@@ -10,6 +10,11 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
       try {
         const jsonPart = JSON.parse(jsonMatch[1]);
         
+        // Handle blocks format in fenced JSON
+        if (jsonPart.blocks && Array.isArray(jsonPart.blocks)) {
+          return { blocks: jsonPart.blocks };
+        }
+        
         // Convert to blocks format
         if (jsonPart.type === 'gallery' && Array.isArray(jsonPart.vehicles)) {
           // Process vehicles data (normalize from RevUP format)
@@ -39,7 +44,12 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
     
     // Standard JSON parsing
     try {
-      const parsed = JSON.parse(response.output);
+      // Strip ```json fences so JSON.parse works
+      let body = response.output;
+      const m = body.match(/```json\s*([\s\S]*?)```/i);
+      if (m) body = m[1].trim();
+      
+      const parsed = JSON.parse(body);
       
       // Handle different response formats
       if (parsed.type === 'gallery' && Array.isArray(parsed.vehicles)) {
