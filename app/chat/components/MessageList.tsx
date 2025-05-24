@@ -85,7 +85,8 @@ export default function MessageList({
   
   return (
     <div 
-      className={cn("flex-1 overflow-y-auto px-4", className)}
+      className={cn("flex-1 overflow-y-auto overflow-x-hidden px-4", className)}
+      style={{ maxHeight: '100%' }}
     >
       <div className="py-4 space-y-1">
         {messages.length === 0 ? (
