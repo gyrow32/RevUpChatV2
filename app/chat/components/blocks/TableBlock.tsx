@@ -292,7 +292,8 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
       {/* Mobile Card Layout (hidden on desktop) */}
       <div className="block lg:hidden space-y-3">
         {rows.map((row, rowIndex) => {
-          const vehicleImage = hasVehicleData ? getCurrentVehicleImage(row, rowIndex) : null;
+          const vehicleImages = hasVehicleData ? getVehicleImages(row, rowIndex) : [];
+          const currentImage = hasVehicleData ? getCurrentVehicleImage(row, rowIndex) : null;
           const vehicleInfo = hasVehicleData ? getVehicleInfo(row) : {};
           const isExpanded = expandedCards.has(rowIndex);
           
@@ -304,143 +305,218 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
               {/* Card background effects */}
               <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-black/40"></div>
               
-              <div className="relative z-10 p-4">
-                {/* Card Header with Vehicle Info */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    {/* Vehicle Image/Icon with Gallery Navigation */}
-                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg flex-shrink-0 group">
-                      {vehicleImage ? (
-                        <>
-                          <img
-                            src={vehicleImage}
-                            alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
-                            className="w-full h-full object-cover object-center"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                              const parent = target.parentElement;
-                              if (parent && parent.querySelector('.fallback-icon') === null) {
-                                const fallback = document.createElement('div');
-                                fallback.className = 'fallback-icon w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30';
-                                fallback.innerHTML = `<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5 1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5 1.5 1.5 0 0 1 6.5 13 1.5 1.5 0 0 1 8 14.5 1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1H6.5c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>`;
-                                parent.appendChild(fallback);
-                              }
-                            }}
-                          />
-                          
-                          {/* Multiple Images Navigation Arrows */}
-                          {hasVehicleData && getVehicleImages(row, rowIndex).length > 1 && (
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  navigateImage(rowIndex, 'prev');
-                                }}
-                                className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-6 bg-black/70 hover:bg-black/90 text-white rounded-r flex items-center justify-center transition-all duration-200 active:scale-95"
-                              >
-                                <ChevronLeft className="w-3 h-3" />
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  navigateImage(rowIndex, 'next');
-                                }}
-                                className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-6 bg-black/70 hover:bg-black/90 text-white rounded-l flex items-center justify-center transition-all duration-200 active:scale-95"
-                              >
-                                <ChevronRight className="w-3 h-3" />
-                              </button>
-                            </div>
-                          )}
-                          
-                          {/* Image count indicator */}
-                          {hasVehicleData && getVehicleImages(row, rowIndex).length > 1 && (
-                            <div className="absolute bottom-0 right-0 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded-tl font-medium">
-                              {(currentImageIndex[rowIndex] || 0) + 1}/{getVehicleImages(row, rowIndex).length}
-                            </div>
-                          )}
-                          
-                          <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                        </>
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30">
-                          <Car className="w-6 h-6 text-white" />
-                        </div>
-                      )}
-                    </div>
+              <div className="relative z-10">
+                {/* Mobile Image Carousel - Full Width */}
+                {hasVehicleData && vehicleImages.length > 0 && (
+                  <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-gray-900 to-black">
+                    {/* Current Image */}
+                    <img
+                      src={currentImage!}
+                      alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
+                      className="w-full h-full object-cover object-center transition-all duration-500"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent && parent.querySelector('.fallback-content') === null) {
+                          const fallback = document.createElement('div');
+                          fallback.className = 'fallback-content w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30';
+                          fallback.innerHTML = `
+                            <svg class="w-16 h-16 text-white/70 mb-3" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5 1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5 1.5 1.5 0 0 1 6.5 13 1.5 1.5 0 0 1 8 14.5 1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1H6.5c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/>
+                            </svg>
+                            <div class="text-white/70 text-sm font-medium">${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}</div>
+                            <div class="text-white/50 text-xs mt-1">Vehicle Image</div>
+                          `;
+                          parent.appendChild(fallback);
+                        }
+                      }}
+                    />
                     
-                    {/* Vehicle Title */}
-                    <div className="flex-1 min-w-0">
-                      <h5 className="text-base font-bold text-white truncate">
+                    {/* Image Overlay with Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
+                    
+                    {/* Navigation Arrows - Only show if multiple images */}
+                    {vehicleImages.length > 1 && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigateImage(rowIndex, 'prev');
+                          }}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/70 hover:bg-black/90 text-white rounded-full flex items-center justify-center transition-all duration-200 active:scale-95 shadow-xl backdrop-blur-sm border border-white/20"
+                        >
+                          <ChevronLeft className="w-6 h-6" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigateImage(rowIndex, 'next');
+                          }}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/70 hover:bg-black/90 text-white rounded-full flex items-center justify-center transition-all duration-200 active:scale-95 shadow-xl backdrop-blur-sm border border-white/20"
+                        >
+                          <ChevronRight className="w-6 h-6" />
+                        </button>
+                      </>
+                    )}
+                    
+                    {/* Image Counter */}
+                    {vehicleImages.length > 1 && (
+                      <div className="absolute top-4 right-4 bg-black/80 text-white text-sm px-3 py-1.5 rounded-full font-semibold shadow-xl backdrop-blur-sm border border-white/20">
+                        {(currentImageIndex[rowIndex] || 0) + 1} / {vehicleImages.length}
+                      </div>
+                    )}
+                    
+                    {/* Photo Indicator Dots - Only show if multiple images */}
+                    {vehicleImages.length > 1 && (
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                        {vehicleImages.map((_, imageIndex) => (
+                          <button
+                            key={imageIndex}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentImageIndex(prev => ({
+                                ...prev,
+                                [rowIndex]: imageIndex
+                              }));
+                            }}
+                            className={cn(
+                              "w-2 h-2 rounded-full transition-all duration-200",
+                              (currentImageIndex[rowIndex] || 0) === imageIndex
+                                ? "bg-white scale-125 shadow-lg"
+                                : "bg-white/50 hover:bg-white/70"
+                            )}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Vehicle Info Overlay */}
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <h5 className="text-lg font-bold mb-1 drop-shadow-lg">
                         {hasVehicleData ? (
                           `${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`.trim() || `Option ${rowIndex + 1}`
                         ) : (
                           `Option ${rowIndex + 1}`
                         )}
                       </h5>
-                      <p className="text-xs text-gray-400 truncate">
-                        {hasVehicleData && vehicleImage && getVehicleImages(row, rowIndex).length > 1 
-                          ? `${getVehicleImages(row, rowIndex).length} photos • ${columns.length} details`
-                          : `${columns.length} details available`
-                        }
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* Expand Button */}
-                  <button
-                    onClick={() => toggleCardExpansion(rowIndex)}
-                    className="touch-target flex items-center justify-center w-8 h-8 rounded-lg bg-black/30 border border-white/10 text-white/70 hover:text-white hover:bg-black/50 transition-all duration-200 active:scale-95"
-                  >
-                    {isExpanded ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-                
-                {/* Primary Info (Always Visible) */}
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  {primaryColumns.slice(0, 4).map((colIndex) => (
-                    <div
-                      key={colIndex}
-                      className="bg-black/20 rounded-lg p-2 border border-white/10"
-                    >
-                      <div className="text-xs text-gray-400 flex items-center space-x-1 mb-1">
-                        <span>{getColumnIcon(columns[colIndex])}</span>
-                        <span className="truncate">{columns[colIndex]}</span>
-                      </div>
-                      <div className={cn("text-sm font-semibold truncate", getCellClassName(columns[colIndex]))}>
-                        {formatCellValue(row[colIndex], columns[colIndex])}
+                      <div className="flex items-center space-x-2 text-sm text-white/90">
+                        <span className="bg-green-500/80 px-2 py-0.5 rounded-full text-xs font-semibold">
+                          {vehicleImages.length} {vehicleImages.length === 1 ? 'Photo' : 'Photos'}
+                        </span>
+                        <span>•</span>
+                        <span>{columns.length} Details</span>
                       </div>
                     </div>
-                  ))}
-                </div>
-                
-                {/* Expanded Details */}
-                {isExpanded && (
-                  <div className="space-y-2 pt-3 border-t border-white/10">
-                    {columns.map((column, colIndex) => {
-                      if (primaryColumns.slice(0, 4).includes(colIndex)) return null;
-                      
-                      return (
-                        <div
-                          key={colIndex}
-                          className="flex items-center justify-between py-2 px-3 bg-black/10 rounded-lg border border-white/5"
-                        >
-                          <div className="flex items-center space-x-2 text-xs text-gray-400">
-                            <span>{getColumnIcon(column)}</span>
-                            <span className="truncate">{column}</span>
-                          </div>
-                          <div className={cn("text-sm font-medium text-right truncate max-w-[60%]", getCellClassName(column))}>
-                            {formatCellValue(row[colIndex], column)}
-                          </div>
-                        </div>
-                      );
-                    })}
+                    
+                    {/* Live Photo Indicator */}
+                    <div className="absolute top-4 left-4 flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-white/90 text-xs font-semibold bg-black/50 px-2 py-1 rounded-full backdrop-blur-sm">
+                        LIVE PHOTOS
+                      </span>
+                    </div>
                   </div>
                 )}
+                
+                {/* Card Content */}
+                <div className="p-4">
+                  {/* Card Header - Only show if NO images */}
+                  {(!hasVehicleData || vehicleImages.length === 0) && (
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3 flex-1 min-w-0">
+                        {/* Fallback Icon */}
+                        <div className="w-12 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-blue-600/30 to-purple-600/30 border border-white/10 shadow-lg flex-shrink-0 flex items-center justify-center">
+                          <Car className="w-6 h-6 text-white" />
+                        </div>
+                        
+                        {/* Vehicle Title */}
+                        <div className="flex-1 min-w-0">
+                          <h5 className="text-base font-bold text-white truncate">
+                            {hasVehicleData ? (
+                              `${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`.trim() || `Option ${rowIndex + 1}`
+                            ) : (
+                              `Option ${rowIndex + 1}`
+                            )}
+                          </h5>
+                          <p className="text-xs text-gray-400 truncate">
+                            {columns.length} details available
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Expand Button */}
+                      <button
+                        onClick={() => toggleCardExpansion(rowIndex)}
+                        className="touch-target flex items-center justify-center w-8 h-8 rounded-lg bg-black/30 border border-white/10 text-white/70 hover:text-white hover:bg-black/50 transition-all duration-200 active:scale-95"
+                      >
+                        {isExpanded ? (
+                          <ChevronUp className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Expand Button for cards with images */}
+                  {hasVehicleData && vehicleImages.length > 0 && (
+                    <div className="flex justify-end mb-3">
+                      <button
+                        onClick={() => toggleCardExpansion(rowIndex)}
+                        className="touch-target flex items-center justify-center w-10 h-10 rounded-xl bg-black/30 border border-white/10 text-white/70 hover:text-white hover:bg-black/50 transition-all duration-200 active:scale-95 shadow-lg backdrop-blur-sm"
+                      >
+                        {isExpanded ? (
+                          <ChevronUp className="w-5 h-5" />
+                        ) : (
+                          <ChevronDown className="w-5 h-5" />
+                        )}
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Primary Info (Always Visible) */}
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    {primaryColumns.slice(0, 4).map((colIndex) => (
+                      <div
+                        key={colIndex}
+                        className="bg-black/20 rounded-lg p-3 border border-white/10 hover:border-white/20 transition-all duration-200"
+                      >
+                        <div className="text-xs text-gray-400 flex items-center space-x-1 mb-2">
+                          <span>{getColumnIcon(columns[colIndex])}</span>
+                          <span className="truncate">{columns[colIndex]}</span>
+                        </div>
+                        <div className={cn("text-sm font-semibold truncate", getCellClassName(columns[colIndex]))}>
+                          {formatCellValue(row[colIndex], columns[colIndex])}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Expanded Details */}
+                  {isExpanded && (
+                    <div className="space-y-2 pt-3 border-t border-white/10">
+                      {columns.map((column, colIndex) => {
+                        if (primaryColumns.slice(0, 4).includes(colIndex)) return null;
+                        
+                        return (
+                          <div
+                            key={colIndex}
+                            className="flex items-center justify-between py-2 px-3 bg-black/10 rounded-lg border border-white/5 hover:border-white/10 transition-all duration-200"
+                          >
+                            <div className="flex items-center space-x-2 text-xs text-gray-400">
+                              <span>{getColumnIcon(column)}</span>
+                              <span className="truncate">{column}</span>
+                            </div>
+                            <div className={cn("text-sm font-medium text-right truncate max-w-[60%]", getCellClassName(column))}>
+                              {formatCellValue(row[colIndex], column)}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           );
