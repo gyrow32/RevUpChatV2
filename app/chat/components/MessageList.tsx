@@ -88,7 +88,7 @@ export default function MessageList({
       className={cn("flex-1 overflow-y-auto overflow-x-hidden px-4", className)}
       style={{ maxHeight: '100%' }}
     >
-      <div className="py-4 space-y-1">
+      <div className="py-6 space-y-2">
         {messages.length === 0 ? (
           <div className="relative flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center px-4 overflow-hidden">
             {/* Cinematic Background Elements */}

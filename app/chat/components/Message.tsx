@@ -124,7 +124,7 @@ export default function Message({
   return (
     <div
       className={cn(
-        "flex mb-6",
+        "flex mb-10",
         isUser ? 'justify-end' : 'justify-start',
         className
       )}
@@ -140,7 +140,7 @@ export default function Message({
           : "bg-black/30 border border-white/10 rounded-bl-md",
         isError && "border-red-400/50 bg-red-500/20"
       )}>
-        <div className="p-4">
+        <div className="p-5">
           {renderContent()}
           
           {/* Status indicators */}
