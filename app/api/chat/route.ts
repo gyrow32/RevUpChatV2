@@ -35,9 +35,9 @@ export async function POST(request: Request) {
       webhook: WEBHOOK_URL.substring(0, 50) + '...'
     });
 
-    // Call webhook with timeout (responses take 3-6 seconds)
+    // Call webhook with longer timeout (AI responses can take 60+ seconds)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
 
     try {
       const response = await fetch(WEBHOOK_URL, {
@@ -54,7 +54,15 @@ export async function POST(request: Request) {
 
       if (!response.ok) {
         console.error('Webhook error:', response.status, response.statusText);
-        throw new Error(`Webhook returned ${response.status}: ${response.statusText}`);
+        
+        // Provide more specific error messages
+        if (response.status === 504 || response.status === 502) {
+          throw new Error('The AI service is temporarily unavailable. Please try again in a moment.');
+        } else if (response.status === 429) {
+          throw new Error('Too many requests. Please wait a moment before trying again.');
+        } else {
+          throw new Error(`AI service error (${response.status}). Please try again.`);
+        }
       }
 
       const data = await response.json();
@@ -69,9 +77,12 @@ export async function POST(request: Request) {
       clearTimeout(timeoutId);
       
       if (fetchError.name === 'AbortError') {
-        console.error('Webhook timeout');
+        console.error('Webhook timeout after 90 seconds');
         return NextResponse.json(
-          { error: 'Request timeout - the AI is taking longer than usual. Please try again.' },
+          { 
+            error: 'The AI is taking longer than usual to respond. This might be due to high demand or complex processing. Please try again or rephrase your question.',
+            retryable: true 
+          },
           { status: 504 }
         );
       }
@@ -86,7 +97,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { 
         error: error instanceof Error ? error.message : 'Failed to process message',
-        details: process.env.NODE_ENV === 'development' ? String(error) : undefined
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+        retryable: true
       },
       { status: 500 }
     );

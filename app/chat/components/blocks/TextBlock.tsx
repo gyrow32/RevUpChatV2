@@ -11,27 +11,20 @@ export default function TextBlock({
   isUser = false, 
   className = '' 
 }: TextBlockProps) {
-  // Format text with line breaks and basic markdown-style formatting
-  const formatText = (text: string) => {
-    return text
-      .replace(/\n/g, '<br>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>');
-  };
-
   return (
     <div className={cn(
-      "text-sm leading-relaxed",
+      "prose prose-sm max-w-none",
       isUser 
-        ? "text-white" 
-        : "text-gray-900 dark:text-gray-100",
+        ? "prose-invert text-white" 
+        : "prose-invert text-gray-100",
       className
     )}>
-      <div 
-        dangerouslySetInnerHTML={{ 
-          __html: formatText(content) 
-        }} 
-      />
+      <p className={cn(
+        "whitespace-pre-wrap leading-relaxed",
+        isUser ? "text-white" : "text-gray-100"
+      )}>
+        {content}
+      </p>
     </div>
   );
 }

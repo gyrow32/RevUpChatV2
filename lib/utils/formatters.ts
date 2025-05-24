@@ -32,7 +32,8 @@ export function formatPayment(payment: string | number): string {
     
   if (isNaN(num)) return 'N/A';
   
-  return `$${num.toLocaleString()}/mo`;
+  // Remove cents for cleaner look
+  return `$${Math.round(num).toLocaleString()}/mo`;
 }
 
 export function formatYear(year: string | number): number {
@@ -46,5 +47,6 @@ export function formatPercentage(value: string | number): string {
     
   if (isNaN(num)) return 'N/A';
   
-  return `${num.toFixed(1)}%`;
+  // Remove decimal places for cleaner look
+  return `${Math.round(num)}%`;
 }

@@ -47,24 +47,24 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
   
   return (
     <div className={cn(
-      "flex flex-col h-full bg-gray-50 dark:bg-gray-900",
+      "flex flex-col h-full bg-black/10 backdrop-blur-sm",
       className
     )}>
-      {/* Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3">
+      {/* Premium Black Glass Header */}
+      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">
               RevUpChat
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-lg text-blue-300">
               AI Car Shopping Assistant
             </p>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
-              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="p-3 text-white hover:text-blue-400 hover:bg-black/30 backdrop-blur-sm rounded-xl border border-white/10 hover:border-white/20 transition-all duration-200 shadow-lg"
               onClick={() => setShowSessionId(!showSessionId)}
               title="Session Info"
             >
@@ -72,7 +72,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
             </button>
             
             <button
-              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="p-3 text-white hover:text-blue-400 hover:bg-black/30 backdrop-blur-sm rounded-xl border border-white/10 hover:border-white/20 transition-all duration-200 shadow-lg"
               onClick={handleNewSession}
               title="New Session"
             >
@@ -80,7 +80,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
             </button>
             
             <button
-              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="p-3 text-white hover:text-blue-400 hover:bg-black/30 backdrop-blur-sm rounded-xl border border-white/10 hover:border-white/20 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleClearChat}
               disabled={messages.length === 0}
               title="Clear Chat"
@@ -91,24 +91,24 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
         </div>
         
         {showSessionId && (
-          <div className="mt-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+          <div className="mt-4 p-4 bg-black/30 backdrop-blur-md rounded-xl border border-white/10 shadow-inner">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                <div className="text-sm text-gray-300 font-medium">
                   Session ID:
                 </div>
-                <div className="text-xs font-mono text-gray-700 dark:text-gray-300 mt-1">
+                <div className="text-sm font-mono text-white mt-1">
                   {sessionId}
                 </div>
               </div>
               <button
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-white hover:text-blue-400 p-2 hover:bg-black/30 rounded-lg transition-all duration-200"
                 onClick={() => setShowSessionId(false)}
               >
                 ✖️
               </button>
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            <div className="text-sm text-gray-300 mt-3">
               Messages: {messages.length} • 
               Status: {isLoading ? 'Processing...' : 'Ready'}
             </div>
@@ -116,17 +116,17 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
         )}
       </div>
       
-      {/* Error Banner */}
+      {/* Premium Error Banner */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-4 py-3">
+        <div className="bg-red-500/20 backdrop-blur-md border-b border-red-400/30 px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-red-600 dark:text-red-400 text-sm">
+            <div className="flex items-center gap-3">
+              <span className="text-red-300 text-lg">
                 ⚠️ {error}
               </span>
             </div>
             <button
-              className="text-red-600 hover:text-red-700 dark:text-red-400"
+              className="text-red-300 hover:text-red-200 p-2 hover:bg-red-500/20 rounded-lg transition-all duration-200"
               onClick={dismissError}
             >
               ✖️

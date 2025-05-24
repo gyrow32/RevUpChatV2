@@ -68,7 +68,18 @@ export function useChat() {
       } else {
         // Handle API error
         const errorMessage = response.error || 'Failed to get response from AI assistant';
-        dispatch({ type: 'SET_ERROR', payload: errorMessage });
+        
+        // Check if this is a retryable error
+        const isTimeout = errorMessage.includes('timeout') || errorMessage.includes('taking longer than usual');
+        const isRetryable = errorMessage.includes('retryable') || isTimeout;
+        
+        // Provide helpful error message
+        let displayMessage = errorMessage;
+        if (isTimeout) {
+          displayMessage = '⏱️ The AI is processing your request but it\'s taking longer than usual. You can try again or wait a moment.';
+        }
+        
+        dispatch({ type: 'SET_ERROR', payload: displayMessage });
         
         // Update user message to error state
         dispatch({ 
@@ -79,7 +90,7 @@ export function useChat() {
           }
         });
         
-        console.error('Webhook error:', errorMessage);
+        console.error('Webhook error:', errorMessage, { isTimeout, isRetryable });
       }
       
     } catch (error) {
@@ -94,9 +105,21 @@ export function useChat() {
         }
       });
       
+      // Provide user-friendly error messages
+      let errorMessage = 'Unknown error occurred';
+      if (error instanceof Error) {
+        if (error.message.includes('fetch')) {
+          errorMessage = '🌐 Network connection error. Please check your internet connection and try again.';
+        } else if (error.message.includes('timeout')) {
+          errorMessage = '⏱️ Request timed out. The AI might be under heavy load. Please try again in a moment.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       dispatch({ 
         type: 'SET_ERROR', 
-        payload: error instanceof Error ? error.message : 'Unknown error occurred' 
+        payload: errorMessage
       });
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });

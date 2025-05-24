@@ -25,6 +25,14 @@ export default function Message({
   const isError = message.status === 'error';
   const isSending = message.status === 'sending';
   
+  // Check if this message contains vehicle galleries that need full width
+  const hasVehicleGallery = !isUser && message.content && 
+    typeof message.content === 'object' && 
+    'blocks' in message.content &&
+    (message.content as ParsedResponse).blocks?.some(block => 
+      block.type === 'gallery' || block.type === 'hybrid'
+    );
+  
   const renderContent = () => {
     if (isUser) {
       // User messages are always text
@@ -122,12 +130,15 @@ export default function Message({
       )}
     >
       <div className={cn(
-        "max-w-[85%] md:max-w-[75%] lg:max-w-[65%]",
-        "shadow-sm rounded-2xl",
+        // Only constrain width for non-vehicle-gallery messages
+        !hasVehicleGallery && "max-w-[85%] md:max-w-[75%] lg:max-w-[65%]",
+        // Vehicle galleries get nearly full width with just small margins
+        hasVehicleGallery && "w-full max-w-[95%]",
+        "shadow-lg rounded-2xl backdrop-blur-sm",
         isUser 
-          ? "bg-blue-600 text-white rounded-br-md" 
-          : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-bl-md",
-        isError && "border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20"
+          ? "bg-blue-600/70 text-white rounded-br-md border border-blue-400/30" 
+          : "bg-black/30 border border-white/10 rounded-bl-md",
+        isError && "border-red-400/50 bg-red-500/20"
       )}>
         <div className="p-4">
           {renderContent()}
@@ -136,14 +147,14 @@ export default function Message({
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-2">
               {isSending && (
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2 text-xs text-gray-300">
                   <div className="animate-spin text-xs">⟳</div>
                   <span>Sending...</span>
                 </div>
               )}
               
               {isError && (
-                <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                <div className="flex items-center gap-2 text-red-300">
                   <span className="text-xs">⚠️</span>
                   <span className="text-sm">Failed to send</span>
                 </div>
@@ -154,7 +165,7 @@ export default function Message({
             {isError && onRetry && (
               <button
                 onClick={() => onRetry(message.id)}
-                className="text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 py-1 px-2 rounded border border-red-300 dark:border-red-600 hover:bg-red-100 dark:hover:bg-red-900/40"
+                className="text-xs text-red-300 bg-red-500/20 py-1 px-2 rounded border border-red-400/50 hover:bg-red-500/30 backdrop-blur-sm transition-all duration-200"
               >
                 <span className="mr-1">⟳</span>
                 Retry
@@ -166,8 +177,8 @@ export default function Message({
           <div className={cn(
             "text-xs mt-2 flex items-center gap-1",
             isUser 
-              ? "text-blue-100" 
-              : "text-gray-500 dark:text-gray-400"
+              ? "text-blue-200" 
+              : "text-gray-400"
           )}>
             <span className="text-xs">🕒</span>
             <span>

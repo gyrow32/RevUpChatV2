@@ -1,4 +1,4 @@
-import type { ParsedResponse, VehicleData } from '@/types';
+import type { ParsedResponse, VehicleData, Block } from '@/types';
 
 export function parseWebhookResponse(response: { output: string }): ParsedResponse {
   try {
@@ -15,7 +15,7 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
           // Process vehicles data (normalize from RevUP format)
           const normalizedVehicles = jsonPart.vehicles.map(normalizeVehicleData);
           
-          const blocks = [{
+          const blocks: Block[] = [{
             type: 'gallery' as const,
             vehicles: normalizedVehicles
           }];
