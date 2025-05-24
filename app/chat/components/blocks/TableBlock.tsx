@@ -1,7 +1,7 @@
 import { formatPrice } from '@/lib/utils/formatters';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import { Car, ChevronDown, ChevronUp } from 'lucide-react';
+import { Car, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface TableBlockProps {
   columns: string[];
@@ -13,6 +13,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
   const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
+  const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: number]: number }>({});
 
   // Check if this table contains vehicle data
   const isVehicleTable = () => {
@@ -23,19 +24,19 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
     );
   };
 
-  // Extract vehicle image from row data
-  const getVehicleImage = (row: (string | number)[], rowIndex: number): string | null => {
-    // Look for common image column names (matching real data structure)
+  // Extract ALL vehicle images from row data
+  const getVehicleImages = (row: (string | number)[], rowIndex: number): string[] => {
     const imageColumnNames = [
       'image', 'image url', 'image urls', 'photo', 'picture', 'img',
       'vehicle image', 'car image', 'thumbnail', 'pic', 'imageurl',
       'vehicleimage', 'carimage'
     ];
     
+    const allImages: string[] = [];
+    
     for (let i = 0; i < columns.length; i++) {
       const colName = columns[i].toLowerCase().trim();
       
-      // Check for exact matches and partial matches
       if (imageColumnNames.some(imgCol => 
         colName === imgCol || 
         colName.includes(imgCol) || 
@@ -44,24 +45,27 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
         const value = row[i];
         
         if (typeof value === 'string' && value.trim()) {
-          let imageUrl = value.trim();
+          let imageUrls = value.trim();
           
-          // Handle comma-separated URLs (take first one)
-          if (imageUrl.includes(',')) {
-            imageUrl = imageUrl.split(',')[0].trim();
+          // Handle comma-separated URLs (extract ALL)
+          if (imageUrls.includes(',')) {
+            const urls = imageUrls.split(',').map(url => url.trim());
+            urls.forEach(url => {
+              if (url.startsWith('http') || url.startsWith('data:')) {
+                allImages.push(url);
+              }
+            });
           }
-          
           // Handle array-like strings [url1, url2] 
-          if (imageUrl.startsWith('[') && imageUrl.includes('http')) {
-            const match = imageUrl.match(/https?:\/\/[^\s,\]]+/);
-            if (match) {
-              imageUrl = match[0];
+          else if (imageUrls.startsWith('[') && imageUrls.includes('http')) {
+            const matches = imageUrls.match(/https?:\/\/[^\s,\]]+/g);
+            if (matches) {
+              matches.forEach(url => allImages.push(url));
             }
           }
-          
-          // Validate it's a proper URL
-          if (imageUrl.startsWith('http') || imageUrl.startsWith('data:')) {
-            return imageUrl;
+          // Single URL
+          else if (imageUrls.startsWith('http') || imageUrls.startsWith('data:')) {
+            allImages.push(imageUrls);
           }
         }
       }
@@ -73,15 +77,47 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
       if (typeof value === 'string' && value.includes('http') && 
           (value.includes('.jpg') || value.includes('.jpeg') || 
            value.includes('.png') || value.includes('.webp'))) {
-        // Extract URL from string
-        const urlMatch = value.match(/https?:\/\/[^\s,"'\]]+\.(jpg|jpeg|png|webp|gif)/i);
-        if (urlMatch) {
-          return urlMatch[0];
+        const urlMatches = value.match(/https?:\/\/[^\s,"'\]]+\.(jpg|jpeg|png|webp|gif)/gi);
+        if (urlMatches) {
+          urlMatches.forEach(url => {
+            if (!allImages.includes(url)) {
+              allImages.push(url);
+            }
+          });
         }
       }
     }
     
-    return null;
+    return allImages;
+  };
+
+  // Get current image for a vehicle
+  const getCurrentVehicleImage = (row: (string | number)[], rowIndex: number): string | null => {
+    const images = getVehicleImages(row, rowIndex);
+    if (images.length === 0) return null;
+    
+    const currentIndex = currentImageIndex[rowIndex] || 0;
+    return images[currentIndex] || images[0];
+  };
+
+  // Navigate to next/previous image
+  const navigateImage = (rowIndex: number, direction: 'next' | 'prev') => {
+    const images = getVehicleImages(rows[rowIndex], rowIndex);
+    if (images.length <= 1) return;
+    
+    const currentIndex = currentImageIndex[rowIndex] || 0;
+    let newIndex;
+    
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % images.length;
+    } else {
+      newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    }
+    
+    setCurrentImageIndex(prev => ({
+      ...prev,
+      [rowIndex]: newIndex
+    }));
   };
 
   // Get vehicle info for thumbnail display
@@ -256,7 +292,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
       {/* Mobile Card Layout (hidden on desktop) */}
       <div className="block lg:hidden space-y-3">
         {rows.map((row, rowIndex) => {
-          const vehicleImage = hasVehicleData ? getVehicleImage(row, rowIndex) : null;
+          const vehicleImage = hasVehicleData ? getCurrentVehicleImage(row, rowIndex) : null;
           const vehicleInfo = hasVehicleData ? getVehicleInfo(row) : {};
           const isExpanded = expandedCards.has(rowIndex);
           
@@ -272,8 +308,8 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                 {/* Card Header with Vehicle Info */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    {/* Vehicle Image/Icon */}
-                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg flex-shrink-0">
+                    {/* Vehicle Image/Icon with Gallery Navigation */}
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg flex-shrink-0 group">
                       {vehicleImage ? (
                         <>
                           <img
@@ -292,6 +328,38 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                               }
                             }}
                           />
+                          
+                          {/* Multiple Images Navigation Arrows */}
+                          {hasVehicleData && getVehicleImages(row, rowIndex).length > 1 && (
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigateImage(rowIndex, 'prev');
+                                }}
+                                className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-6 bg-black/70 hover:bg-black/90 text-white rounded-r flex items-center justify-center transition-all duration-200 active:scale-95"
+                              >
+                                <ChevronLeft className="w-3 h-3" />
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigateImage(rowIndex, 'next');
+                                }}
+                                className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-6 bg-black/70 hover:bg-black/90 text-white rounded-l flex items-center justify-center transition-all duration-200 active:scale-95"
+                              >
+                                <ChevronRight className="w-3 h-3" />
+                              </button>
+                            </div>
+                          )}
+                          
+                          {/* Image count indicator */}
+                          {hasVehicleData && getVehicleImages(row, rowIndex).length > 1 && (
+                            <div className="absolute bottom-0 right-0 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded-tl font-medium">
+                              {(currentImageIndex[rowIndex] || 0) + 1}/{getVehicleImages(row, rowIndex).length}
+                            </div>
+                          )}
+                          
                           <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-green-400 rounded-full"></div>
                         </>
                       ) : (
@@ -311,7 +379,10 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                         )}
                       </h5>
                       <p className="text-xs text-gray-400 truncate">
-                        {columns.length} details available
+                        {hasVehicleData && vehicleImage && getVehicleImages(row, rowIndex).length > 1 
+                          ? `${getVehicleImages(row, rowIndex).length} photos • ${columns.length} details`
+                          : `${columns.length} details available`
+                        }
                       </p>
                     </div>
                   </div>
@@ -420,7 +491,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
             </thead>
             <tbody>
               {rows.map((row, rowIndex) => {
-                const vehicleImage = hasVehicleData ? getVehicleImage(row, rowIndex) : null;
+                const vehicleImage = hasVehicleData ? getCurrentVehicleImage(row, rowIndex) : null;
                 const vehicleInfo = hasVehicleData ? getVehicleInfo(row) : {};
                 
                 return (
@@ -438,7 +509,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                     {hasVehicleData && (
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
-                          <div className="relative w-20 h-14 rounded-xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg group-hover:scale-105 transition-transform duration-300">
+                          <div className="relative w-20 h-14 rounded-xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg group-hover:scale-105 transition-transform duration-300 group">
                             {vehicleImage ? (
                               <>
                                 <img
@@ -467,12 +538,45 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                                   }}
                                 />
                                 
+                                {/* Desktop Gallery Navigation Arrows */}
+                                {getVehicleImages(row, rowIndex).length > 1 && (
+                                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigateImage(rowIndex, 'prev');
+                                      }}
+                                      className="absolute left-1 top-1/2 -translate-y-1/2 w-6 h-8 bg-black/80 hover:bg-black text-white rounded flex items-center justify-center transition-all duration-200 shadow-lg active:scale-95"
+                                    >
+                                      <ChevronLeft className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigateImage(rowIndex, 'next');
+                                      }}
+                                      className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-8 bg-black/80 hover:bg-black text-white rounded flex items-center justify-center transition-all duration-200 shadow-lg active:scale-95"
+                                    >
+                                      <ChevronRight className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                )}
+                                
+                                {/* Desktop Image count indicator */}
+                                {getVehicleImages(row, rowIndex).length > 1 && (
+                                  <div className="absolute bottom-1 left-1 bg-black/80 text-white text-xs px-2 py-1 rounded font-medium shadow-lg">
+                                    {(currentImageIndex[rowIndex] || 0) + 1}/{getVehicleImages(row, rowIndex).length}
+                                  </div>
+                                )}
+                                
                                 {/* Photo indicator badge */}
                                 <div className="absolute top-1 right-1 w-2 h-2 bg-green-400 rounded-full shadow-lg animate-pulse"></div>
                                 
                                 {/* Enhanced thumbnail overlay effect */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                  <div className="absolute bottom-1 left-1 text-xs text-white font-bold opacity-90">PHOTO</div>
+                                  <div className="absolute bottom-1 right-1 text-xs text-white font-bold opacity-90">
+                                    {getVehicleImages(row, rowIndex).length > 1 ? 'GALLERY' : 'PHOTO'}
+                                  </div>
                                 </div>
                               </>
                             ) : (
@@ -484,7 +588,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                             )}
                           </div>
                           
-                          {/* Enhanced Vehicle quick info */}
+                          {/* Enhanced Vehicle quick info with gallery indicator */}
                           <div className="min-w-0 flex-1">
                             <div className="text-sm font-bold text-white truncate">
                               {vehicleInfo.year} {vehicleInfo.make}
@@ -494,7 +598,10 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                             </div>
                             {vehicleImage && (
                               <div className="text-xs text-green-400 font-semibold mt-0.5">
-                                📸 Live Photo
+                                {getVehicleImages(row, rowIndex).length > 1 
+                                  ? `📸 ${getVehicleImages(row, rowIndex).length} Photos` 
+                                  : '📸 Live Photo'
+                                }
                               </div>
                             )}
                           </div>
