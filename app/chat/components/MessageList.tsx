@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Message from './Message';
+import ThinkingIndicator from './ThinkingIndicator';
 import type { Message as MessageType } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -99,25 +100,8 @@ export default function MessageList({
           ))
         )}
         
-        {/* Premium Loading Indicator */}
-        {isLoading && (
-          <div className="flex justify-start mb-6">
-            <div className="max-w-[85%] md:max-w-[75%] lg:max-w-[65%] bg-black/30 backdrop-blur-sm border border-white/10 rounded-2xl rounded-bl-md shadow-lg">
-              <div className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
-                  <span className="text-sm text-gray-300">
-                    AI is thinking...
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* AI Thinking Process Indicator */}
+        {isLoading && <ThinkingIndicator />}
         
         {/* Scroll anchor */}
         <div ref={bottomRef} />
