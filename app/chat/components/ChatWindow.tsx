@@ -50,10 +50,10 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
       "flex flex-col h-full bg-black/10 backdrop-blur-sm",
       className
     )}>
-      {/* Premium Black Glass Header - Mobile Optimized with Safe Area */}
+      {/* Premium Black Glass Header - Mobile Optimized with Maximum Safe Area */}
       <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl px-3 sm:px-6 relative overflow-hidden">
-        {/* Enhanced safe area handling for mobile */}
-        <div className="pt-safe-top py-3 sm:py-4">
+        {/* Maximum safe area handling for mobile with multiple fallbacks */}
+        <div className="pt-safe-top pt-12 sm:pt-4 py-4 sm:py-4">
           {/* Header background effects */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-transparent to-purple-600/5"></div>
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
@@ -61,8 +61,8 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
             <div className="absolute top-0 right-1/4 w-12 h-12 sm:w-24 sm:h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
           </div>
           
-          {/* Extra mobile spacing above content */}
-          <div className="h-1 sm:h-0 mb-2 sm:mb-0"></div>
+          {/* Maximum mobile spacing above content */}
+          <div className="h-6 sm:h-0 mb-4 sm:mb-0"></div>
           
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
