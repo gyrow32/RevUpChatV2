@@ -39,7 +39,7 @@ export default function ChatPage() {
         <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/20"></div>
         
         {/* Mobile-first chat container with safe areas */}
-        <div className="w-full h-screen h-[100dvh] relative z-10 pt-safe-top pb-safe-bottom">
+        <div className="w-full h-screen h-[100dvh] relative z-10 pb-safe-bottom">
           <div className="bg-black/20 backdrop-blur-xl border-white/10 overflow-hidden h-full flex flex-col">
             <ChatWindow className="h-full flex-1" />
           </div>
