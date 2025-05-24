@@ -61,7 +61,7 @@ export default function MessageList({
             </h3>
             
             <p className="text-gray-300 max-w-md mb-8 leading-relaxed">
-              I'm your AI car shopping assistant. Ask me about available vehicles, 
+              I&apos;m your AI car shopping assistant. Ask me about available vehicles, 
               get personalized recommendations, or explore our inventory.
             </p>
             
