@@ -1,7 +1,7 @@
 import { formatPrice } from '@/lib/utils/formatters';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import { Car } from 'lucide-react';
+import { Car, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface TableBlockProps {
   columns: string[];
@@ -12,6 +12,7 @@ interface TableBlockProps {
 export default function TableBlock({ columns, rows, className = '' }: TableBlockProps) {
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
 
   // Check if this table contains vehicle data
   const isVehicleTable = () => {
@@ -96,26 +97,63 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
     };
   };
 
+  // Get primary columns (most important for mobile)
+  const getPrimaryColumns = (): number[] => {
+    const priorityColumns = ['make', 'model', 'year', 'price', 'payment', 'mileage'];
+    const primaryIndices: number[] = [];
+    
+    priorityColumns.forEach(priority => {
+      const index = columns.findIndex(col => 
+        col.toLowerCase().includes(priority)
+      );
+      if (index >= 0) {
+        primaryIndices.push(index);
+      }
+    });
+    
+    // If we don't have enough primary columns, add the first few
+    if (primaryIndices.length < 3) {
+      for (let i = 0; i < Math.min(3, columns.length); i++) {
+        if (!primaryIndices.includes(i)) {
+          primaryIndices.push(i);
+        }
+      }
+    }
+    
+    return primaryIndices;
+  };
+
+  const toggleCardExpansion = (rowIndex: number) => {
+    const newExpanded = new Set(expandedCards);
+    if (newExpanded.has(rowIndex)) {
+      newExpanded.delete(rowIndex);
+    } else {
+      newExpanded.add(rowIndex);
+    }
+    setExpandedCards(newExpanded);
+  };
+
   const hasVehicleData = isVehicleTable();
+  const primaryColumns = getPrimaryColumns();
 
   if (!columns || !rows || rows.length === 0) {
     return (
       <div className={cn(
-        "relative text-center py-12 px-6 rounded-2xl overflow-hidden",
+        "relative text-center py-8 sm:py-12 px-4 sm:px-6 rounded-xl sm:rounded-2xl overflow-hidden",
         "bg-black/20 backdrop-blur-xl border border-white/10 shadow-2xl",
         className
       )}>
-        {/* Background effects */}
+        {/* Background effects - Mobile Optimized */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-purple-600/5"></div>
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-16 h-16 sm:w-32 sm:h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-12 h-12 sm:w-24 sm:h-24 bg-purple-500/10 rounded-full blur-2xl"></div>
         
         <div className="relative z-10">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-600/30 to-purple-600/30 rounded-2xl flex items-center justify-center border border-blue-400/20 shadow-lg">
-            <span className="text-3xl">📊</span>
+          <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-blue-600/30 to-purple-600/30 rounded-xl sm:rounded-2xl flex items-center justify-center border border-blue-400/20 shadow-lg">
+            <span className="text-2xl sm:text-3xl">📊</span>
           </div>
-          <div className="font-semibold text-white text-lg mb-2">No Data Available</div>
-          <div className="text-gray-400">Financial comparison data will appear here</div>
+          <div className="font-semibold text-white text-base sm:text-lg mb-2">No Data Available</div>
+          <div className="text-gray-400 text-sm sm:text-base">Financial comparison data will appear here</div>
         </div>
       </div>
     );
@@ -147,11 +185,11 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
     const colLower = columnName.toLowerCase();
     
     if (isHeader) {
-      return 'text-blue-200 font-bold text-sm tracking-wider uppercase';
+      return 'text-blue-200 font-bold text-xs sm:text-sm tracking-wider uppercase';
     }
     
     if (colLower.includes('price') || colLower.includes('payment')) {
-      return 'text-green-300 font-bold text-lg';
+      return 'text-green-300 font-bold text-base sm:text-lg';
     }
     
     if (colLower === 'make' || colLower === 'model' || colLower.includes('vehicle')) {
@@ -159,7 +197,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
     }
     
     if (colLower === 'vin' || colLower === 'id' || colLower.includes('stock')) {
-      return 'font-mono text-gray-400 text-sm opacity-75';
+      return 'font-mono text-gray-400 text-xs sm:text-sm opacity-75';
     }
     
     if (colLower.includes('rate') || colLower.includes('apr')) {
@@ -184,39 +222,162 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
   };
 
   return (
-    <div className={cn("space-y-6", className)}>
-      {/* Enhanced Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-xl border border-white/10 p-6 shadow-2xl">
-        {/* Header background effects */}
+    <div className={cn("space-y-4 sm:space-y-6", className)}>
+      {/* Enhanced Header - Mobile Optimized */}
+      <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-black/20 backdrop-blur-xl border border-white/10 p-4 sm:p-6 shadow-2xl">
+        {/* Header background effects - Mobile Optimized */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-transparent to-green-600/5"></div>
-        <div className="absolute top-0 left-1/4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl"></div>
-        <div className="absolute top-0 right-1/4 w-20 h-20 bg-green-500/10 rounded-full blur-2xl"></div>
+        <div className="absolute top-0 left-1/4 w-12 h-12 sm:w-24 sm:h-24 bg-blue-500/10 rounded-full blur-2xl"></div>
+        <div className="absolute top-0 right-1/4 w-10 h-10 sm:w-20 sm:h-20 bg-green-500/10 rounded-full blur-2xl"></div>
         
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600/40 to-green-600/40 rounded-xl flex items-center justify-center border border-blue-400/30 shadow-lg">
-              <span className="text-2xl">{hasVehicleData ? '🚗' : '📊'}</span>
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600/40 to-green-600/40 rounded-lg sm:rounded-xl flex items-center justify-center border border-blue-400/30 shadow-lg">
+              <span className="text-lg sm:text-2xl">{hasVehicleData ? '🚗' : '📊'}</span>
             </div>
             <div>
-              <h4 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200">
-                {hasVehicleData ? 'Vehicle Financial Comparison' : 'Financial Comparison'}
+              <h4 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200">
+                {hasVehicleData ? 'Vehicle Comparison' : 'Financial Comparison'}
               </h4>
-              <p className="text-sm text-gray-400">
-                {rows.length} option{rows.length !== 1 ? 's' : ''} • Updated just now
-                {hasVehicleData && ' • Vehicle identification included'}
+              <p className="text-xs sm:text-sm text-gray-400">
+                {rows.length} option{rows.length !== 1 ? 's' : ''} • Updated now
+                {hasVehicleData && ' • Vehicle ID included'}
               </p>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 self-start sm:self-auto">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             <span className="text-xs text-green-400 font-medium">LIVE DATA</span>
           </div>
         </div>
       </div>
       
-      {/* Spectacular Table */}
-      <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-xl border border-white/10 shadow-2xl">
+      {/* Mobile Card Layout (hidden on desktop) */}
+      <div className="block lg:hidden space-y-3">
+        {rows.map((row, rowIndex) => {
+          const vehicleImage = hasVehicleData ? getVehicleImage(row, rowIndex) : null;
+          const vehicleInfo = hasVehicleData ? getVehicleInfo(row) : {};
+          const isExpanded = expandedCards.has(rowIndex);
+          
+          return (
+            <div
+              key={rowIndex}
+              className="relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl"
+            >
+              {/* Card background effects */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-black/40"></div>
+              
+              <div className="relative z-10 p-4">
+                {/* Card Header with Vehicle Info */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    {/* Vehicle Image/Icon */}
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg flex-shrink-0">
+                      {vehicleImage ? (
+                        <>
+                          <img
+                            src={vehicleImage}
+                            alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
+                            className="w-full h-full object-cover object-center"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent && parent.querySelector('.fallback-icon') === null) {
+                                const fallback = document.createElement('div');
+                                fallback.className = 'fallback-icon w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30';
+                                fallback.innerHTML = `<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5 1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5 1.5 1.5 0 0 1 6.5 13 1.5 1.5 0 0 1 8 14.5 1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1H6.5c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>`;
+                                parent.appendChild(fallback);
+                              }
+                            }}
+                          />
+                          <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+                        </>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30">
+                          <Car className="w-6 h-6 text-white" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Vehicle Title */}
+                    <div className="flex-1 min-w-0">
+                      <h5 className="text-base font-bold text-white truncate">
+                        {hasVehicleData ? (
+                          `${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`.trim() || `Option ${rowIndex + 1}`
+                        ) : (
+                          `Option ${rowIndex + 1}`
+                        )}
+                      </h5>
+                      <p className="text-xs text-gray-400 truncate">
+                        {columns.length} details available
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Expand Button */}
+                  <button
+                    onClick={() => toggleCardExpansion(rowIndex)}
+                    className="touch-target flex items-center justify-center w-8 h-8 rounded-lg bg-black/30 border border-white/10 text-white/70 hover:text-white hover:bg-black/50 transition-all duration-200 active:scale-95"
+                  >
+                    {isExpanded ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+                
+                {/* Primary Info (Always Visible) */}
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  {primaryColumns.slice(0, 4).map((colIndex) => (
+                    <div
+                      key={colIndex}
+                      className="bg-black/20 rounded-lg p-2 border border-white/10"
+                    >
+                      <div className="text-xs text-gray-400 flex items-center space-x-1 mb-1">
+                        <span>{getColumnIcon(columns[colIndex])}</span>
+                        <span className="truncate">{columns[colIndex]}</span>
+                      </div>
+                      <div className={cn("text-sm font-semibold truncate", getCellClassName(columns[colIndex]))}>
+                        {formatCellValue(row[colIndex], columns[colIndex])}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Expanded Details */}
+                {isExpanded && (
+                  <div className="space-y-2 pt-3 border-t border-white/10">
+                    {columns.map((column, colIndex) => {
+                      if (primaryColumns.slice(0, 4).includes(colIndex)) return null;
+                      
+                      return (
+                        <div
+                          key={colIndex}
+                          className="flex items-center justify-between py-2 px-3 bg-black/10 rounded-lg border border-white/5"
+                        >
+                          <div className="flex items-center space-x-2 text-xs text-gray-400">
+                            <span>{getColumnIcon(column)}</span>
+                            <span className="truncate">{column}</span>
+                          </div>
+                          <div className={cn("text-sm font-medium text-right truncate max-w-[60%]", getCellClassName(column))}>
+                            {formatCellValue(row[colIndex], column)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      {/* Desktop Table Layout (hidden on mobile) */}
+      <div className="hidden lg:block relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-xl border border-white/10 shadow-2xl">
         {/* Table background effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-black/40"></div>
         <div className="absolute inset-0 opacity-20">

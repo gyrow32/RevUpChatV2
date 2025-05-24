@@ -50,88 +50,88 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
       "flex flex-col h-full bg-black/10 backdrop-blur-sm",
       className
     )}>
-      {/* Premium Black Glass Header */}
-      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl px-6 py-4 relative overflow-hidden">
+      {/* Premium Black Glass Header - Mobile Optimized */}
+      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl px-3 sm:px-6 py-2 sm:py-4 relative overflow-hidden">
         {/* Header background effects */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-transparent to-purple-600/5"></div>
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
-          <div className="absolute top-0 left-1/4 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
-          <div className="absolute top-0 right-1/4 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
+          <div className="absolute top-0 left-1/4 w-16 h-16 sm:w-32 sm:h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
+          <div className="absolute top-0 right-1/4 w-12 h-12 sm:w-24 sm:h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
         </div>
         
         <div className="flex items-center justify-between relative z-10">
-          <div className="flex items-center space-x-4">
-            {/* Enhanced logo/icon */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-xl blur-lg group-hover:blur-xl transition-all duration-300 opacity-50"></div>
-              <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600/40 to-purple-700/40 backdrop-blur-sm rounded-xl flex items-center justify-center border border-blue-400/30 shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
-                <span className="text-xl">🚗</span>
+          <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
+            {/* Enhanced logo/icon - Mobile Optimized */}
+            <div className="relative group flex-shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-lg sm:rounded-xl blur-lg group-hover:blur-xl transition-all duration-300 opacity-50"></div>
+              <div className="relative w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600/40 to-purple-700/40 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center border border-blue-400/30 shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                <span className="text-sm sm:text-xl">🚗</span>
               </div>
             </div>
             
-            <div>
-              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200 drop-shadow-lg">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200 drop-shadow-lg truncate">
                 RevUpChat
               </h1>
-              <p className="text-base text-blue-300/80 font-light">
+              <p className="text-xs sm:text-base text-blue-300/80 font-light truncate">
                 AI Car Shopping Assistant
               </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             <button
-              className="group p-3 text-white/80 hover:text-blue-400 hover:bg-black/30 backdrop-blur-sm rounded-xl border border-white/10 hover:border-blue-400/30 transition-all duration-300 shadow-lg hover:shadow-blue-500/20 relative overflow-hidden"
+              className="group touch-target p-2 sm:p-3 text-white/80 hover:text-blue-400 hover:bg-black/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10 hover:border-blue-400/30 transition-all duration-300 shadow-lg hover:shadow-blue-500/20 relative overflow-hidden active:scale-95"
               onClick={() => setShowSessionId(!showSessionId)}
               title="Session Info"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10 text-lg">⚙️</span>
+              <span className="relative z-10 text-sm sm:text-lg">⚙️</span>
             </button>
             
             <button
-              className="group p-3 text-white/80 hover:text-green-400 hover:bg-black/30 backdrop-blur-sm rounded-xl border border-white/10 hover:border-green-400/30 transition-all duration-300 shadow-lg hover:shadow-green-500/20 relative overflow-hidden"
+              className="group touch-target p-2 sm:p-3 text-white/80 hover:text-green-400 hover:bg-black/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10 hover:border-green-400/30 transition-all duration-300 shadow-lg hover:shadow-green-500/20 relative overflow-hidden active:scale-95"
               onClick={handleNewSession}
               title="New Session"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10 text-lg">➕</span>
+              <span className="relative z-10 text-sm sm:text-lg">➕</span>
             </button>
             
             <button
-              className="group p-3 text-white/80 hover:text-red-400 hover:bg-black/30 backdrop-blur-sm rounded-xl border border-white/10 hover:border-red-400/30 transition-all duration-300 shadow-lg hover:shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-white/80 relative overflow-hidden"
+              className="group touch-target p-2 sm:p-3 text-white/80 hover:text-red-400 hover:bg-black/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10 hover:border-red-400/30 transition-all duration-300 shadow-lg hover:shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-white/80 relative overflow-hidden active:scale-95"
               onClick={handleClearChat}
               disabled={messages.length === 0}
               title="Clear Chat"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-red-600/10 to-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10 text-lg">🗑️</span>
+              <span className="relative z-10 text-sm sm:text-lg">🗑️</span>
             </button>
           </div>
         </div>
         
         {showSessionId && (
-          <div className="mt-4 p-4 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 shadow-inner relative overflow-hidden animate-slide-in-up">
+          <div className="mt-2 sm:mt-4 p-3 sm:p-4 bg-black/40 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/10 shadow-inner relative overflow-hidden animate-slide-in-up">
             {/* Session info background effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
             
-            <div className="flex items-center justify-between relative z-10">
-              <div>
-                <div className="text-sm text-gray-300 font-medium">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between relative z-10 space-y-2 sm:space-y-0">
+              <div className="flex-1 min-w-0">
+                <div className="text-xs sm:text-sm text-gray-300 font-medium">
                   Session ID:
                 </div>
-                <div className="text-sm font-mono text-white mt-1 bg-black/30 px-2 py-1 rounded border border-white/10">
+                <div className="text-xs sm:text-sm font-mono text-white mt-1 bg-black/30 px-2 py-1 rounded border border-white/10 overflow-hidden text-ellipsis">
                   {sessionId}
                 </div>
               </div>
               <button
-                className="text-white/70 hover:text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition-all duration-200 border border-transparent hover:border-red-400/20"
+                className="touch-target self-end sm:self-auto text-white/70 hover:text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition-all duration-200 border border-transparent hover:border-red-400/20 active:scale-95"
                 onClick={() => setShowSessionId(false)}
               >
-                ✖️
+                <span className="text-sm">✖️</span>
               </button>
             </div>
-            <div className="text-sm text-gray-300 mt-3 flex items-center space-x-4">
+            <div className="text-xs sm:text-sm text-gray-300 mt-2 sm:mt-3 flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4">
               <span className="flex items-center space-x-1">
                 <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
                 <span>Messages: {messages.length}</span>
