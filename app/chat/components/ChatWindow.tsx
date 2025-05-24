@@ -79,33 +79,50 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
             </div>
           </div>
           
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          {/* Mobile-first prominent action buttons */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {/* Clear Chat Button - Most Important on Mobile */}
             <button
-              className="group touch-target p-2 sm:p-3 text-white/80 hover:text-blue-400 hover:bg-black/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10 hover:border-blue-400/30 transition-all duration-300 shadow-lg hover:shadow-blue-500/20 relative overflow-hidden active:scale-95"
-              onClick={() => setShowSessionId(!showSessionId)}
-              title="Session Info"
+              className={cn(
+                "group touch-target p-3 sm:p-3 backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 min-w-[44px] min-h-[44px]",
+                messages.length === 0 
+                  ? "text-white/50 hover:text-white/70 border border-white/20 hover:border-white/30 disabled:opacity-50 disabled:cursor-not-allowed" 
+                  : "text-white/90 hover:text-red-300 hover:bg-red-500/20 border border-red-400/30 hover:border-red-300/50 hover:shadow-red-500/30"
+              )}
+              onClick={handleClearChat}
+              disabled={messages.length === 0}
+              title={messages.length === 0 ? "No messages to clear" : `Clear ${messages.length} message${messages.length !== 1 ? 's' : ''}`}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10 text-sm sm:text-lg">⚙️</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-600/10 to-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              {/* Message count indicator */}
+              {messages.length > 0 && (
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse border border-red-300">
+                  {messages.length > 9 ? '9+' : messages.length}
+                </div>
+              )}
+              
+              <span className="relative z-10 text-lg sm:text-xl">🗑️</span>
             </button>
             
+            {/* New Session Button */}
             <button
-              className="group touch-target p-2 sm:p-3 text-white/80 hover:text-green-400 hover:bg-black/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10 hover:border-green-400/30 transition-all duration-300 shadow-lg hover:shadow-green-500/20 relative overflow-hidden active:scale-95"
+              className="group touch-target p-3 sm:p-3 text-white/90 hover:text-green-300 hover:bg-green-500/20 backdrop-blur-sm rounded-xl border border-green-400/30 hover:border-green-300/50 transition-all duration-300 shadow-lg hover:shadow-green-500/30 relative overflow-hidden active:scale-95 min-w-[44px] min-h-[44px]"
               onClick={handleNewSession}
               title="New Session"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10 text-sm sm:text-lg">➕</span>
+              <span className="relative z-10 text-lg sm:text-xl">➕</span>
             </button>
             
+            {/* Session Info Button - Less prominent on mobile */}
             <button
-              className="group touch-target p-2 sm:p-3 text-white/80 hover:text-red-400 hover:bg-black/30 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/10 hover:border-red-400/30 transition-all duration-300 shadow-lg hover:shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-white/80 relative overflow-hidden active:scale-95"
-              onClick={handleClearChat}
-              disabled={messages.length === 0}
-              title="Clear Chat"
+              className="group touch-target p-2.5 sm:p-3 text-white/70 hover:text-blue-300 hover:bg-blue-500/20 backdrop-blur-sm rounded-xl border border-blue-400/20 hover:border-blue-300/40 transition-all duration-300 shadow-lg hover:shadow-blue-500/20 relative overflow-hidden active:scale-95 min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px]"
+              onClick={() => setShowSessionId(!showSessionId)}
+              title="Session Info"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-red-600/10 to-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="relative z-10 text-sm sm:text-lg">🗑️</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="relative z-10 text-base sm:text-lg">⚙️</span>
             </button>
           </div>
         </div>
