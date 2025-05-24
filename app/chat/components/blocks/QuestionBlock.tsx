@@ -18,36 +18,30 @@ export default function QuestionBlock({
   }
   
   return (
-    <div className={cn(
-      "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4",
-      className
-    )}>
-      <div className="pb-3">
-        <div className="text-lg flex items-center gap-2 font-medium">
-          <span className="text-lg">💬</span>
-          Suggested questions
+    <div className={cn("mt-6", className)}>
+      <div className="mb-4">
+        <div className="text-sm font-medium text-gray-300 mb-3">
+          ### Follow-up Questions
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Click any question to continue the conversation
-        </p>
       </div>
       
-      <div className="space-y-2">
+      <div className="flex flex-wrap gap-3">
         {questions.map((question, index) => (
           <button
             key={index}
             className={cn(
-              "w-full flex justify-between items-center h-auto p-4 text-left rounded-lg",
-              "hover:bg-white dark:hover:bg-gray-700 hover:shadow-sm",
-              "transition-all duration-200",
-              "border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
+              "inline-flex items-center px-4 py-2 rounded-full text-sm font-medium",
+              "bg-black/40 backdrop-blur-sm border border-white/20 text-white",
+              "hover:bg-black/60 hover:border-white/30 hover:scale-105",
+              "transition-all duration-200 shadow-lg hover:shadow-xl",
+              "active:scale-95"
             )}
             onClick={() => onQuestionClick?.(question)}
           >
-            <span className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed text-left">
-              {question}
+            <span className="mr-2 text-base">
+              {index === 0 ? '💰' : index === 1 ? '🔍' : index === 2 ? '🚗' : '📅'}
             </span>
-            <span className="text-gray-400 shrink-0 ml-3">→</span>
+            {question}
           </button>
         ))}
       </div>
