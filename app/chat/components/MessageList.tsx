@@ -206,9 +206,9 @@ export default function MessageList({
                     <div className="text-white">
                       <div className="flex items-center space-x-2 mb-2">
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                        <span className="text-xs font-semibold bg-black/30 px-2 py-1 rounded-full backdrop-blur-sm border border-white/20">
+                        {/* <span className="text-xs font-semibold bg-black/30 px-2 py-1 rounded-full backdrop-blur-sm border border-white/20">
                           AI POWERED
-                        </span>
+                        </span> */}
                       </div>
                       <h2 className="text-lg sm:text-xl font-bold text-white/90 drop-shadow-lg">
                         RevUpChat Assistant
@@ -242,7 +242,7 @@ export default function MessageList({
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               )}>
                 <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-10 leading-relaxed font-light px-2">
-                  I&apos;m your <span className="text-blue-300 font-semibold">AI-powered</span> car shopping assistant. 
+                  I&apos;m your car shopping assistant. 
                   Discover your perfect vehicle with personalized recommendations.
                 </p>
               </div>

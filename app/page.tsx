@@ -14,12 +14,19 @@ export default function HomePage() {
         }}
       ></div>
       
-      <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-12 border border-white/5 shadow-2xl shadow-black/50 text-center relative z-10">
-        <h1 className="text-4xl font-bold mb-4 text-white drop-shadow-lg">RevUpChat</h1>
-        <p className="text-xl text-gray-300 mb-8">AI Car Shopping Assistant</p>
+      <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-12 border border-white/5 shadow-2xl shadow-black/50 text-center relative z-10 max-w-2xl mx-auto">
+        <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-cyan-200 mb-6 drop-shadow-lg">
+          Welcome to RevUpChat!
+        </h1>
+        
+        <p className="text-lg sm:text-xl text-gray-300 mb-10 leading-relaxed font-light">
+          I&apos;m your car shopping assistant. 
+          Discover your perfect vehicle with personalized recommendations.
+        </p>
+        
         <a 
           href="/chat" 
-          className="inline-block px-6 py-3 bg-blue-600/70 backdrop-blur-sm text-white rounded-xl hover:bg-blue-700/80 border border-blue-400/50 hover:border-blue-300/70 transition-all duration-200 shadow-lg hover:shadow-blue-500/25 font-semibold"
+          className="inline-block px-8 py-4 bg-blue-600/70 backdrop-blur-sm text-white rounded-xl hover:bg-blue-700/80 border border-blue-400/50 hover:border-blue-300/70 transition-all duration-200 shadow-lg hover:shadow-blue-500/25 font-semibold text-lg"
         >
           Start Chatting
         </a>
