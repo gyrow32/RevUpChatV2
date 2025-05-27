@@ -68,10 +68,10 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
       "flex flex-col h-full bg-black/10 backdrop-blur-sm",
       className
     )}>
-      {/* Premium Black Glass Header - Mobile Optimized with MAXIMUM Safe Area */}
+      {/* Premium Black Glass Header - Mobile Optimized with Reduced Spacing */}
       <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl px-3 sm:px-6 relative overflow-hidden">
-        {/* MAXIMUM safe area handling for mobile with ultimate clearance */}
-        <div className="pt-safe-top pt-16 sm:pt-4 py-5 sm:py-4">
+        {/* Reduced safe area handling for mobile - more compact */}
+        <div className="pt-safe-top pt-8 sm:pt-4 py-3 sm:py-4">
           {/* Header background effects */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-transparent to-purple-600/5"></div>
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
@@ -79,8 +79,8 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
             <div className="absolute top-0 right-1/4 w-12 h-12 sm:w-24 sm:h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
           </div>
           
-          {/* ULTIMATE mobile spacing above content */}
-          <div className="h-8 sm:h-0 mb-5 sm:mb-0"></div>
+          {/* Reduced mobile spacing above content */}
+          <div className="h-2 sm:h-0 mb-2 sm:mb-0"></div>
           
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
@@ -102,13 +102,13 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
               </div>
             </div>
             
-            {/* Mobile-first prominent action buttons */}
-            <div className="flex items-center gap-3 sm:gap-3 flex-shrink-0">
-              {/* Clear Chat Button - SUPER PROMINENT on Mobile */}
+            {/* Mobile-first prominent action buttons with reduced spacing */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              {/* Clear Chat Button - More compact on Mobile */}
               <button
                 className={cn(
                   "group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95",
-                  "p-4 sm:p-3 min-w-[52px] min-h-[52px] sm:min-w-[44px] sm:min-h-[44px]", // Larger on mobile
+                  "p-3 sm:p-3 min-w-[48px] min-h-[48px] sm:min-w-[44px] sm:min-h-[44px]", // Slightly smaller
                   messages.length === 0 
                     ? "text-white/60 hover:text-white/80 bg-black/30 border-2 border-white/20 hover:border-white/30 disabled:opacity-50 disabled:cursor-not-allowed" 
                     : "text-white bg-red-500/30 hover:bg-red-500/40 border-2 border-red-400/50 hover:border-red-300/70 hover:shadow-red-500/40 shadow-red-500/20"
@@ -119,9 +119,9 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-orange-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
-                {/* Message count indicator - Larger on mobile */}
+                {/* Message count indicator */}
                 {messages.length > 0 && (
-                  <div className="absolute -top-2 -right-2 w-5 h-5 sm:w-4 sm:h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse border-2 border-white shadow-lg">
+                  <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-4 sm:h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse border border-white shadow-lg">
                     {messages.length > 9 ? '9+' : messages.length}
                   </div>
                 )}
@@ -129,9 +129,9 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
                 <span className="relative z-10 text-xs sm:text-xl">🗑️</span>
               </button>
               
-              {/* New Session Button - PROMINENT on Mobile */}
+              {/* New Session Button - More compact on Mobile */}
               <button
-                className="group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 p-4 sm:p-3 min-w-[52px] min-h-[52px] sm:min-w-[44px] sm:min-h-[44px] text-white bg-green-500/30 hover:bg-green-500/40 border-2 border-green-400/50 hover:border-green-300/70 hover:shadow-green-500/40 shadow-green-500/20"
+                className="group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 p-3 sm:p-3 min-w-[48px] min-h-[48px] sm:min-w-[44px] sm:min-h-[44px] text-white bg-green-500/30 hover:bg-green-500/40 border-2 border-green-400/50 hover:border-green-300/70 hover:shadow-green-500/40 shadow-green-500/20"
                 onClick={handleNewSession}
                 title="New Session"
               >
@@ -139,9 +139,9 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
                 <span className="relative z-10 text-xs sm:text-xl">➕</span>
               </button>
               
-              {/* Session Info Button - Smaller on mobile */}
+              {/* Session Info Button - More compact on mobile */}
               <button
-                className="group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 p-3 sm:p-3 min-w-[44px] min-h-[44px] text-white/70 hover:text-blue-300 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 hover:border-blue-300/50 hover:shadow-blue-500/30"
+                className="group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 p-3 sm:p-3 min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] text-white/70 hover:text-blue-300 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 hover:border-blue-300/50 hover:shadow-blue-500/30"
                 onClick={() => setShowSessionId(!showSessionId)}
                 title="Session Info"
               >
