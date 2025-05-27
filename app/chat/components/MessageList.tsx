@@ -163,14 +163,26 @@ export default function MessageList({
               "relative z-10 transition-all duration-1000 ease-out max-w-lg mx-auto",
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}>
-              {/* Hero Car Icon - Mobile Optimized */}
+              {/* Hero Car Image - Mobile Optimized with Real Sports Car */}
               <div className={cn(
                 "relative group mb-6 sm:mb-8 transition-all duration-700 delay-300",
                 isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
               )}>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 via-purple-600/20 to-cyan-600/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600/40 to-purple-700/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-blue-400/30 shadow-2xl group-hover:shadow-blue-500/50 transition-all duration-500 group-hover:scale-110 mx-auto">
-                  <span className="text-2xl sm:text-4xl animate-bounce">🚗</span>
+                <div className="relative w-20 h-20 sm:w-28 sm:h-28 bg-gradient-to-br from-blue-600/40 to-purple-700/40 backdrop-blur-sm rounded-full flex items-center justify-center border border-blue-400/30 shadow-2xl group-hover:shadow-blue-500/50 transition-all duration-500 group-hover:scale-110 mx-auto overflow-hidden">
+                  <img 
+                    src="/images/sports-car-hero.png"
+                    alt="Sleek Sports Car"
+                    className="w-16 h-16 sm:w-24 sm:h-24 object-cover object-center rounded-full group-hover:scale-110 transition-transform duration-500 filter brightness-110 contrast-110"
+                    style={{
+                      filter: 'brightness(1.1) contrast(1.1) saturate(1.2)'
+                    }}
+                  />
+                  {/* Subtle overlay for better integration */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 via-transparent to-transparent rounded-full"></div>
+                  
+                  {/* Animated glow effect */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/0 via-blue-400/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                 </div>
               </div>
               
