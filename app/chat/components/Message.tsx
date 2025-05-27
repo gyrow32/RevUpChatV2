@@ -123,6 +123,7 @@ export default function Message({
   
   return (
     <div
+      data-message-id={message.id}
       className={cn(
         "flex mb-10",
         isUser ? 'justify-end' : 'justify-start',

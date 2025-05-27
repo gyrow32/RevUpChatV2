@@ -22,23 +22,65 @@ export default function MessageList({
   className = '' 
 }: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   
-  // Auto-scroll to bottom when new messages arrive - BUT NOT on initial load
+  // Smart scroll to show beginning of new AI responses
   useEffect(() => {
-    // Only auto-scroll if we have messages and it's not the initial load
-    if (messages.length > 0 && bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length > 0) {
+      setTimeout(() => {
+        const container = messagesContainerRef.current;
+        if (container) {
+          // For user messages, just scroll to show them
+          const lastMessage = messages[messages.length - 1];
+          if (lastMessage.role === 'user') {
+            // Scroll to bottom for user messages
+            container.scrollTop = container.scrollHeight;
+          } else {
+            // For AI responses, scroll to show the beginning of the response
+            // Find the position where the new AI message starts
+            const messageElements = container.children;
+            if (messageElements.length >= 2) {
+              // Get the second-to-last element (user message) 
+              const userMessage = messageElements[messageElements.length - 2] as HTMLElement;
+              // Scroll to just after the user message to show start of AI response
+              userMessage.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'end' 
+              });
+              // Small delay then scroll a bit more to show AI response start
+              setTimeout(() => {
+                window.scrollBy(0, 40);
+              }, 300);
+            }
+          }
+        }
+      }, 100);
     }
   }, [messages.length]);
   
-  // Scroll to bottom when loading state changes - BUT ONLY if we have messages
+  // Scroll to beginning of response when loading completes
   useEffect(() => {
-    // Only auto-scroll if we have messages, not on welcome screen
-    if (!isLoading && messages.length > 0 && bottomRef.current) {
+    if (!isLoading && messages.length > 0) {
       setTimeout(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+        const container = messagesContainerRef.current;
+        const lastMessage = messages[messages.length - 1];
+        
+        if (container && lastMessage.role === 'assistant') {
+          // When AI finishes responding, ensure we see the beginning
+          const messageElements = container.children;
+          if (messageElements.length >= 2) {
+            const userMessage = messageElements[messageElements.length - 2] as HTMLElement;
+            userMessage.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'end' 
+            });
+            setTimeout(() => {
+              window.scrollBy(0, 40);
+            }, 300);
+          }
+        }
+      }, 200);
     }
   }, [isLoading]);
 
@@ -90,7 +132,7 @@ export default function MessageList({
       className={cn("flex-1 overflow-y-auto overflow-x-hidden px-4", className)}
       style={{ maxHeight: '100%' }}
     >
-      <div className="py-6 space-y-2">
+      <div ref={messagesContainerRef} className="py-6 space-y-2">
         {messages.length === 0 ? (
           <div className="relative flex flex-col items-center justify-center min-h-[70vh] text-center px-4 py-8 overflow-hidden">
             {/* Cinematic Background Elements - Mobile Optimized */}
@@ -267,7 +309,7 @@ export default function MessageList({
         {/* AI Thinking Process Indicator */}
         {isLoading && <ThinkingIndicator />}
         
-        {/* Scroll anchor */}
+        {/* Scroll anchor - keep for fallback */}
         <div ref={bottomRef} />
       </div>
     </div>
