@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useChat } from '@/hooks/useChat';
@@ -24,6 +24,24 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
   } = useChat();
   
   const [showSessionId, setShowSessionId] = useState(false);
+  
+  // Ensure page loads at top on mobile (fix scroll position issue)
+  useEffect(() => {
+    // Force scroll to top on component mount, especially for mobile
+    const scrollToTop = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+    
+    // Immediate scroll
+    scrollToTop();
+    
+    // Also scroll after a brief delay to handle any layout shifts
+    const timer = setTimeout(scrollToTop, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
   
   const handleQuestionClick = (question: string) => {
     sendMessage(question);
@@ -108,7 +126,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
                   </div>
                 )}
                 
-                <span className="relative z-10 text-xl sm:text-xl">🗑️</span>
+                <span className="relative z-10 text-base sm:text-xl">🗑️</span>
               </button>
               
               {/* New Session Button - PROMINENT on Mobile */}
@@ -118,7 +136,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
                 title="New Session"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="relative z-10 text-xl sm:text-xl">➕</span>
+                <span className="relative z-10 text-base sm:text-xl">➕</span>
               </button>
               
               {/* Session Info Button - Smaller on mobile */}
@@ -128,7 +146,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
                 title="Session Info"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="relative z-10 text-base sm:text-lg">⚙️</span>
+                <span className="relative z-10 text-sm sm:text-lg">⚙️</span>
               </button>
             </div>
           </div>

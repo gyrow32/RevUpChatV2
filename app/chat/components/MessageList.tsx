@@ -24,16 +24,18 @@ export default function MessageList({
   const bottomRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom when new messages arrive - BUT NOT on initial load
   useEffect(() => {
-    if (bottomRef.current) {
+    // Only auto-scroll if we have messages and it's not the initial load
+    if (messages.length > 0 && bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages.length]);
   
-  // Scroll to bottom when loading state changes
+  // Scroll to bottom when loading state changes - BUT ONLY if we have messages
   useEffect(() => {
-    if (!isLoading && bottomRef.current) {
+    // Only auto-scroll if we have messages, not on welcome screen
+    if (!isLoading && messages.length > 0 && bottomRef.current) {
       setTimeout(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
