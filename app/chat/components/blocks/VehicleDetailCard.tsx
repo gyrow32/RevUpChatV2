@@ -25,27 +25,27 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-1 bg-black/90 backdrop-blur-xl" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl" onClick={onClose}>
       <div
-        className="relative w-full max-w-xs mx-auto max-h-[95vh] overflow-y-auto bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl rounded-lg shadow-2xl shadow-black/50 border border-white/10 overflow-hidden"
+        className="relative w-full h-full md:max-w-2xl md:h-auto md:max-h-[95vh] md:rounded-xl overflow-hidden bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl shadow-2xl shadow-black/50 border border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
+        {/* Close Button - More prominent on mobile */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-20 p-2 bg-black/60 backdrop-blur-xl rounded-xl border border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 group"
+          className="absolute top-4 right-4 z-20 p-3 bg-black/80 backdrop-blur-xl rounded-full border border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 group shadow-lg"
         >
-          <X className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+          <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
         </button>
 
-        {/* Hero Image */}
-        <div className="relative cursor-zoom-in">
-          <div className="aspect-[2/1] w-full bg-black overflow-hidden">
+        {/* Hero Image Section - Full height on mobile */}
+        <div className="relative w-full h-full md:h-auto">
+          <div className="aspect-auto md:aspect-[2/1] w-full h-full md:h-auto bg-black">
             {hasImage ? (
               <img
                 src={allImages[currentImageIndex]}
                 alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                className="object-contain w-full h-full"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = '/placeholder-car.jpg';
@@ -56,58 +56,71 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
                 <Car className="w-12 h-12 text-gray-600" />
               </div>
             )}
-            {/* Gradient overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30"></div>
+            
+            {/* Navigation Controls - Larger touch targets */}
             {allImages.length > 1 && (
               <>
                 <button
-                  onClick={prevImage}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevImage();
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-4 bg-black/80 backdrop-blur-xl rounded-full border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group shadow-lg"
                 >
-                  <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                  <ChevronLeft className="w-8 h-8 group-hover:-translate-x-0.5 transition-transform" />
                 </button>
                 <button
-                  onClick={nextImage}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextImage();
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-black/80 backdrop-blur-xl rounded-full border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group shadow-lg"
                 >
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  <ChevronRight className="w-8 h-8 group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </>
             )}
-          </div>
 
-          {allImages.length > 1 && (
-            <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10">
-              <div className="flex gap-1 p-2 overflow-x-auto scrollbar-hide">
-                {allImages.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={cn(
-                      "relative flex-shrink-0 w-12 h-10 rounded overflow-hidden border transition-all duration-300",
-                      currentImageIndex === index
-                        ? "border-blue-400 scale-110 shadow-lg shadow-blue-500/50"
-                        : "border-white/20 hover:border-white/40 opacity-70 hover:opacity-100"
-                    )}
-                  >
-                    <img
-                      src={image}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder-car.jpg';
-                      }}
-                    />
-                    {currentImageIndex === index && (
-                      <div className="absolute inset-0 bg-blue-500/20"></div>
-                    )}
-                  </button>
-                ))}
+            {/* Image Counter - More visible */}
+            {allImages.length > 1 && (
+              <div className="absolute top-6 left-4 bg-black/80 text-white px-4 py-2 rounded-full font-semibold shadow-xl backdrop-blur-sm border border-white/20 text-lg">
+                {currentImageIndex + 1} / {allImages.length}
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Thumbnail Strip - Hidden on mobile */}
+            {allImages.length > 1 && (
+              <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10">
+                <div className="flex gap-1 p-2 overflow-x-auto scrollbar-hide">
+                  {allImages.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={cn(
+                        "relative flex-shrink-0 w-12 h-10 rounded overflow-hidden border transition-all duration-300",
+                        currentImageIndex === index
+                          ? "border-blue-400 scale-110 shadow-lg shadow-blue-500/50"
+                          : "border-white/20 hover:border-white/40 opacity-70 hover:opacity-100"
+                      )}
+                    >
+                      <img
+                        src={image}
+                        alt={`Thumbnail ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/placeholder-car.jpg';
+                        }}
+                      />
+                      {currentImageIndex === index && (
+                        <div className="absolute inset-0 bg-blue-500/20"></div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="p-2 space-y-2">
