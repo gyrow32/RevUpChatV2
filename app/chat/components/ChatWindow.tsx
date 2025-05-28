@@ -5,6 +5,8 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useChat } from '@/hooks/useChat';
 import { cn } from '@/lib/utils';
+import { useTheme } from '../../components/providers/ThemeProvider';
+import { Sun, Moon } from 'lucide-react';
 
 interface ChatWindowProps {
   className?: string;
@@ -23,6 +25,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
     startNewSession
   } = useChat();
   
+  const { theme, toggleTheme } = useTheme();
   const [showSessionId, setShowSessionId] = useState(false);
   
   // Ensure page loads at top on mobile (fix scroll position issue)
@@ -82,7 +85,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
           {/* Reduced mobile spacing above content */}
           <div className="h-2 sm:h-0 mb-2 sm:mb-0"></div>
           
-          <div className="flex items-center justify-between relative z-10">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
               {/* Enhanced logo/icon - Mobile Optimized */}
               <div className="relative group flex-shrink-0">
@@ -103,14 +106,28 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
             </div>
             
             {/* Mobile-first prominent action buttons with reduced spacing */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleTheme}
+                className="group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 p-3 sm:p-3 min-w-[48px] min-h-[48px] sm:min-w-[44px] sm:min-h-[44px] text-gray-700 dark:text-white bg-white/80 dark:bg-black/40 hover:bg-white/90 dark:hover:bg-black/60 border border-gray-200/50 dark:border-white/10 hover:border-gray-300/50 dark:hover:border-white/20"
+                title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-100/50 dark:from-white/5 via-transparent to-gray-200/50 dark:to-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {theme === 'light' ? (
+                  <Moon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                ) : (
+                  <Sun className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                )}
+              </button>
+
               {/* Clear Chat Button - More compact on Mobile */}
               <button
                 className={cn(
                   "group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95",
-                  "p-3 sm:p-3 min-w-[48px] min-h-[48px] sm:min-w-[44px] sm:min-h-[44px]", // Slightly smaller
+                  "p-3 sm:p-3 min-w-[48px] min-h-[48px] sm:min-w-[44px] sm:min-h-[44px]",
                   messages.length === 0 
-                    ? "text-white/60 hover:text-white/80 bg-black/30 border-2 border-white/20 hover:border-white/30 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    ? "text-gray-700 dark:text-white/60 hover:text-gray-900 dark:hover:text-white/80 bg-white/80 dark:bg-black/30 border-2 border-gray-200/50 dark:border-white/20 hover:border-gray-300/50 dark:hover:border-white/30 disabled:opacity-50 disabled:cursor-not-allowed" 
                     : "text-white bg-red-500/30 hover:bg-red-500/40 border-2 border-red-400/50 hover:border-red-300/70 hover:shadow-red-500/40 shadow-red-500/20"
                 )}
                 onClick={handleClearChat}
@@ -141,7 +158,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
               
               {/* Session Info Button - More compact on mobile */}
               <button
-                className="group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 p-3 sm:p-3 min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] text-white/70 hover:text-blue-300 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 hover:border-blue-300/50 hover:shadow-blue-500/30"
+                className="group touch-target backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg relative overflow-hidden active:scale-95 p-3 sm:p-3 min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] text-gray-700 dark:text-white/70 hover:text-blue-600 dark:hover:text-blue-300 bg-white/80 dark:bg-blue-500/20 hover:bg-white/90 dark:hover:bg-blue-500/30 border border-gray-200/50 dark:border-blue-400/30 hover:border-gray-300/50 dark:hover:border-blue-300/50 hover:shadow-blue-500/30"
                 onClick={() => setShowSessionId(!showSessionId)}
                 title="Session Info"
               >
@@ -150,44 +167,32 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
               </button>
             </div>
           </div>
-          
-          {showSessionId && (
-            <div className="mt-2 sm:mt-4 p-3 sm:p-4 bg-black/40 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/10 shadow-inner relative overflow-hidden animate-slide-in-up">
-              {/* Session info background effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between relative z-10 space-y-2 sm:space-y-0">
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs sm:text-sm text-gray-300 font-medium">
-                    Session ID:
-                  </div>
-                  <div className="text-xs sm:text-sm font-mono text-white mt-1 bg-black/30 px-2 py-1 rounded border border-white/10 overflow-hidden text-ellipsis">
-                    {sessionId}
-                  </div>
-                </div>
-                <button
-                  className="touch-target self-end sm:self-auto text-white/70 hover:text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition-all duration-200 border border-transparent hover:border-red-400/20 active:scale-95"
-                  onClick={() => setShowSessionId(false)}
-                >
-                  <span className="text-sm">✖️</span>
-                </button>
-              </div>
-              <div className="text-xs sm:text-sm text-gray-300 mt-2 sm:mt-3 flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4">
-                <span className="flex items-center space-x-1">
-                  <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                  <span>Messages: {messages.length}</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <span className={cn(
-                    "w-2 h-2 rounded-full",
-                    isLoading ? "bg-yellow-400 animate-pulse" : "bg-green-400"
-                  )}></span>
-                  <span>Status: {isLoading ? 'Processing...' : 'Ready'}</span>
-                </span>
-              </div>
-            </div>
-          )}
         </div>
+        
+        {/* Session Info Panel */}
+        {showSessionId && (
+          <div className="mt-2 sm:mt-4 p-3 sm:p-4 bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-lg sm:rounded-xl border border-gray-200/50 dark:border-white/10 shadow-inner relative overflow-hidden animate-slide-in-up">
+            {/* Session info background effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
+            
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between relative z-10 space-y-2 sm:space-y-0">
+              <div className="flex-1 min-w-0">
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">
+                  Session ID:
+                </div>
+                <div className="text-xs sm:text-sm font-mono text-gray-900 dark:text-white mt-1 bg-white/50 dark:bg-black/30 px-2 py-1 rounded border border-gray-200/50 dark:border-white/10 overflow-hidden text-ellipsis">
+                  {sessionId}
+                </div>
+              </div>
+              <button
+                className="touch-target self-end sm:self-auto text-gray-600 dark:text-white/70 hover:text-red-500 dark:hover:text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition-all duration-200 border border-transparent hover:border-red-400/20 active:scale-95"
+                onClick={() => setShowSessionId(false)}
+              >
+                <span className="text-sm">✖️</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       
       {/* Premium Error Banner */}
