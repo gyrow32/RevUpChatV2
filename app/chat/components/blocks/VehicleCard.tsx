@@ -26,7 +26,7 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
   return (
     <div 
       className={cn(
-        "group relative overflow-hidden bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 hover:border-white/20 transition-all duration-500 w-[280px]",
+        "group relative overflow-hidden bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 hover:border-white/20 transition-all duration-500 w-[280px] h-[420px]",
         "shadow-2xl shadow-black/30 hover:shadow-black/50",
         "transform hover:-translate-y-2 hover:scale-[1.02]",
         "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:via-transparent before:to-black/10 before:pointer-events-none",
@@ -95,20 +95,20 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
       </div>
       
       {/* Premium Content Section */}
-      <div className="p-3 space-y-3">
+      <div className="p-3 space-y-3 flex flex-col h-[calc(420px-180px)] justify-between">
         {/* Title */}
         <div>
-          <h3 className="font-bold text-white text-lg leading-tight">
+          <h3 className="font-bold text-white text-lg leading-tight min-h-[2.5em]">
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h3>
-          {vehicle.trim && (
-            <p className="text-white/70 text-sm font-medium">{vehicle.trim}</p>
-          )}
+          <p className="text-white/70 text-sm font-medium min-h-[1.5em]">
+            {vehicle.trim || '\u00A0'}
+          </p>
         </div>
         
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-2">
-          {vehicle.mileage && (
+        <div className="grid grid-cols-2 gap-2 min-h-[70px]">
+          {vehicle.mileage ? (
             <div className="bg-gradient-to-br from-purple-900/30 to-purple-900/10 backdrop-blur-md rounded-lg p-2 border border-purple-500/20">
               <div className="flex items-center gap-1">
                 <Gauge className="w-3 h-3 text-purple-400" />
@@ -116,8 +116,8 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               </div>
               <div className="text-xs font-bold text-white">{formatMileage(vehicle.mileage)}</div>
             </div>
-          )}
-          {vehicle.fuel && (
+          ) : <div className="min-h-[48px]" />}
+          {vehicle.fuel ? (
             <div className="bg-gradient-to-br from-green-900/30 to-green-900/10 backdrop-blur-md rounded-lg p-2 border border-green-500/20">
               <div className="flex items-center gap-1">
                 <Fuel className="w-3 h-3 text-green-400" />
@@ -125,8 +125,8 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               </div>
               <div className="text-xs font-bold text-white">{vehicle.fuel}</div>
             </div>
-          )}
-          {vehicle.drivetrain && (
+          ) : <div className="min-h-[48px]" />}
+          {vehicle.drivetrain ? (
             <div className="bg-gradient-to-br from-orange-900/30 to-orange-900/10 backdrop-blur-md rounded-lg p-2 border border-orange-500/20">
               <div className="flex items-center gap-1">
                 <Settings className="w-3 h-3 text-orange-400" />
@@ -134,8 +134,8 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               </div>
               <div className="text-xs font-bold text-white">{vehicle.drivetrain}</div>
             </div>
-          )}
-          {vehicle.dealer && (
+          ) : <div className="min-h-[48px]" />}
+          {vehicle.dealer ? (
             <div className="bg-gradient-to-br from-red-900/30 to-red-900/10 backdrop-blur-md rounded-lg p-2 border border-red-500/20">
               <div className="flex items-center gap-1">
                 <MapPin className="w-3 h-3 text-red-400" />
@@ -143,23 +143,25 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               </div>
               <div className="text-xs font-bold text-white">{vehicle.dealer}</div>
             </div>
-          )}
+          ) : <div className="min-h-[48px]" />}
         </div>
         
         {/* Action Button */}
-        <button 
-          className="w-full bg-gradient-to-r from-blue-600/70 via-blue-700/70 to-indigo-700/70 backdrop-blur-sm hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800 text-white font-bold py-2 px-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed group/button relative overflow-hidden border border-white/10"
-          onClick={handleViewDetails}
-          disabled={!vehicle["Vehicle Link"]}
-        >
-          {/* Button shine effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-700" />
-          
-          <div className="relative flex items-center justify-center gap-1.5">
-            <span className="text-xs">View Full Details</span>
-            <ExternalLink className="w-3 h-3 group-hover/button:translate-x-1 group-hover/button:-translate-y-0.5 transition-transform duration-300" />
-          </div>
-        </button>
+        <div className="mt-auto">
+          <button 
+            className="w-full bg-gradient-to-r from-blue-600/70 via-blue-700/70 to-indigo-700/70 backdrop-blur-sm hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800 text-white font-bold py-2 px-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-xl hover:shadow-2xl hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed group/button relative overflow-hidden border border-white/10"
+            onClick={handleViewDetails}
+            disabled={!vehicle["Vehicle Link"]}
+          >
+            {/* Button shine effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-700" />
+            
+            <div className="relative flex items-center justify-center gap-1.5">
+              <span className="text-xs">View Full Details</span>
+              <ExternalLink className="w-3 h-3 group-hover/button:translate-x-1 group-hover/button:-translate-y-0.5 transition-transform duration-300" />
+            </div>
+          </button>
+        </div>
       </div>
       
       {/* Premium Glass Shine Effect */}
