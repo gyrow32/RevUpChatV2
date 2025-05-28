@@ -60,7 +60,7 @@ export default function MessageInput({
   
   return (
     <div className={cn(
-      "border-t border-white/10 bg-black/20 backdrop-blur-xl pb-safe-bottom",
+      "border-t border-gray-200/50 dark:border-white/10 bg-white/60 dark:bg-black/20 backdrop-blur-xl pb-safe-bottom",
       className
     )}>
       <div className="p-3 sm:p-4">
@@ -75,11 +75,11 @@ export default function MessageInput({
               disabled={disabled || isLoading}
               className={cn(
                 "min-h-[44px] max-h-[100px] resize-none w-full",
-                "border border-white/20 rounded-xl sm:rounded-lg bg-black/30 backdrop-blur-sm",
+                "border border-gray-300 dark:border-white/20 rounded-xl sm:rounded-lg bg-white/80 dark:bg-black/30 backdrop-blur-sm",
                 "focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30",
                 "p-3 pr-12 sm:pr-16 text-base sm:text-sm",
                 "transition-colors duration-200",
-                "text-white placeholder-gray-400",
+                "text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
                 "mobile-scroll"
               )}
               style={{ 
@@ -119,7 +119,7 @@ export default function MessageInput({
               "active:scale-95", // Mobile touch feedback
               canSend 
                 ? "bg-blue-600/70 hover:bg-blue-700/80 text-white border-blue-400/50 hover:border-blue-300/70 shadow-lg hover:shadow-blue-500/25" 
-                : "bg-black/30 border-white/20 text-gray-500 cursor-not-allowed"
+                : "bg-gray-200 border-gray-300 dark:bg-black/30 dark:border-white/20 text-gray-500 cursor-not-allowed"
             )}
           >
             {isLoading ? (

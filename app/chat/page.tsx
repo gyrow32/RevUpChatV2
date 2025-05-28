@@ -18,11 +18,11 @@ export default function ChatPage() {
       {/* Mobile-first full viewport container */}
       <div className="min-h-screen min-h-[100dvh] relative overflow-hidden">
         {/* Enhanced Cinematic Background - Mobile Optimized */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-100 to-white dark:from-black dark:via-gray-900 dark:to-black"></div>
         
         {/* Multiple gradient layers for depth - Mobile Optimized */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-blue-900/10 via-transparent to-purple-900/10"></div>
-        <div className="absolute inset-0 bg-gradient-to-bl from-green-900/5 via-transparent to-cyan-900/8"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/10 via-transparent to-purple-100/10 dark:from-blue-900/10 dark:to-purple-900/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-green-100/5 via-transparent to-cyan-100/8 dark:from-green-900/5 dark:to-cyan-900/8"></div>
         
         {/* Animated background orbs - Mobile Optimized */}
         <div className="absolute inset-0 overflow-hidden">
@@ -45,11 +45,11 @@ export default function ChatPage() {
         ></div>
         
         {/* Radial gradient overlay for focus */}
-        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-gray-300/20 dark:to-black/20"></div>
         
         {/* Mobile-first chat container with safe areas */}
         <div className="w-full h-screen h-[100dvh] relative z-10 pb-safe-bottom">
-          <div className="bg-black/20 backdrop-blur-xl border-white/10 overflow-hidden h-full flex flex-col">
+          <div className="bg-white/70 dark:bg-black/20 backdrop-blur-xl border-gray-200/50 dark:border-white/10 overflow-hidden h-full flex flex-col">
             <ChatWindow className="h-full flex-1" />
           </div>
         </div>

@@ -68,11 +68,11 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
   
   return (
     <div className={cn(
-      "flex flex-col h-full bg-black/10 backdrop-blur-sm",
+      "flex flex-col h-full bg-gray-100/50 dark:bg-black/10 backdrop-blur-sm",
       className
     )}>
       {/* Premium Black Glass Header - Mobile Optimized with Reduced Spacing */}
-      <div className="border-b border-white/10 bg-black/20 backdrop-blur-xl px-3 sm:px-6 relative overflow-hidden">
+      <div className="border-b border-gray-200/50 dark:border-white/10 bg-white/80 dark:bg-black/20 backdrop-blur-xl px-3 sm:px-6 relative overflow-hidden">
         {/* Reduced safe area handling for mobile - more compact */}
         <div className="pt-safe-top pt-8 sm:pt-4 py-3 sm:py-4">
           {/* Header background effects */}
