@@ -405,12 +405,12 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               
               {/* Vehicle Identifiers */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {vehicle.vin && (
+                {(vehicle.vin || vehicle.id) && (
                   <div className="flex items-center gap-3 p-3 bg-black/30 rounded-lg border border-white/10">
                     <Hash className="w-5 h-5 text-blue-400" />
                     <div>
                       <div className="text-xs text-gray-400">VIN</div>
-                      <div className="text-sm font-mono text-white">{vehicle.vin}</div>
+                      <div className="text-sm font-mono text-white">{vehicle.vin || vehicle.id}</div>
                     </div>
                   </div>
                 )}
@@ -533,9 +533,41 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
                         <div className="text-lg font-black text-indigo-400">{formatPercentage(vehicle.taxRate)}</div>
                       </div>
                     )}
+                    {vehicle.amountFinanced && (
+                      <div>
+                        <div className="text-xs text-gray-400 mb-1">Amount Financed</div>
+                        <div className="text-lg font-black text-cyan-400">{formatPrice(vehicle.amountFinanced)}</div>
+                      </div>
+                    )}
+                    {vehicle.profit && (
+                      <div>
+                        <div className="text-xs text-gray-400 mb-1">Dealer Profit</div>
+                        <div className="text-lg font-black text-emerald-400">{formatPrice(vehicle.profit)}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
+              
+              {/* Vehicle Age Information */}
+              {vehicle.ageDays !== undefined && (
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-3">Inventory Information</h3>
+                  <div className="flex items-center gap-3 p-4 bg-black/30 rounded-lg border border-white/10">
+                    <Calendar className="w-5 h-5 text-blue-400" />
+                    <div>
+                      <div className="text-sm font-semibold text-white">
+                        {vehicle.ageDays} days on lot
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {vehicle.ageDays <= 30 ? 'Fresh Inventory' : 
+                         vehicle.ageDays <= 60 ? 'Recent Arrival' :
+                         vehicle.ageDays <= 90 ? 'Available Now' : 'Priced to Move'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               {/* Dealer Information */}
               {vehicle.dealer && (

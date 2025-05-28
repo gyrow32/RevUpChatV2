@@ -98,15 +98,29 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
               transform: `translateX(-${currentIndex * 872}px)`
             }}
           >
-            {/* Render all vehicles in a single long strip */}
-            {vehicles.map((vehicle, index) => (
-              <div 
-                key={vehicle.id || `vehicle-${index}`}
-                className="flex-shrink-0"
-              >
-                <VehicleCard vehicle={vehicle} />
-              </div>
-            ))}
+            {/* Render vehicles in pages */}
+            {Array.from({ length: totalPages }, (_, pageIndex) => {
+              const start = pageIndex * vehiclesPerPage;
+              const end = start + vehiclesPerPage;
+              const pageVehicles = vehicles.slice(start, end);
+              
+              return (
+                <div 
+                  key={`page-${pageIndex}`}
+                  className="flex gap-4 flex-shrink-0"
+                  style={{ width: '872px' }}
+                >
+                  {pageVehicles.map((vehicle, vehicleIndex) => (
+                    <div 
+                      key={`${vehicle.id || vehicle.stock || start + vehicleIndex}`}
+                      className="flex-shrink-0"
+                    >
+                      <VehicleCard vehicle={vehicle} />
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
           </div>
         </div>
 

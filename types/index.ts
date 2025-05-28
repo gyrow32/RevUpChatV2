@@ -39,6 +39,10 @@ export interface VehicleData {
   ltv?: number;
   interestRate?: number;
   taxRate?: number;
+  amountFinanced?: number;
+  profit?: number;
+  // Additional fields
+  ageDays?: number;
 }
 
 // Block type definitions (from tested responses)
