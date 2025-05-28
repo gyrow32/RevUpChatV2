@@ -27,7 +27,7 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl" onClick={onClose}>
       <div
-        className="relative w-full max-w-screen-lg mx-auto overflow-y-auto h-[calc(100vh-6rem)] bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-black/50 border border-white/10 overflow-hidden"
+        className="relative w-full max-w-2xl mx-auto overflow-y-auto h-[calc(100vh-6rem)] bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-black/50 border border-white/10 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -40,7 +40,7 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
 
         {/* Hero Image */}
         <div className="relative">
-          <div className="aspect-[16/6] w-full overflow-hidden">
+          <div className="aspect-[16/9] w-full overflow-hidden">
             {hasImage ? (
               <img
                 src={allImages[currentImageIndex]}
@@ -113,14 +113,14 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
         <div className="p-6 grid gap-4 lg:grid-cols-2">
           {/* Title */}
           <div>
-            <h1 className="text-xl lg:text-2xl font-black text-white mb-1 drop-shadow-xl">
+            <h1 className="text-lg lg:text-xl font-black text-white mb-1 drop-shadow-xl">
               {vehicle.year} {vehicle.make} {vehicle.model}
             </h1>
             {vehicle.trim && (
               <p className="text-xs lg:text-sm font-semibold text-gray-300 drop-shadow-lg">{vehicle.trim}</p>
             )}
             <div className="flex items-baseline gap-3 mt-2 flex-wrap">
-              <span className="text-lg lg:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-lg">
+              <span className="text-base lg:text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-lg">
                 {formatPrice(vehicle.price)}
               </span>
               {vehicle.payment && (
