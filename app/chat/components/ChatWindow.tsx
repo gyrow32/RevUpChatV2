@@ -72,34 +72,26 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
       className
     )}>
       {/* Premium Black Glass Header - Mobile Optimized with Reduced Spacing */}
-      <div className="border-b border-gray-200/50 dark:border-white/10 bg-white/80 dark:bg-black/20 backdrop-blur-xl px-3 sm:px-6 relative overflow-hidden">
-        {/* Reduced safe area handling for mobile - more compact */}
+      <div className="border-b bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:via-black dark:to-gray-950 border-gray-300 dark:border-blue-900/40 shadow-xl shadow-blue-100/30 dark:shadow-2xl dark:shadow-black/70 px-3 sm:px-6 relative overflow-hidden rounded-b-3xl">
+        {/* Glass/highlight overlays */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="hidden dark:block absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-purple-900/10 opacity-60" />
+          <div className="block dark:hidden absolute inset-0 bg-gradient-to-br from-blue-100/10 via-transparent to-purple-100/10 opacity-60" />
+        </div>
         <div className="pt-safe-top pt-8 sm:pt-4 py-3 sm:py-4">
-          {/* Header background effects */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-transparent to-purple-600/5"></div>
-          <div className="absolute top-0 left-0 w-full h-full opacity-10">
-            <div className="absolute top-0 left-1/4 w-16 h-16 sm:w-32 sm:h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
-            <div className="absolute top-0 right-1/4 w-12 h-12 sm:w-24 sm:h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
-          </div>
-          
-          {/* Reduced mobile spacing above content */}
-          <div className="h-2 sm:h-0 mb-2 sm:mb-0"></div>
-          
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
-              {/* Enhanced logo/icon - Mobile Optimized */}
               <div className="relative group flex-shrink-0">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-lg sm:rounded-xl blur-lg group-hover:blur-xl transition-all duration-300 opacity-50"></div>
                 <div className="relative w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600/40 to-purple-700/40 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center border border-blue-400/30 shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
                   <span className="text-sm sm:text-xl">🚗</span>
                 </div>
               </div>
-              
               <div className="flex-1 min-w-0">
-                <h1 className="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-200 drop-shadow-lg truncate">
+                <h1 className="text-lg sm:text-2xl font-bold truncate text-gray-900 dark:text-white">
                   RevUpChat
                 </h1>
-                <p className="text-xs sm:text-base text-blue-300/80 font-light truncate">
+                <p className="text-xs sm:text-base font-light truncate text-blue-700 dark:text-blue-200">
                   AI Car Shopping Assistant
                 </p>
               </div>

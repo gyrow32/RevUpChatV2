@@ -92,7 +92,13 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   const carouselWidth = isMobile ? cardWidth : cardWidth * 3;
 
   return (
-    <div className={cn("relative space-y-6", className)}>
+    <section
+      className={cn(
+        "w-full max-w-7xl mx-auto px-2 sm:px-6 md:px-8 py-6 sm:py-10",
+        "rounded-3xl border border-gray-300 dark:border-gray-800 shadow-lg shadow-gray-300/40 dark:shadow-2xl dark:shadow-black/70 bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:to-black/90 backdrop-blur-xl",
+        className
+      )}
+    >
       {/* Premium Black Glass Header */}
       <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-white/10 shadow-2xl shadow-gray-200/50 dark:shadow-black/30">
         <div className="flex items-center gap-4">
@@ -191,6 +197,6 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

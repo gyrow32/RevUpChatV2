@@ -26,11 +26,10 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
   return (
     <div 
       className={cn(
-        "group relative overflow-hidden bg-white/80 dark:bg-black/20 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-white/10 hover:border-gray-300/50 dark:hover:border-white/20 transition-all duration-500 w-[308px] min-h-[420px]",
-        "shadow-2xl shadow-gray-200/50 dark:shadow-black/30 hover:shadow-gray-300/50 dark:hover:shadow-black/50",
+        "group relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-black/80 backdrop-blur-xl rounded-3xl border border-gray-300 dark:border-gray-800 hover:border-blue-400 dark:hover:border-blue-400 transition-all duration-500 w-[308px] min-h-[420px]",
+        "shadow-lg shadow-gray-300/40 dark:shadow-2xl dark:shadow-black/70 hover:shadow-blue-200/60 dark:hover:shadow-black/80",
         "transform hover:-translate-y-2 hover:scale-[1.02]",
-        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-gray-100/50 dark:before:from-white/5 before:via-transparent before:to-gray-200/50 dark:before:to-black/10 before:pointer-events-none",
-        "after:absolute after:inset-[1px] after:bg-gradient-to-br after:from-gray-100/50 dark:after:from-white/5 after:via-transparent after:to-transparent after:rounded-3xl after:pointer-events-none",
+        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-100/10 before:via-transparent before:to-purple-100/5 before:pointer-events-none dark:before:from-white/5 dark:before:to-black/10",
         className
       )}
     >
