@@ -26,7 +26,7 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
   return (
     <div 
       className={cn(
-        "group relative overflow-hidden bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 hover:border-white/20 transition-all duration-500 w-[280px] h-[420px]",
+        "group relative overflow-hidden bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 hover:border-white/20 transition-all duration-500 w-[280px] min-h-[420px]",
         "shadow-2xl shadow-black/30 hover:shadow-black/50",
         "transform hover:-translate-y-2 hover:scale-[1.02]",
         "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:via-transparent before:to-black/10 before:pointer-events-none",
@@ -95,7 +95,7 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
       </div>
       
       {/* Premium Content Section */}
-      <div className="p-3 space-y-3 flex flex-col h-[calc(420px-180px)] justify-between">
+      <div className="p-3 space-y-3 flex flex-col justify-between">
         {/* Title */}
         <div>
           <h3 className="font-bold text-white text-lg leading-tight min-h-[2.5em]">
