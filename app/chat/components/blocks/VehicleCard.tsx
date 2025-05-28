@@ -328,277 +328,253 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onClick={() => setShowModal(false)}>
           <div 
-            className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-gray-900/95 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl"
+            className="relative max-w-5xl w-full max-h-[90vh] overflow-y-auto bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 z-10 p-2 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white hover:bg-black/80 transition-all duration-200"
+              className="absolute top-3 right-3 z-10 p-2 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white hover:bg-black/80 transition-all duration-200"
             >
               <X className="w-5 h-5" />
             </button>
             
-            {/* Image Gallery Section */}
-            {allImages.length > 0 && (
-              <div className="relative h-64 sm:h-96 w-full bg-gradient-to-br from-gray-900 via-black to-gray-800 overflow-hidden">
-                <img
-                  src={allImages[currentImageIndex]}
-                  alt={`${vehicle.year} ${vehicle.make} ${vehicle.model} - Image ${currentImageIndex + 1}`}
-                  className="w-full h-full object-cover object-center"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/placeholder-car.jpg';
-                  }}
-                />
-                
-                {/* Navigation Arrows */}
-                {allImages.length > 1 && (
-                  <>
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white hover:bg-black/80 transition-all duration-200"
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white hover:bg-black/80 transition-all duration-200"
-                    >
-                      <ChevronRight className="w-5 h-5" />
-                    </button>
-                  </>
-                )}
-                
-                {/* Image Counter */}
-                {allImages.length > 1 && (
-                  <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-lg border border-white/20">
-                    {currentImageIndex + 1} / {allImages.length}
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {/* Content Section */}
-            <div className="p-6 space-y-6">
-              {/* Vehicle Header */}
-              <div className="space-y-2">
-                <h2 className="text-3xl font-black text-white">
-                  {vehicle.year} {vehicle.make} {vehicle.model}
-                </h2>
-                {vehicle.trim && (
-                  <p className="text-xl font-semibold text-gray-300">
-                    {vehicle.trim}
-                  </p>
-                )}
-                <div className="flex items-center gap-4 flex-wrap">
-                  <span className="text-2xl font-black text-blue-400">
-                    {formatPrice(vehicle.price)}
-                  </span>
-                  {vehicle.payment && (
-                    <span className="text-lg font-semibold text-green-400">
-                      {formatPayment(vehicle.payment)}/mo
-                    </span>
+            {/* Compact Layout */}
+            <div className="flex flex-col lg:flex-row">
+              {/* Image Gallery Section - Left Side */}
+              {allImages.length > 0 && (
+                <div className="relative lg:w-1/2 h-64 lg:h-auto lg:min-h-[500px] bg-gradient-to-br from-gray-900 via-black to-gray-800">
+                  <img
+                    src={allImages[currentImageIndex]}
+                    alt={`${vehicle.year} ${vehicle.make} ${vehicle.model} - Image ${currentImageIndex + 1}`}
+                    className="w-full h-full object-cover object-center"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder-car.jpg';
+                    }}
+                  />
+                  
+                  {/* Navigation Arrows */}
+                  {allImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={prevImage}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white hover:bg-black/80 transition-all duration-200"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={nextImage}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black/60 backdrop-blur-md rounded-lg border border-white/20 text-white hover:bg-black/80 transition-all duration-200"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </>
                   )}
-                </div>
-              </div>
-              
-              {/* Vehicle Identifiers */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {(vehicle.vin || vehicle.id) && (
-                  <div className="flex items-center gap-3 p-3 bg-black/30 rounded-lg border border-white/10">
-                    <Hash className="w-5 h-5 text-blue-400" />
-                    <div>
-                      <div className="text-xs text-gray-400">VIN</div>
-                      <div className="text-sm font-mono text-white">{vehicle.vin || vehicle.id}</div>
-                    </div>
-                  </div>
-                )}
-                {vehicle.stock && (
-                  <div className="flex items-center gap-3 p-3 bg-black/30 rounded-lg border border-white/10">
-                    <FileText className="w-5 h-5 text-green-400" />
-                    <div>
-                      <div className="text-xs text-gray-400">Stock Number</div>
-                      <div className="text-sm font-semibold text-white">#{vehicle.stock}</div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Comprehensive Specs */}
-              <div>
-                <h3 className="text-lg font-bold text-white mb-3">Vehicle Specifications</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {vehicle.mileage && (
-                    <div className="p-3 bg-black/30 rounded-lg border border-blue-500/20">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Gauge className="w-4 h-4 text-blue-400" />
-                        <span className="text-xs text-gray-400">Mileage</span>
-                      </div>
-                      <div className="text-sm font-semibold text-white">{formatMileage(vehicle.mileage)}</div>
-                    </div>
-                  )}
-                  {vehicle.fuel && (
-                    <div className="p-3 bg-black/30 rounded-lg border border-green-500/20">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Fuel className="w-4 h-4 text-green-400" />
-                        <span className="text-xs text-gray-400">Fuel Type</span>
-                      </div>
-                      <div className="text-sm font-semibold text-white">{vehicle.fuel}</div>
-                    </div>
-                  )}
-                  {vehicle.drivetrain && (
-                    <div className="p-3 bg-black/30 rounded-lg border border-purple-500/20">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Settings className="w-4 h-4 text-purple-400" />
-                        <span className="text-xs text-gray-400">Drivetrain</span>
-                      </div>
-                      <div className="text-sm font-semibold text-white">{vehicle.drivetrain}</div>
-                    </div>
-                  )}
-                  {vehicle.bodyStyle && (
-                    <div className="p-3 bg-black/30 rounded-lg border border-orange-500/20">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Car className="w-4 h-4 text-orange-400" />
-                        <span className="text-xs text-gray-400">Body Style</span>
-                      </div>
-                      <div className="text-sm font-semibold text-white">{vehicle.bodyStyle}</div>
-                    </div>
-                  )}
-                  {vehicle.unitCost && (
-                    <div className="p-3 bg-black/30 rounded-lg border border-yellow-500/20">
-                      <div className="flex items-center gap-2 mb-1">
-                        <DollarSign className="w-4 h-4 text-yellow-400" />
-                        <span className="text-xs text-gray-400">Unit Cost</span>
-                      </div>
-                      <div className="text-sm font-semibold text-white">{vehicle.unitCost}</div>
-                    </div>
-                  )}
-                  {vehicle.jdPowerClean && (
-                    <div className="p-3 bg-black/30 rounded-lg border border-indigo-500/20">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Star className="w-4 h-4 text-indigo-400" />
-                        <span className="text-xs text-gray-400">JD Power Clean</span>
-                      </div>
-                      <div className="text-sm font-semibold text-white">{vehicle.jdPowerClean}</div>
+                  
+                  {/* Image Counter */}
+                  {allImages.length > 1 && (
+                    <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white px-2 py-1 rounded text-sm border border-white/20">
+                      {currentImageIndex + 1} / {allImages.length}
                     </div>
                   )}
                 </div>
-              </div>
+              )}
               
-              {/* Complete Financial Details */}
-              <div>
-                <h3 className="text-lg font-bold text-white mb-3">Complete Financing Details</h3>
-                <div className="p-4 bg-black/30 rounded-lg border border-white/10">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div>
-                      <div className="text-xs text-gray-400 mb-1">Sale Price</div>
-                      <div className="text-lg font-black text-blue-400">{formatPrice(vehicle.price)}</div>
-                    </div>
+              {/* Content Section - Right Side */}
+              <div className="flex-1 p-4 lg:p-6 space-y-4 lg:max-h-[85vh] lg:overflow-y-auto">
+                {/* Vehicle Header - Compact */}
+                <div className="space-y-1">
+                  <h2 className="text-2xl font-black text-white">
+                    {vehicle.year} {vehicle.make} {vehicle.model}
+                  </h2>
+                  {vehicle.trim && (
+                    <p className="text-lg font-semibold text-gray-300">{vehicle.trim}</p>
+                  )}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-xl font-black text-blue-400">{formatPrice(vehicle.price)}</span>
                     {vehicle.payment && (
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Monthly Payment</div>
-                        <div className="text-lg font-black text-green-400">{formatPayment(vehicle.payment)}</div>
-                      </div>
+                      <span className="text-lg font-semibold text-green-400">{formatPayment(vehicle.payment)}/mo</span>
                     )}
-                    {vehicle.downPayment !== undefined && (
+                  </div>
+                </div>
+                
+                {/* Two Column Layout for Identifiers and Specs */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {/* Left Column - Identifiers & Key Specs */}
+                  <div className="space-y-3">
+                    {/* Vehicle Identifiers */}
+                    <div className="space-y-2">
+                      {(vehicle.vin || vehicle.id) && (
+                        <div className="flex items-center gap-2 p-2 bg-black/30 rounded-lg border border-white/10">
+                          <Hash className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <span className="text-xs text-gray-400">VIN: </span>
+                            <span className="text-sm font-mono text-white">{vehicle.vin || vehicle.id}</span>
+                          </div>
+                        </div>
+                      )}
+                      {vehicle.stock && (
+                        <div className="flex items-center gap-2 p-2 bg-black/30 rounded-lg border border-white/10">
+                          <FileText className="w-4 h-4 text-green-400 flex-shrink-0" />
+                          <div className="flex-1">
+                            <span className="text-xs text-gray-400">Stock: </span>
+                            <span className="text-sm font-semibold text-white">#{vehicle.stock}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Key Specs */}
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-bold text-white uppercase tracking-wider">Specifications</h3>
+                      <div className="grid grid-cols-2 gap-2">
+                        {vehicle.mileage && (
+                          <div className="p-2 bg-black/30 rounded border border-blue-500/20">
+                            <div className="flex items-center gap-1 mb-1">
+                              <Gauge className="w-3 h-3 text-blue-400" />
+                              <span className="text-xs text-gray-400">Mileage</span>
+                            </div>
+                            <div className="text-sm font-semibold text-white">{formatMileage(vehicle.mileage)}</div>
+                          </div>
+                        )}
+                        {vehicle.fuel && (
+                          <div className="p-2 bg-black/30 rounded border border-green-500/20">
+                            <div className="flex items-center gap-1 mb-1">
+                              <Fuel className="w-3 h-3 text-green-400" />
+                              <span className="text-xs text-gray-400">Fuel</span>
+                            </div>
+                            <div className="text-sm font-semibold text-white truncate">{vehicle.fuel}</div>
+                          </div>
+                        )}
+                        {vehicle.drivetrain && (
+                          <div className="p-2 bg-black/30 rounded border border-purple-500/20">
+                            <div className="flex items-center gap-1 mb-1">
+                              <Settings className="w-3 h-3 text-purple-400" />
+                              <span className="text-xs text-gray-400">Drive</span>
+                            </div>
+                            <div className="text-sm font-semibold text-white">{vehicle.drivetrain}</div>
+                          </div>
+                        )}
+                        {vehicle.bodyStyle && (
+                          <div className="p-2 bg-black/30 rounded border border-orange-500/20">
+                            <div className="flex items-center gap-1 mb-1">
+                              <Car className="w-3 h-3 text-orange-400" />
+                              <span className="text-xs text-gray-400">Body</span>
+                            </div>
+                            <div className="text-sm font-semibold text-white truncate">{vehicle.bodyStyle}</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Right Column - Financial Details */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">Financing</h3>
+                    <div className="p-3 bg-black/30 rounded-lg border border-white/10">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <div className="text-xs text-gray-400">Sale Price</div>
+                          <div className="text-base font-black text-blue-400">{formatPrice(vehicle.price)}</div>
+                        </div>
+                        {vehicle.payment && (
+                          <div>
+                            <div className="text-xs text-gray-400">Monthly</div>
+                            <div className="text-base font-black text-green-400">{formatPayment(vehicle.payment)}</div>
+                          </div>
+                        )}
+                        {vehicle.downPayment !== undefined && (
+                          <div>
+                            <div className="text-xs text-gray-400">Down</div>
+                            <div className="text-base font-black text-yellow-400">
+                              {vehicle.downPayment === 0 ? '$0' : formatPrice(vehicle.downPayment)}
+                            </div>
+                          </div>
+                        )}
+                        {vehicle.loanTermMonths && (
+                          <div>
+                            <div className="text-xs text-gray-400">Term</div>
+                            <div className="text-base font-black text-purple-400">{vehicle.loanTermMonths}mo</div>
+                          </div>
+                        )}
+                        {vehicle.ltv && (
+                          <div>
+                            <div className="text-xs text-gray-400">LTV</div>
+                            <div className="text-base font-black text-red-400">{formatPercentage(vehicle.ltv)}</div>
+                          </div>
+                        )}
+                        {vehicle.amountFinanced && (
+                          <div>
+                            <div className="text-xs text-gray-400">Financed</div>
+                            <div className="text-base font-black text-cyan-400">{formatPrice(vehicle.amountFinanced)}</div>
+                          </div>
+                        )}
+                        {vehicle.profit && (
+                          <div>
+                            <div className="text-xs text-gray-400">Profit</div>
+                            <div className="text-base font-black text-emerald-400">{formatPrice(vehicle.profit)}</div>
+                          </div>
+                        )}
+                        {vehicle.interestRate && (
+                          <div>
+                            <div className="text-xs text-gray-400">APR</div>
+                            <div className="text-base font-black text-orange-400">{formatPercentage(vehicle.interestRate)}</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Bottom Row - Additional Info */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                  {/* Inventory Age */}
+                  {vehicle.ageDays !== undefined && (
+                    <div className="flex items-center gap-2 p-3 bg-black/30 rounded-lg border border-white/10">
+                      <Calendar className="w-4 h-4 text-blue-400" />
                       <div>
-                        <div className="text-xs text-gray-400 mb-1">Down Payment</div>
-                        <div className="text-lg font-black text-yellow-400">
-                          {vehicle.downPayment === 0 ? '$0' : formatPrice(vehicle.downPayment)}
+                        <div className="text-sm font-semibold text-white">
+                          {vehicle.ageDays} days on lot
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {vehicle.ageDays <= 30 ? 'Fresh Inventory' : 
+                           vehicle.ageDays <= 60 ? 'Recent Arrival' :
+                           vehicle.ageDays <= 90 ? 'Available Now' : 'Priced to Move'}
                         </div>
                       </div>
-                    )}
-                    {vehicle.loanTermMonths && (
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Loan Term</div>
-                        <div className="text-lg font-black text-purple-400">{vehicle.loanTermMonths} months</div>
-                      </div>
-                    )}
-                    {vehicle.interestRate && (
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Interest Rate</div>
-                        <div className="text-lg font-black text-orange-400">{formatPercentage(vehicle.interestRate)}</div>
-                      </div>
-                    )}
-                    {vehicle.ltv && (
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Loan to Value</div>
-                        <div className="text-lg font-black text-red-400">{formatPercentage(vehicle.ltv)}</div>
-                      </div>
-                    )}
-                    {vehicle.taxRate && (
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Tax Rate</div>
-                        <div className="text-lg font-black text-indigo-400">{formatPercentage(vehicle.taxRate)}</div>
-                      </div>
-                    )}
-                    {vehicle.amountFinanced && (
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Amount Financed</div>
-                        <div className="text-lg font-black text-cyan-400">{formatPrice(vehicle.amountFinanced)}</div>
-                      </div>
-                    )}
-                    {vehicle.profit && (
-                      <div>
-                        <div className="text-xs text-gray-400 mb-1">Dealer Profit</div>
-                        <div className="text-lg font-black text-emerald-400">{formatPrice(vehicle.profit)}</div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Vehicle Age Information */}
-              {vehicle.ageDays !== undefined && (
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-3">Inventory Information</h3>
-                  <div className="flex items-center gap-3 p-4 bg-black/30 rounded-lg border border-white/10">
-                    <Calendar className="w-5 h-5 text-blue-400" />
-                    <div>
-                      <div className="text-sm font-semibold text-white">
-                        {vehicle.ageDays} days on lot
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        {vehicle.ageDays <= 30 ? 'Fresh Inventory' : 
-                         vehicle.ageDays <= 60 ? 'Recent Arrival' :
-                         vehicle.ageDays <= 90 ? 'Available Now' : 'Priced to Move'}
+                    </div>
+                  )}
+                  
+                  {/* Dealer */}
+                  {vehicle.dealer && (
+                    <div className="flex items-center gap-2 p-3 bg-black/30 rounded-lg border border-white/10">
+                      <MapPin className="w-4 h-4 text-gray-400" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-white truncate">{vehicle.dealer}</div>
+                        <div className="text-xs text-gray-400">Authorized Dealer</div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-              )}
-              
-              {/* Dealer Information */}
-              {vehicle.dealer && (
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-3">Dealership Information</h3>
-                  <div className="flex items-center gap-3 p-4 bg-black/30 rounded-lg border border-white/10">
-                    <MapPin className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <div className="text-sm font-semibold text-white">{vehicle.dealer}</div>
-                      <div className="text-xs text-gray-400">Authorized Dealer</div>
-                    </div>
-                  </div>
+                
+                {/* Action Buttons - Compact */}
+                <div className="flex gap-3 pt-2">
+                  <button
+                    onClick={handleViewDetails}
+                    disabled={!vehicle["Vehicle Link"]}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    <span>View on Dealer Website</span>
+                    <ExternalLink className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg transition-all duration-300 border border-white/10"
+                  >
+                    Close
+                  </button>
                 </div>
-              )}
-              
-              {/* Action Buttons */}
-              <div className="flex gap-4 pt-4">
-                <button
-                  onClick={handleViewDetails}
-                  disabled={!vehicle["Vehicle Link"]}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  <span>View on Dealer Website</span>
-                  <ExternalLink className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg transition-all duration-300 border border-white/10"
-                >
-                  Close
-                </button>
               </div>
             </div>
           </div>
