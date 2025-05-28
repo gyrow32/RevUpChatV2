@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import VehicleCard from './VehicleCard';
 import type { VehicleData } from '@/types';
@@ -13,9 +13,50 @@ interface VehicleBlockProps {
 
 export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const vehiclesPerPage = 3;
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Responsive: detect mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const vehiclesPerPage = isMobile ? 1 : 3;
   const totalPages = Math.ceil(vehicles.length / vehiclesPerPage);
   
+  // Handle touch events for swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50; // minimum distance for swipe
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && currentIndex < vehicles.length - vehiclesPerPage) {
+      goToNext();
+    }
+    if (isRightSwipe && currentIndex > 0) {
+      goToPrevious();
+    }
+
+    // Reset touch positions
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
   if (!vehicles || vehicles.length === 0) {
     return (
       <div className={cn(
@@ -32,18 +73,23 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   }
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % totalPages);
+    setCurrentIndex((prev) => Math.min(prev + 1, vehicles.length - vehiclesPerPage));
   };
 
+  // For mobile, show only one card at a time, for desktop, show 3
   const getCurrentVehicles = () => {
-    const start = currentIndex * vehiclesPerPage;
+    const start = currentIndex;
     const end = start + vehiclesPerPage;
     return vehicles.slice(start, end);
   };
+
+  // Calculate carousel width
+  const cardWidth = 280 + 16; // card width + gap
+  const carouselWidth = isMobile ? cardWidth : cardWidth * 3;
 
   return (
     <div className={cn("relative space-y-6", className)}>
@@ -57,79 +103,69 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
             <h4 className="font-black text-xl text-white leading-tight drop-shadow-lg">
               Found {vehicles.length} Premium Vehicle{vehicles.length !== 1 ? 's' : ''}
             </h4>
-            <p className="text-sm font-semibold text-blue-300 leading-tight">
-              Displaying {Math.min(vehicles.length, vehiclesPerPage)} of {vehicles.length} • Page {currentIndex + 1} of {totalPages}
-            </p>
           </div>
         </div>
         
         {/* Page indicator with black glass */}
         {totalPages > 1 && (
-            <div className="px-4 py-2 bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
-              <span className="text-sm font-bold text-white">
-                {currentIndex + 1}
-              </span>
-              <span className="text-gray-300 mx-2">of</span>
-              <span className="text-sm font-bold text-white">
-                {totalPages}
-              </span>
-            </div>
+          <div className="px-4 py-2 bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
+            <span className="text-sm font-bold text-white">
+              {currentIndex + 1}
+            </span>
+            <span className="text-gray-300 mx-2">of</span>
+            <span className="text-sm font-bold text-white">
+              {totalPages}
+            </span>
+          </div>
         )}
       </div>
 
       {/* Premium Black Glass Carousel */}
       <div className="relative flex items-center p-6 bg-black/10 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl shadow-black/30">
         {/* Left Arrow with Glass Effect */}
-        {totalPages > 1 && (
+        {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToPrevious}
             className="absolute left-2 z-10 p-3 rounded-full bg-black/40 backdrop-blur-md shadow-xl hover:bg-black/60 border border-white/10 hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
-            disabled={totalPages <= 1}
+            disabled={currentIndex === 0}
             aria-label="Previous Vehicles"
           >
             <ChevronLeft className="w-6 h-6 text-white group-hover:text-blue-400 transition-colors drop-shadow-lg" />
           </button>
         )}
 
-        <div className="relative overflow-hidden" style={{ width: '872px', margin: '0 auto' }}>
+        <div 
+          ref={carouselRef}
+          className="relative overflow-hidden touch-pan-x" 
+          style={{ width: `${carouselWidth}px`, margin: '0 auto' }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div 
             className="flex transition-transform duration-700 ease-out gap-4 items-stretch min-h-[360px]"
             style={{ 
-              transform: `translateX(-${currentIndex * 872}px)`
+              transform: `translateX(-${currentIndex * (cardWidth)}px)`
             }}
           >
-            {/* Render vehicles in pages */}
-            {Array.from({ length: totalPages }, (_, pageIndex) => {
-              const start = pageIndex * vehiclesPerPage;
-              const end = start + vehiclesPerPage;
-              const pageVehicles = vehicles.slice(start, end);
-              
-              return (
-                <div 
-                  key={`page-${pageIndex}`}
-                  className="flex gap-4 flex-shrink-0"
-                  style={{ width: '872px' }}
-                >
-                  {pageVehicles.map((vehicle, vehicleIndex) => (
-                    <div 
-                      key={`${vehicle.id || vehicle.stock || start + vehicleIndex}`}
-                      className="flex-shrink-0"
-                    >
-                      <VehicleCard vehicle={vehicle} />
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
+            {vehicles.map((vehicle, vehicleIndex) => (
+              <div 
+                key={`${vehicle.id || vehicle.stock || vehicleIndex}`}
+                className="flex-shrink-0"
+                style={{ width: '280px' }}
+              >
+                <VehicleCard vehicle={vehicle} />
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Right Arrow with Glass Effect */}
-        {totalPages > 1 && (
+        {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToNext}
             className="absolute right-2 z-10 p-3 rounded-full bg-black/40 backdrop-blur-md shadow-xl hover:bg-black/60 border border-white/10 hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
-            disabled={totalPages <= 1}
+            disabled={currentIndex >= vehicles.length - vehiclesPerPage}
             aria-label="Next Vehicles"
           >
             <ChevronRight className="w-6 h-6 text-white group-hover:text-blue-400 transition-colors drop-shadow-lg" />
@@ -138,9 +174,9 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
       </div>
 
       {/* Premium Black Glass Page Indicators */}
-      {totalPages > 1 && (
+      {vehicles.length > vehiclesPerPage && (
         <div className="flex justify-center items-center gap-3 pt-4">
-          {Array.from({ length: totalPages }, (_, index) => (
+          {Array.from({ length: vehicles.length - vehiclesPerPage + 1 }, (_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
@@ -150,7 +186,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
                   ? "bg-blue-600/70 border-blue-400/50 w-8 h-3 shadow-lg shadow-blue-500/25" 
                   : "bg-black/30 border-white/20 hover:bg-black/50 hover:border-white/30 w-3 h-3"
               )}
-              aria-label={`Go to page ${index + 1}`}
+              aria-label={`Go to card ${index + 1}`}
             />
           ))}
         </div>
