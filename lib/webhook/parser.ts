@@ -1,8 +1,54 @@
 import type { ParsedResponse, VehicleData, Block } from '@/types';
 
+// Parse markdown gallery format
+function parseMarkdownGallery(content: string): VehicleData[] {
+  const vehicles: VehicleData[] = [];
+  const vehicleBlocks = content.split(/\d+\.\s+\*\*/);
+
+  vehicleBlocks.slice(1).forEach(block => {
+    const titleMatch = block.match(/([^*]+)\*\*/);
+    if (!titleMatch) return;
+
+    const title = titleMatch[1].trim();
+    const [year, make, model] = title.split(' ');
+    
+    // Extract image URLs
+    const imageUrls = block.match(/!\[Image\]\((https?:\/\/[^\s)]+)\)/g)?.map(url => {
+      return url.match(/\((https?:\/\/[^\s)]+)\)/)?.[1] || '';
+    }) || [];
+
+    if (imageUrls.length > 0) {
+      vehicles.push({
+        id: `vehicle-${Date.now()}-${vehicles.length}`,
+        year: parseInt(year) || 0,
+        make: make || '',
+        model: model || '',
+        image: imageUrls[0],
+        "Image URLs": imageUrls,
+        price: 0
+      });
+    }
+  });
+
+  return vehicles;
+}
+
 export function parseWebhookResponse(response: { output: string }): ParsedResponse {
   try {
     console.log('Raw webhook response:', response.output);
+    
+    // Check for markdown gallery format first
+    if (response.output.includes('Here is a gallery') || response.output.includes('Here are')) {
+      const vehicles = parseMarkdownGallery(response.output);
+      if (vehicles.length > 0) {
+        return {
+          blocks: [{
+            type: 'gallery',
+            vehicles
+          }]
+        };
+      }
+    }
     
     // Handle mixed content (markdown with embedded JSON)
     const jsonMatch = response.output.match(/```json\s*({[\s\S]*?})\s*```/);
