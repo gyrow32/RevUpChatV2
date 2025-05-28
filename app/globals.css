@@ -42,8 +42,8 @@ body {
 
 /* Mobile-first touch targets */
 .touch-target {
-  min-height: 44px;
   min-width: 44px;
+  min-height: 44px;
 }
 
 /* Mobile-first smooth scrolling */
@@ -243,4 +243,13 @@ body {
   button:active {
     transform: scale(0.98);
   }
+}
+
+/* Hide scrollbar for thumbnail strip */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }
