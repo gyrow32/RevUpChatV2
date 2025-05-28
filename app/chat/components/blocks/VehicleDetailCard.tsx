@@ -25,9 +25,9 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-1 bg-black/90 backdrop-blur-xl" onClick={onClose}>
       <div
-        className="relative w-full max-w-md mx-auto overflow-y-auto h-[calc(100vh-6rem)] bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-black/50 border border-white/10 overflow-hidden"
+        className="relative w-full max-w-xs mx-auto max-h-[95vh] overflow-y-auto bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl rounded-lg shadow-2xl shadow-black/50 border border-white/10 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -40,7 +40,7 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
 
         {/* Hero Image */}
         <div className="relative cursor-zoom-in">
-          <div className="aspect-[4/3] w-full bg-black overflow-hidden">
+          <div className="aspect-[2/1] w-full bg-black overflow-hidden">
             {hasImage ? (
               <img
                 src={allImages[currentImageIndex]}
@@ -110,21 +110,21 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
           )}
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="p-2 space-y-2">
           {/* Title */}
           <div>
-            <h1 className="text-xl font-black text-white mb-1">
+            <h1 className="text-base font-black text-white mb-1">
               {vehicle.year} {vehicle.make} {vehicle.model}
             </h1>
             {vehicle.trim && (
               <p className="text-xs font-semibold text-gray-300">{vehicle.trim}</p>
             )}
             <div className="flex items-baseline gap-2 mt-1 flex-wrap">
-              <span className="text-lg font-black text-blue-400">
+              <span className="text-sm font-black text-blue-400">
                 {formatPrice(vehicle.price)}
               </span>
               {vehicle.payment && (
-                <span className="text-lg font-semibold text-green-400">
+                <span className="text-sm font-semibold text-green-400">
                   {formatPayment(vehicle.payment)}/mo
                 </span>
               )}
@@ -132,7 +132,7 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
           </div>
 
           {/* Financing Grid */}
-          <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-xl p-3 border border-white/10 shadow-xl">
+          <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-lg p-2 border border-white/10 shadow-xl">
             <h2 className="text-xs font-bold text-white mb-2 flex items-center gap-1">
               <DollarSign className="w-3 h-3 text-blue-400" />
               Financing
@@ -202,37 +202,29 @@ export default function VehicleDetailCard({ vehicle, onClose }: VehicleDetailCar
                 <div className="text-xs font-bold text-white">{formatMileage(vehicle.mileage)}</div>
               </div>
             )}
-            {vehicle.ageDays !== undefined && (
-              <div className="bg-gradient-to-br from-orange-900/30 to-orange-900/10 backdrop-blur-md rounded-lg p-2 border border-orange-500/20">
+            {vehicle.year && (
+              <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-900/10 backdrop-blur-md rounded-lg p-2 border border-yellow-500/20">
                 <div className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-orange-400" />
-                  <span className="text-xs text-orange-300 font-medium">Age</span>
+                  <Calendar className="w-3 h-3 text-yellow-400" />
+                  <span className="text-xs text-yellow-300 font-medium">Year</span>
                 </div>
-                <div className="text-xs font-bold text-white">{vehicle.ageDays} days</div>
+                <div className="text-xs font-bold text-white">{vehicle.year}</div>
               </div>
             )}
-
-          {/* CTA */}
-          <div className="lg:col-span-2 flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={() => {
-                if (vehicle["Vehicle Link"]) {
-                  window.open(vehicle["Vehicle Link"], '_blank', 'noopener,noreferrer');
-                }
-              }}
-              disabled={!vehicle["Vehicle Link"]}
-              className="flex-1 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xl shadow-blue-500/25"
-            >
-              <span className="text-sm">View on Dealer Site ↗</span>
-              <ExternalLink className="w-4 h-4" />
-            </button>
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-800/80 backdrop-blur hover:bg-gray-700/80 text-white font-bold text-sm rounded-xl transition-all duration-300 border border-white/10 hover:border-white/20"
-            >
-              Close
-            </button>
           </div>
+
+          {/* External Link */}
+          {vehicle["Vehicle Link"] && (
+            <a
+              href={vehicle["Vehicle Link"]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full p-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all duration-300 group"
+            >
+              <span className="font-semibold text-sm">View Full Details</span>
+              <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </a>
+          )}
         </div>
 
         <div className="absolute top-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
