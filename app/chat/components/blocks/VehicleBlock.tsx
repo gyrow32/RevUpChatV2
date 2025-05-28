@@ -88,7 +88,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   };
 
   // Calculate carousel width
-  const cardWidth = 280 + 16; // card width + gap
+  const cardWidth = 308 + 16; // card width (increased by 10%) + gap
   const carouselWidth = isMobile ? cardWidth : cardWidth * 3;
 
   return (
@@ -152,7 +152,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
               <div 
                 key={`${vehicle.id || vehicle.stock || vehicleIndex}`}
                 className="flex-shrink-0"
-                style={{ width: '280px' }}
+                style={{ width: '308px' }}
               >
                 <VehicleCard vehicle={vehicle} />
               </div>
