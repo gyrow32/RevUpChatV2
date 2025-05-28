@@ -25,13 +25,21 @@ export default function Message({
   const isError = message.status === 'error';
   const isSending = message.status === 'sending';
   
-  // Check if this message contains vehicle galleries that need full width
-  const hasVehicleGallery = !isUser && message.content && 
-    typeof message.content === 'object' && 
-    'blocks' in message.content &&
-    (message.content as ParsedResponse).blocks?.some(block => 
-      block.type === 'gallery' || block.type === 'hybrid'
-    );
+  // Check if this message contains blocks that should span nearly full width
+  const parsedBlocks = !isUser && message.content &&
+    typeof message.content === 'object' &&
+    'blocks' in message.content
+      ? (message.content as ParsedResponse).blocks
+      : undefined;
+
+  const hasVehicleGallery = parsedBlocks?.some(
+    block => block.type === 'gallery' || block.type === 'hybrid'
+  );
+
+  const hasTable = parsedBlocks?.some(block => block.type === 'table');
+
+  // Any block type that should use more width
+  const hasWideContent = hasVehicleGallery || hasTable;
   
   const renderContent = () => {
     if (isUser) {
@@ -131,13 +139,13 @@ export default function Message({
       )}
     >
       <div className={cn(
-        // Only constrain width for non-vehicle-gallery messages
-        !hasVehicleGallery && "max-w-[85%] md:max-w-[75%] lg:max-w-[65%]",
-        // Vehicle galleries get nearly full width with just small margins
-        hasVehicleGallery && "w-full max-w-[95%]",
+        // Only constrain width for standard text messages
+        !hasWideContent && "max-w-[85%] md:max-w-[75%] lg:max-w-[65%]",
+        // Wide content like galleries and tables get extra width
+        hasWideContent && "w-full max-w-[95%]",
         "shadow-lg rounded-2xl backdrop-blur-sm",
-        isUser 
-          ? "bg-blue-600/70 text-white rounded-br-md border border-blue-400/30" 
+        isUser
+          ? "bg-blue-600/70 text-white rounded-br-md border border-blue-400/30"
           : "bg-black/30 border border-white/10 rounded-bl-md",
         isError && "border-red-400/50 bg-red-500/20"
       )}>
