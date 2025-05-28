@@ -328,21 +328,21 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl" onClick={() => setShowModal(false)}>
           <div 
-            className="relative max-w-6xl w-full max-h-[95vh] bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/50 border border-white/10 overflow-hidden"
+            className="relative max-w-4xl w-full max-h-[90vh] bg-gradient-to-b from-gray-900/95 via-gray-900/98 to-black/95 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-black/50 border border-white/10 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Premium Close Button */}
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-6 right-6 z-20 p-3 bg-black/60 backdrop-blur-xl rounded-2xl border border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 group"
+              className="absolute top-3 right-3 z-20 p-2 bg-black/60 backdrop-blur-xl rounded-xl border border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 group"
             >
-              <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+              <X className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
             </button>
             
             {/* Top Image Carousel with Thumbnails */}
             <div className="relative">
               {/* Main Image Display */}
-              <div className="relative h-[400px] lg:h-[500px] w-full bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden">
+              <div className="relative h-[200px] lg:h-[250px] w-full bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden">
                 {allImages.length > 0 ? (
                   <>
                     <img
@@ -364,40 +364,40 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
                       <>
                         <button
                           onClick={prevImage}
-                          className="absolute left-6 top-1/2 -translate-y-1/2 p-4 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
                         >
-                          <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+                          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
                         </button>
                         <button
                           onClick={nextImage}
-                          className="absolute right-6 top-1/2 -translate-y-1/2 p-4 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 group"
                         >
-                          <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                          <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                         </button>
                       </>
                     )}
                   </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
-                    <Car className="w-24 h-24 text-gray-600" />
+                    <Car className="w-12 h-12 text-gray-600" />
                   </div>
                 )}
                 
                 {/* Vehicle Title Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 via-black/70 to-transparent">
-                  <div className="max-w-4xl">
-                    <h1 className="text-4xl lg:text-5xl font-black text-white mb-2 drop-shadow-2xl">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/70 to-transparent">
+                  <div className="max-w-3xl">
+                    <h1 className="text-2xl lg:text-3xl font-black text-white mb-1 drop-shadow-xl">
                       {vehicle.year} {vehicle.make} {vehicle.model}
                     </h1>
                     {vehicle.trim && (
-                      <p className="text-xl lg:text-2xl font-semibold text-gray-300 drop-shadow-lg">{vehicle.trim}</p>
+                      <p className="text-sm lg:text-base font-semibold text-gray-300 drop-shadow-lg">{vehicle.trim}</p>
                     )}
-                    <div className="flex items-baseline gap-4 mt-4 flex-wrap">
-                      <span className="text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-lg">
+                    <div className="flex items-baseline gap-3 mt-2 flex-wrap">
+                      <span className="text-xl lg:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-lg">
                         {formatPrice(vehicle.price)}
                       </span>
                       {vehicle.payment && (
-                        <span className="text-xl lg:text-2xl font-bold text-green-400 drop-shadow-lg">
+                        <span className="text-base lg:text-lg font-bold text-green-400 drop-shadow-lg">
                           {formatPayment(vehicle.payment)}/mo
                         </span>
                       )}
@@ -409,13 +409,13 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               {/* Thumbnail Strip */}
               {allImages.length > 1 && (
                 <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10">
-                  <div className="flex gap-2 p-3 overflow-x-auto scrollbar-hide">
+                  <div className="flex gap-1 p-2 overflow-x-auto scrollbar-hide">
                     {allImages.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
                         className={cn(
-                          "relative flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300",
+                          "relative flex-shrink-0 w-12 h-10 rounded overflow-hidden border transition-all duration-300",
                           currentImageIndex === index
                             ? "border-blue-400 scale-110 shadow-lg shadow-blue-500/50"
                             : "border-white/20 hover:border-white/40 opacity-70 hover:opacity-100"
@@ -441,57 +441,57 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
             </div>
             
             {/* Premium Content Section */}
-            <div className="p-6 lg:p-8 space-y-6 max-h-[calc(95vh-500px)] overflow-y-auto">
+            <div className="p-4 lg:p-5 space-y-4 max-h-[calc(90vh-250px)] overflow-y-auto">
               {/* Quick Info Cards */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                 {(vehicle.vin || vehicle.id) && (
-                  <div className="bg-gradient-to-br from-blue-900/30 to-blue-900/10 backdrop-blur-md rounded-2xl p-4 border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 hover:scale-105">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-500/20 rounded-xl">
-                        <Hash className="w-5 h-5 text-blue-400" />
+                  <div className="bg-gradient-to-br from-blue-900/30 to-blue-900/10 backdrop-blur-md rounded-lg p-2 border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1 bg-blue-500/20 rounded">
+                        <Hash className="w-3 h-3 text-blue-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs text-blue-300 font-medium uppercase tracking-wider">VIN</div>
-                        <div className="text-sm font-mono text-white truncate">{vehicle.vin || vehicle.id}</div>
+                        <div className="text-xs text-blue-300 font-medium">VIN</div>
+                        <div className="text-xs font-mono text-white truncate">{vehicle.vin || vehicle.id}</div>
                       </div>
                     </div>
                   </div>
                 )}
                 {vehicle.stock && (
-                  <div className="bg-gradient-to-br from-green-900/30 to-green-900/10 backdrop-blur-md rounded-2xl p-4 border border-green-500/20 hover:border-green-400/40 transition-all duration-300 hover:scale-105">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-green-500/20 rounded-xl">
-                        <FileText className="w-5 h-5 text-green-400" />
+                  <div className="bg-gradient-to-br from-green-900/30 to-green-900/10 backdrop-blur-md rounded-lg p-2 border border-green-500/20 hover:border-green-400/40 transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1 bg-green-500/20 rounded">
+                        <FileText className="w-3 h-3 text-green-400" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-xs text-green-300 font-medium uppercase tracking-wider">Stock</div>
-                        <div className="text-sm font-bold text-white">#{vehicle.stock}</div>
+                        <div className="text-xs text-green-300 font-medium">Stock</div>
+                        <div className="text-xs font-bold text-white">#{vehicle.stock}</div>
                       </div>
                     </div>
                   </div>
                 )}
                 {vehicle.mileage && (
-                  <div className="bg-gradient-to-br from-purple-900/30 to-purple-900/10 backdrop-blur-md rounded-2xl p-4 border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:scale-105">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-purple-500/20 rounded-xl">
-                        <Gauge className="w-5 h-5 text-purple-400" />
+                  <div className="bg-gradient-to-br from-purple-900/30 to-purple-900/10 backdrop-blur-md rounded-lg p-2 border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1 bg-purple-500/20 rounded">
+                        <Gauge className="w-3 h-3 text-purple-400" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-xs text-purple-300 font-medium uppercase tracking-wider">Mileage</div>
-                        <div className="text-sm font-bold text-white">{formatMileage(vehicle.mileage)}</div>
+                        <div className="text-xs text-purple-300 font-medium">Mileage</div>
+                        <div className="text-xs font-bold text-white">{formatMileage(vehicle.mileage)}</div>
                       </div>
                     </div>
                   </div>
                 )}
                 {vehicle.ageDays !== undefined && (
-                  <div className="bg-gradient-to-br from-orange-900/30 to-orange-900/10 backdrop-blur-md rounded-2xl p-4 border border-orange-500/20 hover:border-orange-400/40 transition-all duration-300 hover:scale-105">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-orange-500/20 rounded-xl">
-                        <Calendar className="w-5 h-5 text-orange-400" />
+                  <div className="bg-gradient-to-br from-orange-900/30 to-orange-900/10 backdrop-blur-md rounded-lg p-2 border border-orange-500/20 hover:border-orange-400/40 transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1 bg-orange-500/20 rounded">
+                        <Calendar className="w-3 h-3 text-orange-400" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-xs text-orange-300 font-medium uppercase tracking-wider">Age</div>
-                        <div className="text-sm font-bold text-white">{vehicle.ageDays} days</div>
+                        <div className="text-xs text-orange-300 font-medium">Age</div>
+                        <div className="text-xs font-bold text-white">{vehicle.ageDays} days</div>
                       </div>
                     </div>
                   </div>
@@ -499,73 +499,73 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               </div>
               
               {/* Financing Section - Premium Card Design */}
-              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-3xl p-6 border border-white/10 shadow-xl">
-                <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl">
-                    <DollarSign className="w-6 h-6 text-blue-400" />
+              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-xl p-3 border border-white/10 shadow-xl">
+                <h2 className="text-base font-black text-white mb-3 flex items-center gap-2">
+                  <div className="p-1 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded">
+                    <DollarSign className="w-4 h-4 text-blue-400" />
                   </div>
                   Complete Financing Details
                 </h2>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                   {/* Each financial metric as a premium card */}
-                  <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                    <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Sale Price</div>
-                    <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-300">
+                  <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                    <div className="text-xs text-gray-400 font-medium mb-1">Sale Price</div>
+                    <div className="text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-300">
                       {formatPrice(vehicle.price)}
                     </div>
                   </div>
                   {vehicle.payment && (
-                    <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Monthly</div>
-                      <div className="text-2xl font-black text-green-400">
+                    <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                      <div className="text-xs text-gray-400 font-medium mb-1">Monthly</div>
+                      <div className="text-base font-black text-green-400">
                         {formatPayment(vehicle.payment)}
                       </div>
                     </div>
                   )}
                   {vehicle.downPayment !== undefined && (
-                    <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Down Payment</div>
-                      <div className="text-2xl font-black text-yellow-400">
+                    <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                      <div className="text-xs text-gray-400 font-medium mb-1">Down</div>
+                      <div className="text-base font-black text-yellow-400">
                         {vehicle.downPayment === 0 ? '$0' : formatPrice(vehicle.downPayment)}
                       </div>
                     </div>
                   )}
                   {vehicle.loanTermMonths && (
-                    <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Term</div>
-                      <div className="text-2xl font-black text-purple-400">
-                        {vehicle.loanTermMonths}<span className="text-base font-semibold text-purple-300">mo</span>
+                    <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                      <div className="text-xs text-gray-400 font-medium mb-1">Term</div>
+                      <div className="text-base font-black text-purple-400">
+                        {vehicle.loanTermMonths}<span className="text-sm font-semibold text-purple-300">mo</span>
                       </div>
                     </div>
                   )}
                   {vehicle.ltv && (
-                    <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">LTV</div>
-                      <div className="text-2xl font-black text-red-400">
+                    <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                      <div className="text-xs text-gray-400 font-medium mb-1">LTV</div>
+                      <div className="text-base font-black text-red-400">
                         {formatPercentage(vehicle.ltv)}
                       </div>
                     </div>
                   )}
                   {vehicle.amountFinanced && (
-                    <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Financed</div>
-                      <div className="text-2xl font-black text-cyan-400">
+                    <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                      <div className="text-xs text-gray-400 font-medium mb-1">Financed</div>
+                      <div className="text-base font-black text-cyan-400">
                         {formatPrice(vehicle.amountFinanced)}
                       </div>
                     </div>
                   )}
                   {vehicle.profit && (
-                    <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Profit</div>
-                      <div className="text-2xl font-black text-emerald-400">
+                    <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                      <div className="text-xs text-gray-400 font-medium mb-1">Profit</div>
+                      <div className="text-base font-black text-emerald-400">
                         {formatPrice(vehicle.profit)}
                       </div>
                     </div>
                   )}
                   {vehicle.interestRate && (
-                    <div className="bg-black/40 backdrop-blur rounded-2xl p-4 border border-white/5 hover:border-white/20 transition-all duration-300">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">APR</div>
-                      <div className="text-2xl font-black text-orange-400">
+                    <div className="bg-black/40 backdrop-blur rounded-lg p-2 border border-white/5 hover:border-white/20 transition-all duration-300">
+                      <div className="text-xs text-gray-400 font-medium mb-1">APR</div>
+                      <div className="text-base font-black text-orange-400">
                         {formatPercentage(vehicle.interestRate)}
                       </div>
                     </div>
@@ -575,42 +575,42 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               
               {/* Specifications Grid */}
               {(vehicle.fuel || vehicle.drivetrain || vehicle.bodyStyle) && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
                   {vehicle.fuel && (
-                    <div className="bg-gradient-to-br from-green-900/20 to-transparent backdrop-blur-md rounded-2xl p-5 border border-green-500/20 hover:border-green-400/40 transition-all duration-300 group">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-green-500/20 rounded-2xl group-hover:scale-110 transition-transform">
-                          <Fuel className="w-6 h-6 text-green-400" />
+                    <div className="bg-gradient-to-br from-green-900/20 to-transparent backdrop-blur-md rounded-lg p-3 border border-green-500/20 hover:border-green-400/40 transition-all duration-300 group">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-green-500/20 rounded-lg group-hover:scale-110 transition-transform">
+                          <Fuel className="w-4 h-4 text-green-400" />
                         </div>
                         <div>
-                          <div className="text-xs text-green-300 font-medium uppercase tracking-wider">Fuel Type</div>
-                          <div className="text-lg font-bold text-white">{vehicle.fuel}</div>
+                          <div className="text-xs text-green-300 font-medium">Fuel Type</div>
+                          <div className="text-sm font-bold text-white">{vehicle.fuel}</div>
                         </div>
                       </div>
                     </div>
                   )}
                   {vehicle.drivetrain && (
-                    <div className="bg-gradient-to-br from-purple-900/20 to-transparent backdrop-blur-md rounded-2xl p-5 border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 group">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-purple-500/20 rounded-2xl group-hover:scale-110 transition-transform">
-                          <Settings className="w-6 h-6 text-purple-400" />
+                    <div className="bg-gradient-to-br from-purple-900/20 to-transparent backdrop-blur-md rounded-lg p-3 border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 group">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-purple-500/20 rounded-lg group-hover:scale-110 transition-transform">
+                          <Settings className="w-4 h-4 text-purple-400" />
                         </div>
                         <div>
-                          <div className="text-xs text-purple-300 font-medium uppercase tracking-wider">Drivetrain</div>
-                          <div className="text-lg font-bold text-white">{vehicle.drivetrain}</div>
+                          <div className="text-xs text-purple-300 font-medium">Drivetrain</div>
+                          <div className="text-sm font-bold text-white">{vehicle.drivetrain}</div>
                         </div>
                       </div>
                     </div>
                   )}
                   {vehicle.bodyStyle && (
-                    <div className="bg-gradient-to-br from-orange-900/20 to-transparent backdrop-blur-md rounded-2xl p-5 border border-orange-500/20 hover:border-orange-400/40 transition-all duration-300 group">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-orange-500/20 rounded-2xl group-hover:scale-110 transition-transform">
-                          <Car className="w-6 h-6 text-orange-400" />
+                    <div className="bg-gradient-to-br from-orange-900/20 to-transparent backdrop-blur-md rounded-lg p-3 border border-orange-500/20 hover:border-orange-400/40 transition-all duration-300 group">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-orange-500/20 rounded-lg group-hover:scale-110 transition-transform">
+                          <Car className="w-4 h-4 text-orange-400" />
                         </div>
                         <div>
-                          <div className="text-xs text-orange-300 font-medium uppercase tracking-wider">Body Style</div>
-                          <div className="text-lg font-bold text-white">{vehicle.bodyStyle}</div>
+                          <div className="text-xs text-orange-300 font-medium">Body Style</div>
+                          <div className="text-sm font-bold text-white">{vehicle.bodyStyle}</div>
                         </div>
                       </div>
                     </div>
@@ -620,32 +620,32 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
               
               {/* Dealer Information */}
               {vehicle.dealer && (
-                <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-white/20 transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-gray-700/30 rounded-2xl">
-                      <MapPin className="w-6 h-6 text-gray-400" />
+                <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-md rounded-lg p-3 border border-white/10 hover:border-white/20 transition-all duration-300">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-gray-700/30 rounded-lg">
+                      <MapPin className="w-4 h-4 text-gray-400" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-xs text-gray-400 font-medium uppercase tracking-wider">Dealership</div>
-                      <div className="text-lg font-bold text-white">{vehicle.dealer}</div>
+                      <div className="text-xs text-gray-400 font-medium">Dealership</div>
+                      <div className="text-sm font-bold text-white">{vehicle.dealer}</div>
                     </div>
                   </div>
                 </div>
               )}
               
               {/* Premium Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button
                   onClick={handleViewDetails}
                   disabled={!vehicle["Vehicle Link"]}
-                  className="flex-1 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-blue-500/25 group"
+                  className="flex-1 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xl shadow-blue-500/25 group"
                 >
-                  <span className="text-lg">View on Dealer Website</span>
-                  <ExternalLink className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  <span className="text-sm">View on Dealer Website</span>
+                  <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-8 py-4 bg-gray-800/80 backdrop-blur hover:bg-gray-700/80 text-white font-bold text-lg rounded-2xl transition-all duration-300 border border-white/10 hover:border-white/20 shadow-xl"
+                  className="px-4 py-2.5 bg-gray-800/80 backdrop-blur hover:bg-gray-700/80 text-white font-bold text-sm rounded-xl transition-all duration-300 border border-white/10 hover:border-white/20 shadow-xl"
                 >
                   Close
                 </button>
@@ -653,8 +653,8 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
             </div>
             
             {/* Decorative Elements */}
-            <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+            <div className="absolute top-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+            <div className="absolute bottom-0 right-0 w-48 h-48 bg-purple-500/10 rounded-full blur-2xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
           </div>
         </div>
       )}
