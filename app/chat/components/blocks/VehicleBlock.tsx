@@ -94,13 +94,13 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   return (
     <div className={cn("relative space-y-6", className)}>
       {/* Premium Black Glass Header */}
-      <div className="flex items-center justify-between p-4 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl shadow-black/30">
+      <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-white/10 shadow-2xl shadow-gray-200/50 dark:shadow-black/30">
         <div className="flex items-center gap-4">
-          <div className="p-2.5 bg-gradient-to-br from-blue-600/70 to-blue-700/70 backdrop-blur-sm rounded-2xl shadow-lg border border-blue-400/20">
+          <div className="p-2.5 bg-gradient-to-br from-blue-500/70 dark:from-blue-600/70 to-blue-600/70 dark:to-blue-700/70 backdrop-blur-sm rounded-2xl shadow-lg border border-blue-400/20">
             <span className="text-white text-xl">🚗</span>
           </div>
           <div>
-            <h4 className="font-black text-xl text-white leading-tight drop-shadow-lg">
+            <h4 className="font-black text-xl text-gray-900 dark:text-white leading-tight drop-shadow-lg">
               Found {vehicles.length} Premium Vehicle{vehicles.length !== 1 ? 's' : ''}
             </h4>
           </div>
@@ -108,12 +108,12 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
         
         {/* Page indicator with black glass */}
         {totalPages > 1 && (
-          <div className="px-4 py-2 bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
-            <span className="text-sm font-bold text-white">
+          <div className="px-4 py-2 bg-white/80 dark:bg-black/30 backdrop-blur-md rounded-2xl border border-gray-200/50 dark:border-white/10 shadow-lg">
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
               {currentIndex + 1}
             </span>
-            <span className="text-gray-300 mx-2">of</span>
-            <span className="text-sm font-bold text-white">
+            <span className="text-gray-600 dark:text-gray-300 mx-2">of</span>
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
               {totalPages}
             </span>
           </div>
@@ -121,16 +121,16 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
       </div>
 
       {/* Premium Black Glass Carousel */}
-      <div className="relative flex items-center p-6 bg-black/10 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl shadow-black/30">
+      <div className="relative flex items-center p-6 bg-white/80 dark:bg-black/10 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-white/5 shadow-2xl shadow-gray-200/50 dark:shadow-black/30">
         {/* Left Arrow with Glass Effect */}
         {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToPrevious}
-            className="absolute left-2 z-10 p-3 rounded-full bg-black/40 backdrop-blur-md shadow-xl hover:bg-black/60 border border-white/10 hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="absolute left-2 z-10 p-3 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-md shadow-xl hover:bg-white/90 dark:hover:bg-black/60 border border-gray-200/50 dark:border-white/10 hover:border-gray-300/50 dark:hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
             disabled={currentIndex === 0}
             aria-label="Previous Vehicles"
           >
-            <ChevronLeft className="w-6 h-6 text-white group-hover:text-blue-400 transition-colors drop-shadow-lg" />
+            <ChevronLeft className="w-6 h-6 text-gray-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-lg" />
           </button>
         )}
 
@@ -164,11 +164,11 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
         {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToNext}
-            className="absolute right-2 z-10 p-3 rounded-full bg-black/40 backdrop-blur-md shadow-xl hover:bg-black/60 border border-white/10 hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="absolute right-2 z-10 p-3 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-md shadow-xl hover:bg-white/90 dark:hover:bg-black/60 border border-gray-200/50 dark:border-white/10 hover:border-gray-300/50 dark:hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
             disabled={currentIndex >= vehicles.length - vehiclesPerPage}
             aria-label="Next Vehicles"
           >
-            <ChevronRight className="w-6 h-6 text-white group-hover:text-blue-400 transition-colors drop-shadow-lg" />
+            <ChevronRight className="w-6 h-6 text-gray-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-lg" />
           </button>
         )}
       </div>
@@ -183,8 +183,8 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
               className={cn(
                 "transition-all duration-300 rounded-full border backdrop-blur-sm",
                 index === currentIndex 
-                  ? "bg-blue-600/70 border-blue-400/50 w-8 h-3 shadow-lg shadow-blue-500/25" 
-                  : "bg-black/30 border-white/20 hover:bg-black/50 hover:border-white/30 w-3 h-3"
+                  ? "bg-blue-500/70 dark:bg-blue-600/70 border-blue-400/50 w-8 h-3 shadow-lg shadow-blue-500/25" 
+                  : "bg-white/80 dark:bg-black/30 border-gray-200/50 dark:border-white/20 hover:bg-white/90 dark:hover:bg-black/50 hover:border-gray-300/50 dark:hover:border-white/30 w-3 h-3"
               )}
               aria-label={`Go to card ${index + 1}`}
             />

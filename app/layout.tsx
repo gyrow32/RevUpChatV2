@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,13 +32,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#000000" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
-  ],
 };
 
 export default function RootLayout({
@@ -46,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="light">
       <head>
         <meta name="format-detection" content="telephone=no, address=no, email=no" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -55,9 +52,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="RevUpChat" />
         <meta name="application-name" content="RevUpChat" />
         <meta name="msapplication-TileColor" content="#000000" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
       </head>
-      <body className={inter.className}>
+      <body className={cn(
+        inter.className,
+        "bg-gray-50 dark:bg-black text-gray-900 dark:text-white"
+      )}>
         {children}
       </body>
     </html>
