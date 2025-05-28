@@ -146,7 +146,7 @@ export default function Message({
         "shadow-lg rounded-2xl backdrop-blur-sm",
         isUser
           ? "bg-blue-600/70 text-white rounded-br-md border border-blue-400/30"
-          : "bg-black/30 border border-white/10 rounded-bl-md",
+          : "bg-gray-100 dark:bg-black/30 border border-gray-200 dark:border-white/10 rounded-bl-md",
         isError && "border-red-400/50 bg-red-500/20"
       )}>
         <div className="p-5">

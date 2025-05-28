@@ -2,9 +2,9 @@ export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 md:p-24 relative">
       {/* Deep Black Background */}
-      <div className="absolute inset-0 bg-black"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-950 to-black"></div>
-      <div className="absolute inset-0 opacity-3 bg-gradient-to-tr from-blue-950/10 via-transparent to-purple-950/10"></div>
+      <div className="absolute inset-0 bg-white dark:bg-black"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-200 to-white dark:from-black dark:via-gray-950 dark:to-black"></div>
+      <div className="absolute inset-0 opacity-3 bg-gradient-to-tr from-blue-100/10 via-transparent to-purple-100/10 dark:from-blue-950/10 dark:to-purple-950/10"></div>
       <div 
         className="absolute inset-0 opacity-2"
         style={{
@@ -14,7 +14,7 @@ export default function HomePage() {
         }}
       ></div>
       
-      <div className="bg-black/30 backdrop-blur-xl rounded-3xl p-8 sm:p-12 border border-white/5 shadow-2xl shadow-black/50 text-center relative z-10 max-w-2xl mx-auto">
+      <div className="bg-white/80 dark:bg-black/30 backdrop-blur-xl rounded-3xl p-8 sm:p-12 border border-gray-200/50 dark:border-white/5 shadow-2xl shadow-gray-200/50 dark:shadow-black/50 text-center relative z-10 max-w-2xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-cyan-200 mb-6 drop-shadow-lg">
           Welcome to RevUpChat!
         </h1>
