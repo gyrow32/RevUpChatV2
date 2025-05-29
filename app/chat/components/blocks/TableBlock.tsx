@@ -17,6 +17,11 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
   const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
   const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: number]: number }>({});
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+
+  const handleImageError = (src: string) => {
+    setImageErrors(prev => ({ ...prev, [src]: true }));
+  };
 
   // Check if this table contains vehicle data
   const isVehicleTable = () => {
@@ -265,29 +270,23 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                   <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-gray-900 to-black">
                     {/* Current Image */}
                     <div className="relative w-full h-full">
-                      <Image
-                        src={currentImage!}
-                        alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
-                        fill
-                        className="object-cover object-center transition-all duration-500"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent && parent.querySelector('.fallback-content') === null) {
-                            const fallback = document.createElement('div');
-                            fallback.className = 'fallback-content w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30';
-                            fallback.innerHTML = `
-                              <svg class="w-16 h-16 text-white/70 mb-3" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5 1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5 1.5 1.5 0 0 1 6.5 13 1.5 1.5 0 0 1 8 14.5 1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1H6.5c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/>
-                              </svg>
-                              <div class="text-white/70 text-sm font-medium">${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}</div>
-                              <div class="text-white/50 text-xs mt-1">Vehicle Image</div>
-                            `;
-                            parent.appendChild(fallback);
-                          }
-                        }}
-                      />
+                      {!imageErrors[currentImage!] ? (
+                        <Image
+                          src={currentImage!}
+                          alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
+                          fill
+                          className="object-cover object-center transition-all duration-500"
+                          onError={() => handleImageError(currentImage!)}
+                        />
+                      ) : (
+                        <div className="fallback-content w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30">
+                          <Car className="w-16 h-16 text-white/70 mb-3" />
+                          <div className="text-white/70 text-sm font-medium">
+                            {vehicleInfo.year} {vehicleInfo.make} {vehicleInfo.model}
+                          </div>
+                          <div className="text-white/50 text-xs mt-1">Vehicle Image</div>
+                        </div>
+                      )}
                     </div>
                     
                     {/* Image Overlay with Gradient */}
@@ -545,32 +544,25 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                           <div className="relative w-20 h-14 rounded-xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg group-hover:scale-105 transition-transform duration-300 group">
                             {vehicleImage ? (
                               <>
-                                <Image
-                                  src={vehicleImage}
-                                  alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
-                                  fill
-                                  className="object-cover object-center group-hover:scale-110 transition-transform duration-500"
-                                  onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    debugLog('Image failed to load:', vehicleImage);
-                                    // Replace with car icon on error
-                                    target.style.display = 'none';
-                                    const parent = target.parentElement;
-                                    if (parent && parent.querySelector('.fallback-icon') === null) {
-                                      const fallback = document.createElement('div');
-                                      fallback.className = 'fallback-icon w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30';
-                                      fallback.innerHTML = `
-                                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                          <path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5 1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5 1.5 1.5 0 0 1 6.5 13 1.5 1.5 0 0 1 8 14.5 1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1H6.5c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/>
-                                        </svg>
-                                      `;
-                                      parent.appendChild(fallback);
-                                    }
-                                  }}
-                                  onLoad={() => {
-                                    debugLog('Image loaded successfully:', vehicleImage);
-                                  }}
-                                />
+                                {!imageErrors[vehicleImage] ? (
+                                  <Image
+                                    src={vehicleImage}
+                                    alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
+                                    fill
+                                    className="object-cover object-center group-hover:scale-110 transition-transform duration-500"
+                                    onError={() => {
+                                      debugLog('Image failed to load:', vehicleImage);
+                                      handleImageError(vehicleImage);
+                                    }}
+                                    onLoad={() => {
+                                      debugLog('Image loaded successfully:', vehicleImage);
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="fallback-icon w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30">
+                                    <Car className="w-6 h-6 text-white" />
+                                  </div>
+                                )}
                                 
                                 {/* Desktop Gallery Navigation Arrows */}
                                 {getVehicleImages(row).length > 1 && (
