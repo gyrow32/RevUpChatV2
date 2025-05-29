@@ -64,7 +64,7 @@ export default function Message({
       <div className="space-y-4">
         {parsedContent.blocks.map((block, index) => {
           if (!isBlock(block)) {
-            console.warn('Invalid block:', block);
+            debugLog('Invalid block:', block);
             return null;
           }
 
@@ -126,12 +126,12 @@ export default function Message({
               );
               
             default:
-              console.warn('Unknown block type:', block);
+              debugLog('Unknown block type:', block);
               return (
-                <TextBlock 
-                  key={index} 
-                  content={`[Unknown block type: ${(block as any).type}]`} 
-                  isUser={false} 
+                <TextBlock
+                  key={index}
+                  content={`[Unknown block type: ${(block as any).type}]`}
+                  isUser={false}
                 />
               );
           }

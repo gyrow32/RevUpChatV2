@@ -41,7 +41,7 @@ export class WebhookClient {
       const data = await response.json();
       
       if (!response.ok) {
-        console.error('API error:', data);
+        debugLog('API error:', data);
         return {
           success: false,
           error: data.error || `HTTP ${response.status}: ${response.statusText}`,
@@ -62,7 +62,7 @@ export class WebhookClient {
       };
       
     } catch (error) {
-      console.error('Webhook client error:', error);
+      debugLog('Webhook client error:', error);
       
       return {
         success: false,

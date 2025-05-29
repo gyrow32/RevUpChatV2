@@ -84,7 +84,7 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
           return { blocks };
         }
       } catch (mixedError) {
-        console.error('Error parsing mixed content:', mixedError);
+        debugLog('Error parsing mixed content:', mixedError);
         // Continue to standard parsing
       }
     }
@@ -151,7 +151,7 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
     };
     
   } catch (error) {
-    console.error('Failed to parse webhook response:', error);
+    debugLog('Failed to parse webhook response:', error);
     throw new Error('Failed to parse AI response');
   }
 }
