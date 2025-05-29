@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { scrollToTop } from '@/lib/utils/scroll';
 import { ChatProvider } from '@/components/providers/ChatProvider';
 import ChatWindow from './components/ChatWindow';
 import { scrollToTop } from '@/lib/utils';
