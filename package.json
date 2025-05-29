@@ -1,4 +1,5 @@
 {
+  "_comment": "Force Vercel deployment trigger",
   "name": "revup-chat",
   "version": "0.1.0",
   "private": true,
