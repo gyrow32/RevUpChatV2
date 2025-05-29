@@ -12,7 +12,7 @@ export function useChat() {
   
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim()) {
-      console.warn('Attempted to send empty message');
+      debugLog('Attempted to send empty message');
       return;
     }
     
@@ -91,11 +91,11 @@ export function useChat() {
           }
         });
         
-        console.error('Webhook error:', errorMessage, { isTimeout, isRetryable });
+        debugLog('Webhook error:', errorMessage, { isTimeout, isRetryable });
       }
       
     } catch (error) {
-      console.error('Send message error:', error);
+      debugLog('Send message error:', error);
       
       // Update user message to error state
       dispatch({ 

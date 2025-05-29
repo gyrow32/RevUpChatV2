@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        console.error('Webhook error:', response.status, response.statusText);
+        debugLog('Webhook error:', response.status, response.statusText);
         
         // Provide more specific error messages
         if (response.status === 504 || response.status === 502) {
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       clearTimeout(timeoutId);
       
       if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-        console.error('Webhook timeout after 90 seconds');
+        debugLog('Webhook timeout after 90 seconds');
         return NextResponse.json(
           { 
             error: 'The AI is taking longer than usual to respond. This might be due to high demand or complex processing. Please try again or rephrase your question.',
@@ -88,12 +88,12 @@ export async function POST(request: Request) {
         );
       }
       
-      console.error('Webhook fetch error:', fetchError);
+      debugLog('Webhook fetch error:', fetchError);
       throw fetchError;
     }
     
   } catch (error) {
-    console.error('Chat API error:', error);
+    debugLog('Chat API error:', error);
     
     return NextResponse.json(
       { 

@@ -97,7 +97,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
           dispatch({ type: 'LOAD_MESSAGES', payload: messagesWithDates });
           debugLog('Loaded saved messages:', messagesWithDates.length);
         } catch (error) {
-          console.error('Failed to load saved messages:', error);
+          debugLog('Failed to load saved messages:', error);
           localStorage.removeItem(`revup_messages_${savedSessionId}`);
         }
       }
