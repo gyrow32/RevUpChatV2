@@ -1,4 +1,5 @@
 'use client';
+// Deployment trigger - fix applied for duplicate scrollToTop import
 
 import { useEffect } from 'react';
 import { ChatProvider } from '@/components/providers/ChatProvider';
