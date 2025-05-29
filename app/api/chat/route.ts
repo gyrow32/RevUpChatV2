@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { WebhookRequest } from '@/types';
+import { debugLog } from '@/lib/utils';
 
 const WEBHOOK_URL = process.env.WEBHOOK_URL || 'https://revupinventory.app.n8n.cloud/webhook/e1f37ad8-7461-49b3-8a6c-479ec4013958/chat';
 
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
       chatInput: body.message.trim()
     };
 
-    console.log('Sending to webhook:', { 
+    debugLog('Sending to webhook:', {
       sessionId: body.sessionId, 
       messageLength: body.message.length,
       webhook: WEBHOOK_URL.substring(0, 50) + '...'
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
       }
 
       const data = await response.json();
-      console.log('Webhook response received:', { 
+      debugLog('Webhook response received:', {
         hasOutput: !!data.output,
         outputLength: data.output?.length || 0
       });

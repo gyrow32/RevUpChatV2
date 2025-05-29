@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 import type { Message, ChatState, ParsedResponse } from '@/types';
-import { generateSessionId } from '@/lib/utils/session';
+import { generateSessionId, getStoredSessionId, storeSessionId } from '@/lib/utils/session';
+import { debugLog } from '@/lib/utils';
 
 type ChatAction =
   | { type: 'ADD_MESSAGE'; payload: Message }
@@ -78,7 +79,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   
   // Load saved session and messages on mount
   useEffect(() => {
-    const savedSessionId = localStorage.getItem('revup_session_id');
+    const savedSessionId = getStoredSessionId();
     if (savedSessionId) {
       dispatch({ type: 'SET_SESSION_ID', payload: savedSessionId });
       
@@ -93,7 +94,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
             timestamp: new Date(msg.timestamp)
           }));
           dispatch({ type: 'LOAD_MESSAGES', payload: messagesWithDates });
-          console.log('Loaded saved messages:', messagesWithDates.length);
+          debugLog('Loaded saved messages:', messagesWithDates.length);
         } catch (error) {
           console.error('Failed to load saved messages:', error);
           localStorage.removeItem(`revup_messages_${savedSessionId}`);
@@ -101,8 +102,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
       }
     } else {
       // Save new session ID
-      localStorage.setItem('revup_session_id', state.sessionId);
-      console.log('Created new session:', state.sessionId);
+      storeSessionId(state.sessionId);
+      debugLog('Created new session:', state.sessionId);
     }
   }, []);
   
@@ -122,7 +123,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   
   // Save session ID when it changes
   useEffect(() => {
-    localStorage.setItem('revup_session_id', state.sessionId);
+    storeSessionId(state.sessionId);
   }, [state.sessionId]);
   
   return (

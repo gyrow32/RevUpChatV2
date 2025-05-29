@@ -1,5 +1,5 @@
 import { formatPrice } from '@/lib/utils/formatters';
-import { cn } from '@/lib/utils';
+import { cn, debugLog } from '@/lib/utils';
 import { useState } from 'react';
 import { Car, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -594,7 +594,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                                   className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
-                                    console.log('Image failed to load:', vehicleImage);
+                                    debugLog('Image failed to load:', vehicleImage);
                                     // Replace with car icon on error
                                     target.style.display = 'none';
                                     const parent = target.parentElement;
@@ -610,7 +610,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                                     }
                                   }}
                                   onLoad={() => {
-                                    console.log('Image loaded successfully:', vehicleImage);
+                                    debugLog('Image loaded successfully:', vehicleImage);
                                   }}
                                 />
                                 

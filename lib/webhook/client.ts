@@ -1,5 +1,6 @@
 import type { ParsedResponse } from '@/types';
 import { parseWebhookResponse } from './parser';
+import { debugLog } from '@/lib/utils';
 
 export interface ChatRequest {
   message: string;
@@ -21,7 +22,7 @@ export class WebhookClient {
   
   async sendMessage(request: ChatRequest): Promise<ChatResponse> {
     try {
-      console.log('Sending message:', { 
+      debugLog('Sending message:', {
         messageLength: request.message.length, 
         sessionId: request.sessionId 
       });
@@ -50,7 +51,7 @@ export class WebhookClient {
       // Parse the webhook response
       const parsed = parseWebhookResponse(data);
       
-      console.log('Parsed response:', { 
+      debugLog('Parsed response:', {
         blockCount: parsed.blocks.length,
         blockTypes: parsed.blocks.map(b => b.type)
       });

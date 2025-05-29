@@ -6,7 +6,7 @@ import TableBlock from './blocks/TableBlock';
 import SurveyBlock from './blocks/SurveyBlock';
 import QuestionBlock from './blocks/QuestionBlock';
 import type { Message as MessageType, ParsedResponse } from '@/types';
-import { cn } from '@/lib/utils';
+import { cn, debugLog } from '@/lib/utils';
 
 interface MessageProps {
   message: MessageType;
@@ -98,7 +98,7 @@ export default function Message({
                   key={index} 
                   questions={block.content as string[]}
                   onSubmit={(ratings) => {
-                    console.log('Survey ratings:', ratings);
+                    debugLog('Survey ratings:', ratings);
                     // Could send ratings back to chat
                     // onQuestionClick?.(`My ratings: ${JSON.stringify(ratings)}`);
                   }}
