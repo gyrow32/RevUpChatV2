@@ -5,7 +5,7 @@ import VehicleBlock from './blocks/VehicleBlock';
 import TableBlock from './blocks/TableBlock';
 import SurveyBlock from './blocks/SurveyBlock';
 import QuestionBlock from './blocks/QuestionBlock';
-import type { Message as MessageType, ParsedResponse } from '@/types';
+import type { Message as MessageType, ParsedResponse, Block } from '@/types';
 import { cn, debugLog } from '@/lib/utils';
 
 interface MessageProps {
@@ -13,6 +13,10 @@ interface MessageProps {
   onRetry?: (messageId: string) => void;
   onQuestionClick?: (question: string) => void;
   className?: string;
+}
+
+function isBlock(obj: unknown): obj is Block {
+  return typeof obj === 'object' && obj !== null && 'type' in obj;
 }
 
 export default function Message({ 
@@ -33,10 +37,12 @@ export default function Message({
       : undefined;
 
   const hasVehicleGallery = parsedBlocks?.some(
-    block => block.type === 'gallery' || block.type === 'hybrid'
+    block => isBlock(block) && (block.type === 'gallery' || block.type === 'hybrid')
   );
 
-  const hasTable = parsedBlocks?.some(block => block.type === 'table');
+  const hasTable = parsedBlocks?.some(
+    block => isBlock(block) && block.type === 'table'
+  );
 
   // Any block type that should use more width
   const hasWideContent = hasVehicleGallery || hasTable;
@@ -57,12 +63,17 @@ export default function Message({
     return (
       <div className="space-y-4">
         {parsedContent.blocks.map((block, index) => {
+          if (!isBlock(block)) {
+            console.warn('Invalid block:', block);
+            return null;
+          }
+
           switch (block.type) {
             case 'text':
               return (
                 <TextBlock 
                   key={index} 
-                  content={block.content as string} 
+                  content={block.content} 
                   isUser={false} 
                 />
               );
@@ -71,7 +82,7 @@ export default function Message({
               return (
                 <VehicleBlock 
                   key={index} 
-                  vehicles={(block as any).vehicles || []} 
+                  vehicles={block.vehicles} 
                 />
               );
               
@@ -79,7 +90,7 @@ export default function Message({
               return (
                 <VehicleBlock 
                   key={index} 
-                  vehicles={block.content as any[]} 
+                  vehicles={block.content} 
                 />
               );
               
@@ -87,8 +98,8 @@ export default function Message({
               return (
                 <TableBlock 
                   key={index} 
-                  columns={(block as any).columns || []}
-                  rows={(block as any).rows || []}
+                  columns={block.columns}
+                  rows={block.rows}
                 />
               );
               
@@ -96,7 +107,7 @@ export default function Message({
               return (
                 <SurveyBlock 
                   key={index} 
-                  questions={block.content as string[]}
+                  questions={block.content}
                   onSubmit={(ratings) => {
                     debugLog('Survey ratings:', ratings);
                     // Could send ratings back to chat
@@ -109,7 +120,7 @@ export default function Message({
               return (
                 <QuestionBlock 
                   key={index} 
-                  questions={block.content as string[]}
+                  questions={block.content}
                   onQuestionClick={onQuestionClick}
                 />
               );
@@ -119,7 +130,7 @@ export default function Message({
               return (
                 <TextBlock 
                   key={index} 
-                  content={`[Unknown block type: ${(block as any).type}]`} 
+                  content={`[Unknown block type: ${block.type}]`} 
                   isUser={false} 
                 />
               );

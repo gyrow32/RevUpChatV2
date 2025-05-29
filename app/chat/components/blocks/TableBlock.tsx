@@ -1,7 +1,10 @@
+'use client';
+
 import { formatPrice } from '@/lib/utils/formatters';
 import { cn, debugLog } from '@/lib/utils';
 import { useState } from 'react';
 import { Car, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 interface TableBlockProps {
   columns: string[];
@@ -24,76 +27,27 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
     );
   };
 
-  // Extract ALL vehicle images from row data
-  const getVehicleImages = (row: (string | number)[], rowIndex: number): string[] => {
-    const imageColumnNames = [
-      'image', 'image url', 'image urls', 'photo', 'picture', 'img',
-      'vehicle image', 'car image', 'thumbnail', 'pic', 'imageurl',
-      'vehicleimage', 'carimage'
-    ];
-    
-    const allImages: string[] = [];
-    
-    for (let i = 0; i < columns.length; i++) {
-      const colName = columns[i].toLowerCase().trim();
-      
-      if (imageColumnNames.some(imgCol => 
-        colName === imgCol || 
-        colName.includes(imgCol) || 
-        imgCol.includes(colName)
-      )) {
-        const value = row[i];
-        
-        if (typeof value === 'string' && value.trim()) {
-          let imageUrls = value.trim();
-          
-          // Handle comma-separated URLs (extract ALL)
-          if (imageUrls.includes(',')) {
-            const urls = imageUrls.split(',').map(url => url.trim());
-            urls.forEach(url => {
-              if (url.startsWith('http') || url.startsWith('data:')) {
-                allImages.push(url);
-              }
-            });
-          }
-          // Handle array-like strings [url1, url2] 
-          else if (imageUrls.startsWith('[') && imageUrls.includes('http')) {
-            const matches = imageUrls.match(/https?:\/\/[^\s,\]]+/g);
-            if (matches) {
-              matches.forEach(url => allImages.push(url));
-            }
-          }
-          // Single URL
-          else if (imageUrls.startsWith('http') || imageUrls.startsWith('data:')) {
-            allImages.push(imageUrls);
-          }
-        }
-      }
+  // Extract image URLs from the first row
+  const imageUrls = rows[0].map(cell => {
+    if (typeof cell === 'string' && cell.match(/!\[.*?\]\((.*?)\)/)) {
+      return cell.match(/!\[.*?\]\((.*?)\)/)?.[1] || '';
     }
-    
-    // Also check for columns that might contain JSON-like data with images
-    for (let i = 0; i < columns.length; i++) {
-      const value = row[i];
-      if (typeof value === 'string' && value.includes('http') && 
-          (value.includes('.jpg') || value.includes('.jpeg') || 
-           value.includes('.png') || value.includes('.webp'))) {
-        const urlMatches = value.match(/https?:\/\/[^\s,"'\]]+\.(jpg|jpeg|png|webp|gif)/gi);
-        if (urlMatches) {
-          urlMatches.forEach(url => {
-            if (!allImages.includes(url)) {
-              allImages.push(url);
-            }
-          });
-        }
+    return '';
+  });
+
+  // Get vehicle images for a specific row
+  const getVehicleImages = (row: (string | number)[]): string[] => {
+    return row.map(cell => {
+      if (typeof cell === 'string' && cell.match(/!\[.*?\]\((.*?)\)/)) {
+        return cell.match(/!\[.*?\]\((.*?)\)/)?.[1] || '';
       }
-    }
-    
-    return allImages;
+      return '';
+    }).filter(Boolean);
   };
 
   // Get current image for a vehicle
   const getCurrentVehicleImage = (row: (string | number)[], rowIndex: number): string | null => {
-    const images = getVehicleImages(row, rowIndex);
+    const images = getVehicleImages(row);
     if (images.length === 0) return null;
     
     const currentIndex = currentImageIndex[rowIndex] || 0;
@@ -102,7 +56,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
 
   // Navigate to next/previous image
   const navigateImage = (rowIndex: number, direction: 'next' | 'prev') => {
-    const images = getVehicleImages(rows[rowIndex], rowIndex);
+    const images = getVehicleImages(rows[rowIndex]);
     if (images.length <= 1) return;
     
     const currentIndex = currentImageIndex[rowIndex] || 0;
@@ -292,7 +246,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
       {/* Mobile Card Layout (hidden on desktop) */}
       <div className="block lg:hidden space-y-3">
         {rows.map((row, rowIndex) => {
-          const vehicleImages = hasVehicleData ? getVehicleImages(row, rowIndex) : [];
+          const vehicleImages = hasVehicleData ? getVehicleImages(row) : [];
           const currentImage = hasVehicleData ? getCurrentVehicleImage(row, rowIndex) : null;
           const vehicleInfo = hasVehicleData ? getVehicleInfo(row) : {};
           const isExpanded = expandedCards.has(rowIndex);
@@ -310,28 +264,31 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                 {hasVehicleData && vehicleImages.length > 0 && (
                   <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-gray-900 to-black">
                     {/* Current Image */}
-                    <img
-                      src={currentImage!}
-                      alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
-                      className="w-full h-full object-cover object-center transition-all duration-500"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        const parent = target.parentElement;
-                        if (parent && parent.querySelector('.fallback-content') === null) {
-                          const fallback = document.createElement('div');
-                          fallback.className = 'fallback-content w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30';
-                          fallback.innerHTML = `
-                            <svg class="w-16 h-16 text-white/70 mb-3" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5 1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5 1.5 1.5 0 0 1 6.5 13 1.5 1.5 0 0 1 8 14.5 1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1H6.5c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/>
-                            </svg>
-                            <div class="text-white/70 text-sm font-medium">${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}</div>
-                            <div class="text-white/50 text-xs mt-1">Vehicle Image</div>
-                          `;
-                          parent.appendChild(fallback);
-                        }
-                      }}
-                    />
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={currentImage!}
+                        alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
+                        fill
+                        className="object-cover object-center transition-all duration-500"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent && parent.querySelector('.fallback-content') === null) {
+                            const fallback = document.createElement('div');
+                            fallback.className = 'fallback-content w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30';
+                            fallback.innerHTML = `
+                              <svg class="w-16 h-16 text-white/70 mb-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5 1.5 1.5 0 0 1 1.5-1.5 1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5 1.5 1.5 0 0 1 6.5 13 1.5 1.5 0 0 1 8 14.5 1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1H6.5c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/>
+                              </svg>
+                              <div class="text-white/70 text-sm font-medium">${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}</div>
+                              <div class="text-white/50 text-xs mt-1">Vehicle Image</div>
+                            `;
+                            parent.appendChild(fallback);
+                          }
+                        }}
+                      />
+                    </div>
                     
                     {/* Image Overlay with Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
@@ -588,10 +545,11 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                           <div className="relative w-20 h-14 rounded-xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-white/10 shadow-lg group-hover:scale-105 transition-transform duration-300 group">
                             {vehicleImage ? (
                               <>
-                                <img
+                                <Image
                                   src={vehicleImage}
                                   alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
-                                  className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
+                                  fill
+                                  className="object-cover object-center group-hover:scale-110 transition-transform duration-500"
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
                                     debugLog('Image failed to load:', vehicleImage);
@@ -615,7 +573,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                                 />
                                 
                                 {/* Desktop Gallery Navigation Arrows */}
-                                {getVehicleImages(row, rowIndex).length > 1 && (
+                                {getVehicleImages(row).length > 1 && (
                                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10">
                                     <button
                                       onClick={(e) => {
@@ -639,9 +597,9 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                                 )}
                                 
                                 {/* Desktop Image count indicator */}
-                                {getVehicleImages(row, rowIndex).length > 1 && (
+                                {getVehicleImages(row).length > 1 && (
                                   <div className="absolute bottom-1 left-1 bg-black/80 text-white text-xs px-2 py-1 rounded font-medium shadow-lg">
-                                    {(currentImageIndex[rowIndex] || 0) + 1}/{getVehicleImages(row, rowIndex).length}
+                                    {(currentImageIndex[rowIndex] || 0) + 1}/{getVehicleImages(row).length}
                                   </div>
                                 )}
                                 
@@ -651,7 +609,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                                 {/* Enhanced thumbnail overlay effect */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                   <div className="absolute bottom-1 right-1 text-xs text-white font-bold opacity-90">
-                                    {getVehicleImages(row, rowIndex).length > 1 ? 'GALLERY' : 'PHOTO'}
+                                    {getVehicleImages(row).length > 1 ? 'GALLERY' : 'PHOTO'}
                                   </div>
                                 </div>
                               </>
@@ -674,8 +632,8 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                             </div>
                             {vehicleImage && (
                               <div className="text-xs text-green-400 font-semibold mt-0.5">
-                                {getVehicleImages(row, rowIndex).length > 1 
-                                  ? `📸 ${getVehicleImages(row, rowIndex).length} Photos` 
+                                {getVehicleImages(row).length > 1 
+                                  ? `📸 ${getVehicleImages(row).length} Photos` 
                                   : '📸 Live Photo'
                                 }
                               </div>

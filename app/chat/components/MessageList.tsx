@@ -5,6 +5,7 @@ import Message from './Message';
 import ThinkingIndicator from './ThinkingIndicator';
 import type { Message as MessageType } from '@/types';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 interface MessageListProps {
   messages: MessageType[];
@@ -57,7 +58,7 @@ export default function MessageList({
         }
       }, 100);
     }
-  }, [messages.length]);
+  }, [messages]);
   
   // Scroll to beginning of response when loading completes
   useEffect(() => {
@@ -82,7 +83,7 @@ export default function MessageList({
         }
       }, 200);
     }
-  }, [isLoading]);
+  }, [isLoading, messages]);
 
   // Animation trigger for welcome screen
   useEffect(() => {
@@ -171,10 +172,11 @@ export default function MessageList({
                 {/* Hero Image Container */}
                 <div className="relative h-32 sm:h-40 w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black overflow-hidden">
                   {/* Sports Car Image */}
-                  <img 
+                  <Image 
                     src="/images/sports-car-hero.png"
                     alt="Sleek Sports Car"
-                    className="w-full h-full object-cover object-center scale-110 transition-transform duration-700 group-hover:scale-125"
+                    fill
+                    className="object-cover object-center scale-110 transition-transform duration-700 group-hover:scale-125"
                     style={{
                       filter: 'brightness(0.9) contrast(1.1) saturate(1.1)'
                     }}

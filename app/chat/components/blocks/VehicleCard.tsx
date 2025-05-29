@@ -2,8 +2,28 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Car, Gauge, Fuel, Settings, ExternalLink, Star, MapPin, Calendar, DollarSign, X, ChevronLeft, ChevronRight, Info, Hash, FileText, Wrench } from 'lucide-react';
-import { formatPrice, formatMileage, formatPayment, formatPercentage } from '@/lib/utils/formatters';
+import { 
+  Calendar,
+  Car,
+  Gauge,
+  MapPin,
+  Phone,
+  Tag,
+  Link as LinkIcon,
+  ExternalLink,
+  Star,
+  DollarSign,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Info,
+  Hash,
+  FileText,
+  Wrench,
+  Fuel,
+  Settings
+} from 'lucide-react';
+import { formatPrice, formatMileage, formatPayment } from '@/lib/utils/formatters';
 import type { VehicleData } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -39,10 +59,11 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
       {/* Hero Image Section */}
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-3xl">
         {hasImage ? (
-          <img
+          <Image
             src={primaryImage}
             alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-            className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
+            fill
+            className="object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.src = '/placeholder-car.jpg';

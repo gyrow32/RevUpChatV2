@@ -156,11 +156,41 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
   }
 }
 
+interface RawVehicleData {
+  id?: string;
+  vin?: string;
+  year?: string | number;
+  make?: string;
+  model?: string;
+  trim?: string;
+  price?: string | number;
+  image?: string;
+  stock?: string;
+  dealer?: string;
+  mileage?: string | number;
+  odometer?: string | number;
+  bodyStyle?: string;
+  fuel?: string;
+  fuelType?: string;
+  drivetrain?: string;
+  unitCost?: string | number;
+  jdPowerClean?: string | number;
+  "Image URLs"?: string[];
+  "Vehicle Link"?: string;
+  vdp?: string;
+  payment?: string | number;
+  downPayment?: string | number;
+  loanTermMonths?: string | number;
+  ltv?: string | number;
+  interestRate?: string | number;
+  taxRate?: string | number;
+}
+
 // Normalize vehicle data from different formats
-function normalizeVehicleData(vehicle: any): VehicleData {
+function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
   return {
     id: vehicle.id || vehicle.vin || `vehicle-${Date.now()}`,
-    year: parseInt(vehicle.year) || 0,
+    year: parseInt(String(vehicle.year)) || 0,
     make: vehicle.make || '',
     model: vehicle.model || '',
     trim: vehicle.trim || undefined,
@@ -171,20 +201,20 @@ function normalizeVehicleData(vehicle: any): VehicleData {
     dealer: vehicle.dealer || undefined,
     mileage: vehicle.mileage ? parseFloat(String(vehicle.mileage).replace(/[,]/g, '')) : 
              vehicle.odometer ? parseFloat(String(vehicle.odometer).replace(/[,]/g, '')) : undefined,
-    odometer: vehicle.odometer || undefined,
+    odometer: vehicle.odometer ? String(vehicle.odometer) : undefined,
     bodyStyle: vehicle.bodyStyle || undefined,
     fuel: vehicle.fuel || vehicle.fuelType || undefined,
     drivetrain: vehicle.drivetrain || undefined,
-    unitCost: vehicle.unitCost || undefined,
-    jdPowerClean: vehicle.jdPowerClean || undefined,
+    unitCost: vehicle.unitCost ? String(vehicle.unitCost) : undefined,
+    jdPowerClean: vehicle.jdPowerClean ? String(vehicle.jdPowerClean) : undefined,
     "Image URLs": vehicle["Image URLs"] || undefined,
     "Vehicle Link": vehicle["Vehicle Link"] || vehicle.vdp || undefined,
     // Financial data
     payment: vehicle.payment ? parseFloat(String(vehicle.payment).replace(/[$,]/g, '')) : undefined,
     downPayment: vehicle.downPayment ? parseFloat(String(vehicle.downPayment).replace(/[$,]/g, '')) : undefined,
-    loanTermMonths: vehicle.loanTermMonths ? parseInt(vehicle.loanTermMonths) : undefined,
-    ltv: vehicle.ltv ? parseFloat(vehicle.ltv) : undefined,
-    interestRate: vehicle.interestRate ? parseFloat(vehicle.interestRate) : undefined,
-    taxRate: vehicle.taxRate ? parseFloat(vehicle.taxRate) : undefined,
+    loanTermMonths: vehicle.loanTermMonths ? parseInt(String(vehicle.loanTermMonths)) : undefined,
+    ltv: vehicle.ltv ? parseFloat(String(vehicle.ltv)) : undefined,
+    interestRate: vehicle.interestRate ? parseFloat(String(vehicle.interestRate)) : undefined,
+    taxRate: vehicle.taxRate ? parseFloat(String(vehicle.taxRate)) : undefined,
   };
 }

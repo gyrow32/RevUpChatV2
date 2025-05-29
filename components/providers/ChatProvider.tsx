@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
-import type { Message, ChatState, ParsedResponse } from '@/types';
+import type { Message, ChatState } from '@/types';
 import { generateSessionId, getStoredSessionId, storeSessionId } from '@/lib/utils/session';
 import { debugLog } from '@/lib/utils/debug';
 
@@ -90,7 +90,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
         try {
           const parsed = JSON.parse(savedMessages);
           // Convert timestamp strings back to Date objects
-          const messagesWithDates = parsed.map((msg: any) => ({
+          const messagesWithDates = parsed.map((msg: Omit<Message, 'timestamp'> & { timestamp: string }) => ({
             ...msg,
             timestamp: new Date(msg.timestamp)
           }));
@@ -104,9 +104,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
     } else {
       // Save new session ID
       storeSessionId(state.sessionId);
-
     }
-  }, []);
+  }, [state.sessionId]);
   
   // Save messages when they change (debounced)
   useEffect(() => {

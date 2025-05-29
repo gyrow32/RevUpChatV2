@@ -74,10 +74,10 @@ export async function POST(request: Request) {
       
       return NextResponse.json(data);
       
-    } catch (fetchError: any) {
+    } catch (fetchError: unknown) {
       clearTimeout(timeoutId);
       
-      if (fetchError.name === 'AbortError') {
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
         console.error('Webhook timeout after 90 seconds');
         return NextResponse.json(
           { 

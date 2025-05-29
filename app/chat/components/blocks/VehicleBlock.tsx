@@ -80,13 +80,6 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
     setCurrentIndex((prev) => Math.min(prev + 1, vehicles.length - vehiclesPerPage));
   };
 
-  // For mobile, show only one card at a time, for desktop, show 3
-  const getCurrentVehicles = () => {
-    const start = currentIndex;
-    const end = start + vehiclesPerPage;
-    return vehicles.slice(start, end);
-  };
-
   // Calculate carousel width
   const cardWidth = 308 + 16; // card width (increased by 10%) + gap
   const carouselWidth = isMobile ? cardWidth : cardWidth * 3;

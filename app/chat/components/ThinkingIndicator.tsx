@@ -28,7 +28,6 @@ const thinkingSteps = [
 
 export default function ThinkingIndicator({ className = '' }: ThinkingIndicatorProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const step = thinkingSteps[currentStep];
