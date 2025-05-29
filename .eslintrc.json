@@ -1,14 +1,20 @@
 {
   "extends": [
     "next/core-web-vitals",
-    "plugin:testing-library/react"
+    "plugin:testing-library/react",
+    "plugin:@typescript-eslint/recommended"
   ],
-  "plugins": ["testing-library"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["testing-library", "@typescript-eslint"],
   "rules": {
     "testing-library/prefer-screen-queries": "warn",
     "testing-library/prefer-user-event": "warn",
     "testing-library/no-debugging-utils": "warn",
-    "testing-library/no-dom-import": "error"
+    "testing-library/no-dom-import": "error",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
   },
   "overrides": [
     {
