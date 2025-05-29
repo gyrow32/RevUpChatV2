@@ -98,7 +98,7 @@ export default function MessageList({
       label: 'Browse SUVs', 
       description: '150+ premium SUVs available',
       query: 'Show me available SUVs', 
-      color: 'from-blue-600/40 to-cyan-600/30',
+      color: 'from-blue-600/70 to-cyan-600/60',
       badge: 'POPULAR' 
     },
     { 
@@ -106,7 +106,7 @@ export default function MessageList({
       label: 'Budget $300/mo', 
       description: 'Find your perfect match',
       query: 'What can I get for $300/month?', 
-      color: 'from-green-600/40 to-emerald-600/30',
+      color: 'from-green-600/70 to-emerald-600/60',
       badge: 'SMART CHOICE'
     },
     { 
@@ -114,7 +114,7 @@ export default function MessageList({
       label: 'Electric Vehicles', 
       description: 'Eco-friendly & efficient',
       query: 'Show me electric vehicles', 
-      color: 'from-yellow-600/40 to-orange-600/30',
+      color: 'from-yellow-600/70 to-orange-600/60',
       badge: 'ECO'
     },
     { 
@@ -122,7 +122,7 @@ export default function MessageList({
       label: 'VIN Lookup', 
       description: 'Instant vehicle history',
       query: 'I want to check a VIN', 
-      color: 'from-purple-600/40 to-violet-600/30',
+      color: 'from-purple-600/70 to-violet-600/60',
       badge: 'QUICK'
     }
   ];
@@ -269,7 +269,7 @@ export default function MessageList({
                   >
                     {/* Card background gradient */}
                     <div className={cn(
-                      "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-15 transition-opacity duration-300",
+                      "absolute inset-0 bg-gradient-to-br opacity-30 group-hover:opacity-50 transition-opacity duration-300",
                       action.color
                     )}></div>
                     
