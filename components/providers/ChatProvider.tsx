@@ -4,6 +4,7 @@ import { createContext, useContext, useReducer, ReactNode, useEffect } from 'rea
 import type { Message, ChatState, ParsedResponse } from '@/types';
 import { generateSessionId, getStoredSessionId, storeSessionId } from '@/lib/utils/session';
 
+
 type ChatAction =
   | { type: 'ADD_MESSAGE'; payload: Message }
   | { type: 'UPDATE_MESSAGE'; payload: { id: string; updates: Partial<Message> } }
@@ -93,7 +94,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
             timestamp: new Date(msg.timestamp)
           }));
           dispatch({ type: 'LOAD_MESSAGES', payload: messagesWithDates });
-          console.log('Loaded saved messages:', messagesWithDates.length);
+          debugLog('Loaded saved messages:', messagesWithDates.length);
         } catch (error) {
           console.error('Failed to load saved messages:', error);
           localStorage.removeItem(`revup_messages_${savedSessionId}`);
@@ -102,7 +103,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     } else {
       // Save new session ID
       storeSessionId(state.sessionId);
-      console.log('Created new session:', state.sessionId);
+
     }
   }, []);
   

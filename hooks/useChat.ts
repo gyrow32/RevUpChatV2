@@ -5,6 +5,7 @@ import { useChatContext } from '@/components/providers/ChatProvider';
 import { webhookClient } from '@/lib/webhook/client';
 import { generateSessionId, storeSessionId } from '@/lib/utils/session';
 import type { Message } from '@/types';
+import { debugLog } from '@/lib/utils';
 
 export function useChat() {
   const { state, dispatch } = useChatContext();
@@ -15,7 +16,7 @@ export function useChat() {
       return;
     }
     
-    console.log('Sending message:', { length: content.length, sessionId: state.sessionId });
+    debugLog('Sending message:', { length: content.length, sessionId: state.sessionId });
     
     // Create message ID
     const messageId = 'msg-' + Math.random().toString(36).substring(2, 15);
@@ -61,7 +62,7 @@ export function useChat() {
         };
         
         dispatch({ type: 'ADD_MESSAGE', payload: aiMessage });
-        console.log('AI response added:', { 
+        debugLog('AI response added:', {
           blocks: response.data.blocks.length,
           types: response.data.blocks.map(b => b.type)
         });
@@ -129,13 +130,13 @@ export function useChat() {
   const retryMessage = useCallback(async (messageId: string) => {
     const message = state.messages.find(m => m.id === messageId);
     if (message?.role === 'user' && message.status === 'error') {
-      console.log('Retrying message:', messageId);
+      debugLog('Retrying message:', messageId);
       await sendMessage(message.content as string);
     }
   }, [state.messages, sendMessage]);
   
   const clearChat = useCallback(() => {
-    console.log('Clearing chat session:', state.sessionId);
+    debugLog('Clearing chat session:', state.sessionId);
     // Clear saved messages
     localStorage.removeItem(`revup_messages_${state.sessionId}`);
     dispatch({ type: 'CLEAR_CHAT' });
@@ -147,7 +148,7 @@ export function useChat() {
   
   const startNewSession = useCallback(() => {
     const newSessionId = generateSessionId();
-    console.log('Starting new session:', newSessionId);
+    debugLog('Starting new session:', newSessionId);
     
     // Clear old messages
     localStorage.removeItem(`revup_messages_${state.sessionId}`);

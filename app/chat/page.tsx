@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { scrollToTop } from '@/lib/utils/scroll';
 import { ChatProvider } from '@/components/providers/ChatProvider';
 import ChatWindow from './components/ChatWindow';
+import { scrollToTop } from '@/lib/utils';
 
 export default function ChatPage() {
   // Ensure page starts at top on load (mobile fix)

@@ -5,7 +5,7 @@ import { scrollToTop } from '@/lib/utils/scroll';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useChat } from '@/hooks/useChat';
-import { cn } from '@/lib/utils';
+import { cn, scrollToTop } from '@/lib/utils';
 import { useTheme } from '../../components/providers/ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
 
@@ -31,8 +31,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
   
   // Ensure page loads at top on mobile (fix scroll position issue)
   useEffect(() => {
-    scrollToTop();
-    const timer = setTimeout(scrollToTop, 100);
+
     return () => clearTimeout(timer);
   }, []);
   

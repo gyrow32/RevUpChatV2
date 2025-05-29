@@ -1,4 +1,5 @@
 import type { ParsedResponse, VehicleData, Block } from '@/types';
+import { debugLog } from '@/lib/utils';
 
 // Parse markdown gallery format
 function parseMarkdownGallery(content: string): VehicleData[] {
@@ -35,7 +36,7 @@ function parseMarkdownGallery(content: string): VehicleData[] {
 
 export function parseWebhookResponse(response: { output: string }): ParsedResponse {
   try {
-    console.log('Raw webhook response:', response.output);
+    debugLog('Raw webhook response:', response.output);
     
     // Check for markdown gallery format first
     if (response.output.includes('Here is a gallery') || response.output.includes('Here are')) {
