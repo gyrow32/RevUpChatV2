@@ -3,6 +3,7 @@
 import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 import type { Message, ChatState, ParsedResponse } from '@/types';
 import { generateSessionId, getStoredSessionId, storeSessionId } from '@/lib/utils/session';
+import { debugLog } from '@/lib/utils/debug';
 
 
 type ChatAction =
