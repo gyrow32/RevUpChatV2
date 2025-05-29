@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { scrollToTop } from '@/lib/utils/scroll';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useChat } from '@/hooks/useChat';
@@ -31,6 +30,9 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
   
   // Ensure page loads at top on mobile (fix scroll position issue)
   useEffect(() => {
+    const timer = setTimeout(() => {
+      scrollToTop();
+    }, 100);
 
     return () => clearTimeout(timer);
   }, []);
