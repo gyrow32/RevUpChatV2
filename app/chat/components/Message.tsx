@@ -138,17 +138,20 @@ export default function Message({
         className
       )}
     >
-      <div className={cn(
-        // Only constrain width for standard text messages
-        !hasWideContent && "max-w-[85%] md:max-w-[75%] lg:max-w-[65%]",
-        // Wide content like galleries and tables get extra width
-        hasWideContent && "w-full max-w-[95%]",
-        "shadow-lg rounded-2xl backdrop-blur-sm",
-        isUser
-          ? "bg-blue-600/70 text-white rounded-br-md border border-blue-400/30"
-          : "bg-gray-100 dark:bg-black/30 border border-gray-200 dark:border-white/10 rounded-bl-md",
-        isError && "border-red-400/50 bg-red-500/20"
-      )}>
+      <div
+        data-testid={`message-bubble-${message.id}`}
+        className={cn(
+          // Only constrain width for standard text messages
+          !hasWideContent && "max-w-[85%] md:max-w-[75%] lg:max-w-[65%]",
+          // Wide content like galleries and tables get extra width
+          hasWideContent && "w-full max-w-[95%]",
+          "shadow-lg rounded-2xl backdrop-blur-sm",
+          isUser
+            ? "bg-blue-600/70 text-white rounded-br-md border border-blue-400/30"
+            : "bg-gray-100 dark:bg-black/30 border border-gray-200 dark:border-white/10 rounded-bl-md",
+          isError && "border-red-400/50 bg-red-500/20"
+        )}
+      >
         <div className="p-5">
           {renderContent()}
           

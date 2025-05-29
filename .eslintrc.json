@@ -1,3 +1,24 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:testing-library/react"
+  ],
+  "plugins": ["testing-library"],
+  "rules": {
+    "testing-library/prefer-screen-queries": "warn",
+    "testing-library/prefer-user-event": "warn",
+    "testing-library/no-debugging-utils": "warn",
+    "testing-library/no-dom-import": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.{js,jsx,ts,tsx}", "**/*.spec.{js,jsx,ts,tsx}"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "testing-library/prefer-screen-queries": "error"
+      }
+    }
+  ]
 }
