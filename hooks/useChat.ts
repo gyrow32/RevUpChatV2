@@ -3,7 +3,7 @@
 import { useCallback } from 'react';
 import { useChatContext } from '@/components/providers/ChatProvider';
 import { webhookClient } from '@/lib/webhook/client';
-import { generateSessionId } from '@/lib/utils/session';
+import { generateSessionId, storeSessionId } from '@/lib/utils/session';
 import type { Message } from '@/types';
 
 export function useChat() {
@@ -157,7 +157,7 @@ export function useChat() {
     dispatch({ type: 'LOAD_MESSAGES', payload: [] });
     dispatch({ type: 'SET_ERROR', payload: null });
     
-    localStorage.setItem('revup_session_id', newSessionId);
+    storeSessionId(newSessionId);
   }, [state.sessionId, dispatch]);
   
   return {
