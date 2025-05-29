@@ -130,7 +130,7 @@ export default function Message({
               return (
                 <TextBlock 
                   key={index} 
-                  content={`[Unknown block type: ${block.type}]`} 
+                  content={`[Unknown block type: ${(block as any).type}]`} 
                   isUser={false} 
                 />
               );

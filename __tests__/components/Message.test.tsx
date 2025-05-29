@@ -108,4 +108,20 @@ describe('Message Component', () => {
     render(<Message message={sendingMessage} />);
     expect(screen.getByText('Sending...')).toBeInTheDocument();
   });
+
+  it('renders fallback for unknown block type', () => {
+    const unknownBlockMessage: MessageType = {
+      id: '3',
+      role: 'assistant',
+      content: {
+        blocks: [
+          { type: 'notarealtype', content: 'foo' } as any
+        ]
+      },
+      timestamp: new Date('2024-01-01T12:00:00Z'),
+      status: 'sent'
+    };
+    render(<Message message={unknownBlockMessage} />);
+    expect(screen.getByText('[Unknown block type: notarealtype]')).toBeInTheDocument();
+  });
 }); 
