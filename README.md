@@ -95,6 +95,14 @@ revup-chat/
 └── .eslintrc.json               # ESLint config
 ```
 
+## Allowed Image Domains
+
+Vehicle images are loaded from external sources. The application only
+allows optimized images from the following domains:
+
+- `example.com`
+- `images.example.com`
+
 ## Next Steps
 
 According to the implementation plan:
