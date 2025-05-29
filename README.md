@@ -1,5 +1,7 @@
 # RevUpChat
 
+<!-- Recent fix: Resolved duplicate scrollToTop import issue -->
+
 AI-powered car shopping assistant chat interface.
 
 ## Project Status
