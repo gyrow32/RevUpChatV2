@@ -40,7 +40,7 @@ describe('TextBlock Component', () => {
     render(<TextBlock content="" />);
     
     // Should render paragraph element even with empty content
-    const paragraph = screen.getByRole('paragraph');
+    const paragraph = screen.getByTestId('text-block-paragraph');
     expect(paragraph).toBeInTheDocument();
     expect(paragraph).toHaveTextContent('');
   });
@@ -50,7 +50,7 @@ describe('TextBlock Component', () => {
     render(<TextBlock content={multilineContent} />);
     
     // Test that the paragraph has the whitespace preservation class
-    const paragraph = screen.getByRole('paragraph');
+    const paragraph = screen.getByTestId('text-block-paragraph');
     expect(paragraph).toHaveClass('whitespace-pre-wrap');
     
     // Test that the content is actually preserved in the paragraph
