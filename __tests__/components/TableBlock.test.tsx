@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TableBlock from '@/app/chat/components/blocks/TableBlock';
 import React from 'react';
 
@@ -41,4 +41,24 @@ describe('TableBlock Component', () => {
     expect(screen.getAllByText('Toyota').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Civic').length).toBeGreaterThan(0);
   });
-}); 
+
+  it('shows fallback content when carousel image fails to load', async () => {
+    window.innerWidth = 375;
+    render(<TableBlock columns={columns} rows={rows} />);
+    const img = screen.getByAltText(/toyota camry/i);
+    fireEvent.error(img);
+    await waitFor(() => {
+      expect(document.querySelector('.fallback-content')).toBeInTheDocument();
+    });
+  });
+
+  it('shows fallback icon when thumbnail image fails to load', async () => {
+    window.innerWidth = 1024;
+    render(<TableBlock columns={columns} rows={rows} />);
+    const img = screen.getByAltText(/toyota camry/i);
+    fireEvent.error(img);
+    await waitFor(() => {
+      expect(document.querySelector('.fallback-icon')).toBeInTheDocument();
+    });
+  });
+});
