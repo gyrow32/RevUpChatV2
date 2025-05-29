@@ -19,10 +19,13 @@ export default function TextBlock({
         : "prose-invert text-gray-100",
       className
     )}>
-      <p className={cn(
-        "whitespace-pre-wrap leading-relaxed",
-        isUser ? "text-white" : "text-gray-100"
-      )}>
+      <p
+        data-testid="text-block-paragraph"
+        className={cn(
+          "whitespace-pre-wrap leading-relaxed",
+          isUser ? "text-white" : "text-gray-100"
+        )}
+      >
         {content}
       </p>
     </div>
