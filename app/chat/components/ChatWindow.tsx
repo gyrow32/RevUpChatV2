@@ -59,11 +59,11 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
   
   return (
     <div className={cn(
-      "flex flex-col h-full bg-gray-100/50 dark:bg-black/10 backdrop-blur-sm",
+      "flex flex-col h-full bg-gray-50/80 dark:bg-black/10 backdrop-blur-sm",
       className
     )}>
-      {/* Premium Black Glass Header - Mobile Optimized with Reduced Spacing */}
-      <div className="border-b bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:via-black dark:to-gray-950 border-gray-300 dark:border-blue-900/40 shadow-xl shadow-blue-100/30 dark:shadow-2xl dark:shadow-black/70 px-3 sm:px-6 relative overflow-hidden rounded-b-3xl">
+      {/* Premium Glass Header - Mobile Optimized with Reduced Spacing */}
+      <div className="border-b bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:via-black dark:to-gray-950 border-gray-300 dark:border-blue-900/40 shadow-xl shadow-blue-100/30 dark:shadow-2xl dark:shadow-black/70 px-3 sm:px-6 relative overflow-hidden rounded-b-3xl">
         {/* Glass/highlight overlays */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="hidden dark:block absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-purple-900/10 opacity-60" />

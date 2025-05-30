@@ -32,13 +32,17 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
     );
   };
 
-  // Extract image URLs from the first row
-  const imageUrls = rows[0].map(cell => {
+  // Safe access to rows data
+  const hasRows = Array.isArray(rows) && rows.length > 0;
+  const firstRow = hasRows ? rows[0] : [];
+
+  // Extract image URLs from the first row (safely)
+  const imageUrls = hasRows ? firstRow.map(cell => {
     if (typeof cell === 'string' && cell.match(/!\[.*?\]\((.*?)\)/)) {
       return cell.match(/!\[.*?\]\((.*?)\)/)?.[1] || '';
     }
     return '';
-  });
+  }).filter(Boolean) : [];
 
   // Get vehicle images for a specific row
   const getVehicleImages = (row: (string | number)[]): string[] => {
@@ -131,7 +135,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
   const hasVehicleData = isVehicleTable();
   const primaryColumns = getPrimaryColumns();
 
-  if (!columns || !rows || rows.length === 0) {
+  if (!hasRows || !columns || columns.length === 0) {
     return (
       <div className={cn(
         "relative text-center py-8 sm:py-12 px-4 sm:px-6 rounded-xl sm:rounded-2xl overflow-hidden",
@@ -260,6 +264,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
             <div
               key={rowIndex}
               className="relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl"
+              data-testid={`vehicle-row-${rowIndex}`}
             >
               {/* Card background effects */}
               <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-black/40"></div>
@@ -277,6 +282,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                           fill
                           className="object-cover object-center transition-all duration-500"
                           onError={() => handleImageError(currentImage!)}
+                          data-testid={`vehicle-${vehicleInfo.make?.toLowerCase() || ''}-${vehicleInfo.model?.toLowerCase() || ''}-image`}
                         />
                       ) : (
                         <div className="fallback-content w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30">
@@ -548,15 +554,10 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                                   <Image
                                     src={vehicleImage}
                                     alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
-                                    fill
+                                    fill={true}
                                     className="object-cover object-center group-hover:scale-110 transition-transform duration-500"
-                                    onError={() => {
-                                      debugLog('Image failed to load:', vehicleImage);
-                                      handleImageError(vehicleImage);
-                                    }}
-                                    onLoad={() => {
-                                      debugLog('Image loaded successfully:', vehicleImage);
-                                    }}
+                                    onError={() => handleImageError(vehicleImage)}
+                                    data-testid={`vehicle-${vehicleInfo.make?.toLowerCase() || ''}-${vehicleInfo.model?.toLowerCase() || ''}-image`}
                                   />
                                 ) : (
                                   <div className="fallback-icon w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600/30 to-purple-600/30">

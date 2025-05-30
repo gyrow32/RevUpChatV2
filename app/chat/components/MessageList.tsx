@@ -153,15 +153,15 @@ export default function MessageList({
       className={cn("flex-1 overflow-y-auto overflow-x-hidden px-4", className)}
       style={{ maxHeight: '100%' }}
     >
-      <div ref={messagesContainerRef} className="py-6 space-y-2">
+      <div ref={messagesContainerRef} className="py-6 space-y-4">
         {messages.length === 0 ? (
           <div className="relative flex flex-col items-center justify-center min-h-[70vh] text-center px-4 py-8 overflow-hidden">
             {/* Cinematic Background Elements - Mobile Optimized */}
             <div className="absolute inset-0 opacity-15 sm:opacity-20">
               {/* Animated gradient orbs - Smaller on mobile */}
-              <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute bottom-1/4 right-1/4 w-28 h-28 sm:w-80 sm:h-80 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-72 sm:h-72 bg-gradient-to-r from-green-500/15 to-teal-500/15 rounded-full blur-3xl animate-pulse delay-500"></div>
+              <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-500/30 to-cyan-500/20 dark:from-blue-500/20 dark:to-cyan-500/20 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-1/4 right-1/4 w-28 h-28 sm:w-80 sm:h-80 bg-gradient-to-r from-purple-500/30 to-pink-500/20 dark:from-purple-500/20 dark:to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-72 sm:h-72 bg-gradient-to-r from-green-500/25 to-teal-500/15 dark:from-green-500/15 dark:to-teal-500/15 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
             {/* Floating particles - Reduced on mobile */}
@@ -169,7 +169,7 @@ export default function MessageList({
               {[...Array(10)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute w-1 h-1 bg-white/20 rounded-full animate-float hidden sm:block"
+                  className="absolute w-1 h-1 bg-blue-400/40 dark:bg-white/20 rounded-full animate-float hidden sm:block"
                   style={{
                     left: `${Math.random() * 100}%`,
                     animationDelay: `${Math.random() * 3}s`,
@@ -190,7 +190,7 @@ export default function MessageList({
                 isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
               )}>
                 {/* Hero Image Container */}
-                <div className="relative h-32 sm:h-40 w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black overflow-hidden">
+                <div className="relative h-32 sm:h-40 w-full bg-gradient-to-br from-blue-800 via-indigo-800 to-blue-900 dark:from-gray-900 dark:via-gray-800 dark:to-black overflow-hidden">
                   {/* Sports Car Image */}
                   <Image 
                     src="/images/sports-car-hero.png"
@@ -203,9 +203,9 @@ export default function MessageList({
                   />
                   
                   {/* Cinematic Gradient Overlays for Blending */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
-                  <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-transparent to-gray-900/80"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-gray-900/30 via-transparent to-gray-900/30"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900 via-blue-900/60 to-transparent dark:from-gray-900 dark:via-gray-900/60 dark:to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-blue-900/40 via-transparent to-blue-900/80 dark:from-gray-900/40 dark:via-transparent dark:to-gray-900/80"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 via-transparent to-blue-900/30 dark:from-gray-900/30 dark:via-transparent dark:to-gray-900/30"></div>
                   
                   {/* Subtle animated particles for premium feel */}
                   <div className="absolute inset-0 opacity-20">
@@ -242,7 +242,7 @@ export default function MessageList({
                   </div>
                   
                   {/* Subtle bottom fade to blend with content below */}
-                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-blue-900 to-transparent dark:from-gray-900 dark:to-transparent"></div>
                 </div>
               </div>
               
@@ -251,7 +251,7 @@ export default function MessageList({
                 "transition-all duration-1000 delay-500",
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               )}>
-                <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-cyan-200 mb-3 sm:mb-4 drop-shadow-2xl tracking-wide">
+                <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 via-indigo-800 to-blue-700 dark:from-white dark:via-blue-200 dark:to-cyan-200 mb-3 sm:mb-4 drop-shadow-2xl tracking-wide">
                   Welcome to RevUpChat!
                 </h3>
                 
@@ -263,7 +263,7 @@ export default function MessageList({
                 "transition-all duration-1000 delay-700",
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               )}>
-                <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-10 leading-relaxed font-light px-2">
+                <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 sm:mb-10 leading-relaxed font-light px-2">
                   I&apos;m your car shopping assistant. 
                   Discover your perfect vehicle with personalized recommendations.
                 </p>
@@ -279,8 +279,8 @@ export default function MessageList({
                     key={index}
                     onClick={() => onQuestionClick?.(action.query)}
                     className={cn(
-                      "group relative overflow-hidden h-auto p-4 sm:p-6 text-left bg-black/30 backdrop-blur-md rounded-xl sm:rounded-2xl",
-                      "hover:bg-black/50 border border-white/10 hover:border-white/20",
+                      "group relative overflow-hidden h-auto p-4 sm:p-6 text-left bg-white/50 backdrop-blur-md rounded-xl sm:rounded-2xl dark:bg-black/30",
+                      "hover:bg-white/70 dark:hover:bg-black/50 border border-white/80 dark:border-white/10 hover:border-white/90 dark:hover:border-white/20",
                       "transition-all duration-300 shadow-xl hover:shadow-2xl",
                       "hover:scale-[1.02] transform-gpu hover:-translate-y-1 min-h-[100px] sm:min-h-[140px]",
                       "touch-target active:scale-95"
@@ -316,7 +316,7 @@ export default function MessageList({
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-white text-sm sm:text-lg group-hover:text-blue-100 transition-colors duration-300 leading-tight">
+                          <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-lg group-hover:text-blue-700 dark:group-hover:text-blue-100 transition-colors duration-300 leading-tight">
                             {action.label}
                           </h3>
                         </div>
@@ -324,12 +324,12 @@ export default function MessageList({
                       
                       {/* Description */}
                       <div className="ml-8 sm:ml-12">
-                        <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-medium">
+                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300 font-medium">
                           {action.description}
                         </p>
                         
                         {/* Hover Indicator */}
-                        <div className="mt-2 sm:mt-3 flex items-center text-xs text-gray-500 group-hover:text-blue-400 transition-all duration-300">
+                        <div className="mt-2 sm:mt-3 flex items-center text-xs text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-all duration-300">
                           <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             Tap to explore →
                           </span>
@@ -359,7 +359,7 @@ export default function MessageList({
                 "mt-6 sm:mt-8 transition-all duration-1000 delay-1000",
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               )}>
-                <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm text-gray-400">
+                <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   <div className="w-6 sm:w-8 h-px bg-gradient-to-r from-transparent to-gray-500"></div>
                   <span>Or type your question below</span>
                   <div className="w-6 sm:w-8 h-px bg-gradient-to-l from-transparent to-gray-500"></div>

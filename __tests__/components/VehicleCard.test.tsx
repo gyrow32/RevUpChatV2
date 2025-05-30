@@ -34,7 +34,7 @@ describe('VehicleCard Component', () => {
   it('renders vehicle basic information correctly', () => {
     render(<VehicleCard vehicle={mockVehicle} />);
     
-    expect(screen.getByText('2020 Toyota Camry')).toBeInTheDocument();
+    expect(screen.getByText(/2020 Toyota Camry/)).toBeInTheDocument();
     expect(screen.getByText('XLE')).toBeInTheDocument();
     expect(screen.getByText('$25,000')).toBeInTheDocument();
     expect(screen.getByText('$350/mo')).toBeInTheDocument();
@@ -43,10 +43,9 @@ describe('VehicleCard Component', () => {
   it('renders vehicle specs correctly', () => {
     render(<VehicleCard vehicle={mockVehicle} />);
     
-    expect(screen.getByText('50,000 miles')).toBeInTheDocument();
-    expect(screen.getByText('Gasoline')).toBeInTheDocument();
-    expect(screen.getByText('FWD')).toBeInTheDocument();
-    expect(screen.getByText('Local Toyota')).toBeInTheDocument();
+    // Updated to match new mi format
+    expect(screen.getByText('50,000 mi')).toBeInTheDocument();
+    // We no longer show these specs in the card, so removing these tests
   });
 
   it('shows stock number when available', () => {
@@ -58,7 +57,8 @@ describe('VehicleCard Component', () => {
   it('opens vehicle link when View Details button is clicked', () => {
     render(<VehicleCard vehicle={mockVehicle} />);
     
-    const viewDetailsButton = screen.getByText('View Full Details');
+    // Updated to match new button text
+    const viewDetailsButton = screen.getByText('View Details');
     fireEvent.click(viewDetailsButton);
     
     expect(mockWindowOpen).toHaveBeenCalledWith(
@@ -72,7 +72,8 @@ describe('VehicleCard Component', () => {
     const vehicleWithoutLink = { ...mockVehicle, "Vehicle Link": undefined };
     render(<VehicleCard vehicle={vehicleWithoutLink} />);
     
-    const viewDetailsButton = screen.getByRole('button', { name: /view full details/i });
+    // Updated to match new button text
+    const viewDetailsButton = screen.getByRole('button', { name: /view details/i });
     expect(viewDetailsButton).toBeDisabled();
   });
 
@@ -87,11 +88,11 @@ describe('VehicleCard Component', () => {
     
     render(<VehicleCard vehicle={minimalVehicle} />);
     
-    expect(screen.getByText('2015 Honda Civic')).toBeInTheDocument();
+    expect(screen.getByText(/2015 Honda Civic/)).toBeInTheDocument();
     expect(screen.getByText('$15,000')).toBeInTheDocument();
     
     // Should not show fields that aren't provided
-    expect(screen.queryByText('miles')).not.toBeInTheDocument();
+    expect(screen.queryByText('mi')).not.toBeInTheDocument();
     expect(screen.queryByText('/mo')).not.toBeInTheDocument();
   });
 
@@ -111,4 +112,4 @@ describe('VehicleCard Component', () => {
     
     expect(container.firstChild).toHaveClass('custom-test-class');
   });
-}); 
+});

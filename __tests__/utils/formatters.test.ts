@@ -35,13 +35,13 @@ describe('Formatter Functions', () => {
 
   describe('formatMileage', () => {
     it('formats number mileage correctly', () => {
-      expect(formatMileage(50000)).toBe('50,000 miles');
-      expect(formatMileage(1000)).toBe('1,000 miles');
+      expect(formatMileage(50000)).toBe('50,000 mi');
+      expect(formatMileage(1000)).toBe('1,000 mi');
     });
 
     it('formats string mileage correctly', () => {
-      expect(formatMileage('50,000')).toBe('50,000 miles');
-      expect(formatMileage('50000')).toBe('50,000 miles');
+      expect(formatMileage('50,000')).toBe('50,000 mi');
+      expect(formatMileage('50000')).toBe('50,000 mi');
     });
 
     it('handles invalid mileage', () => {

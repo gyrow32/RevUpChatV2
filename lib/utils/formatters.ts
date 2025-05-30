@@ -7,12 +7,8 @@ export function formatPrice(price: string | number): string {
     
   if (isNaN(num)) return 'Price N/A';
   
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(num);
+  // Use simple string formatting instead of Intl.NumberFormat for consistency
+  return '$' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export function formatMileage(mileage: string | number): string {
@@ -22,7 +18,9 @@ export function formatMileage(mileage: string | number): string {
     
   if (isNaN(num)) return 'N/A';
   
-  return `${num.toLocaleString()} miles`;
+  // Use custom formatting instead of toLocaleString
+  const formatted = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return `${formatted} mi`;
 }
 
 export function formatPayment(payment: string | number): string {
@@ -32,8 +30,8 @@ export function formatPayment(payment: string | number): string {
     
   if (isNaN(num)) return 'N/A';
   
-  // Remove cents for cleaner look
-  return `$${Math.round(num).toLocaleString()}/mo`;
+  // Use simple string formatting instead of toLocaleString
+  return '$' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '/mo';
 }
 
 export function formatYear(year: string | number): number {

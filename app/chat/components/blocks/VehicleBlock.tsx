@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Car } from 'lucide-react';
 import VehicleCard from './VehicleCard';
 import type { VehicleData } from '@/types';
 import { cn } from '@/lib/utils';
@@ -60,12 +60,14 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   if (!vehicles || vehicles.length === 0) {
     return (
       <div className={cn(
-        "text-center text-gray-500 dark:text-gray-400 py-20 px-12 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-inner",
+        "text-center text-gray-500 dark:text-gray-400 py-20 px-12 bg-gray-100 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700",
         className
       )}>
-        <div className="text-9xl mb-8 opacity-40">🔍</div>
-        <div className="font-bold text-3xl mb-4 text-gray-800 dark:text-gray-200">No vehicles found</div>
-        <div className="text-xl text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+        <div className="flex justify-center items-center mb-8">
+          <Car className="w-20 h-20 text-gray-400 dark:text-gray-500" />
+        </div>
+        <div className="font-bold text-2xl mb-4 text-gray-800 dark:text-gray-200">No vehicles found</div>
+        <div className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
           Try adjusting your search criteria or contact our specialists for personalized recommendations
         </div>
       </div>
@@ -81,55 +83,44 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   };
 
   // Calculate carousel width
-  const cardWidth = 308 + 16; // card width (increased by 10%) + gap
+  const cardWidth = 308 + 16; // card width + gap
   const carouselWidth = isMobile ? cardWidth : cardWidth * 3;
 
   return (
     <section
       className={cn(
-        "w-full max-w-7xl mx-auto px-2 sm:px-6 md:px-8 py-6 sm:py-10",
-        "rounded-3xl border border-gray-300 dark:border-gray-800 shadow-lg shadow-gray-300/40 dark:shadow-2xl dark:shadow-black/70 bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:to-black/90 backdrop-blur-xl",
+        "w-full max-w-7xl mx-auto px-2 sm:px-6 md:px-8 py-6 sm:py-8",
+        "rounded-xl border border-gray-200 dark:border-gray-800 shadow-md dark:shadow-lg bg-white dark:bg-gray-900",
         className
       )}
     >
-      {/* Premium Black Glass Header */}
-      <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-white/10 shadow-2xl shadow-gray-200/50 dark:shadow-black/30">
-        <div className="flex items-center gap-4">
-          <div className="p-2.5 bg-gradient-to-br from-blue-500/70 dark:from-blue-600/70 to-blue-600/70 dark:to-blue-700/70 backdrop-blur-sm rounded-2xl shadow-lg border border-blue-400/20">
-            <span className="text-white text-xl">🚗</span>
-          </div>
-          <div>
-            <h4 className="font-black text-xl text-gray-900 dark:text-white leading-tight drop-shadow-lg">
-              Found {vehicles.length} Premium Vehicle{vehicles.length !== 1 ? 's' : ''}
-            </h4>
-          </div>
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 mb-4 border-b border-gray-200 dark:border-gray-800">
+        <div>
+          <h4 className="font-bold text-lg text-gray-900 dark:text-white">
+            {vehicles.length} Vehicle{vehicles.length !== 1 ? 's' : ''} Found
+          </h4>
         </div>
         
-        {/* Page indicator with black glass */}
+        {/* Page indicator */}
         {totalPages > 1 && (
-          <div className="px-4 py-2 bg-white/80 dark:bg-black/30 backdrop-blur-md rounded-2xl border border-gray-200/50 dark:border-white/10 shadow-lg">
-            <span className="text-sm font-bold text-gray-900 dark:text-white">
-              {currentIndex + 1}
-            </span>
-            <span className="text-gray-600 dark:text-gray-300 mx-2">of</span>
-            <span className="text-sm font-bold text-gray-900 dark:text-white">
-              {totalPages}
-            </span>
+          <div className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300">
+            {currentIndex + 1} of {totalPages}
           </div>
         )}
       </div>
 
-      {/* Premium Black Glass Carousel */}
-      <div className="relative flex items-center p-6 bg-white/80 dark:bg-black/10 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-white/5 shadow-2xl shadow-gray-200/50 dark:shadow-black/30">
-        {/* Left Arrow with Glass Effect */}
+      {/* Carousel */}
+      <div className="relative flex items-center px-6 py-4">
+        {/* Left Arrow */}
         {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToPrevious}
-            className="absolute left-2 z-10 p-3 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-md shadow-xl hover:bg-white/90 dark:hover:bg-black/60 border border-gray-200/50 dark:border-white/10 hover:border-gray-300/50 dark:hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="absolute left-2 z-10 p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 transition-colors -translate-y-1/2 top-1/2 disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={currentIndex === 0}
             aria-label="Previous Vehicles"
           >
-            <ChevronLeft className="w-6 h-6 text-gray-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-lg" />
+            <ChevronLeft className="w-5 h-5 text-gray-700 dark:text-white" />
           </button>
         )}
 
@@ -142,7 +133,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
           onTouchEnd={handleTouchEnd}
         >
           <div 
-            className="flex transition-transform duration-700 ease-out gap-4 items-stretch min-h-[360px]"
+            className="flex transition-transform duration-500 ease-out gap-4 items-stretch min-h-[480px]"
             style={{ 
               transform: `translateX(-${currentIndex * (cardWidth)}px)`
             }}
@@ -153,39 +144,39 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
                 className="flex-shrink-0"
                 style={{ width: '308px' }}
               >
-                <VehicleCard vehicle={vehicle} />
+                <VehicleCard vehicle={vehicle} className="h-full" />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right Arrow with Glass Effect */}
+        {/* Right Arrow */}
         {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToNext}
-            className="absolute right-2 z-10 p-3 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-md shadow-xl hover:bg-white/90 dark:hover:bg-black/60 border border-gray-200/50 dark:border-white/10 hover:border-gray-300/50 dark:hover:border-white/20 transition-all duration-300 transform -translate-y-1/2 top-1/2 disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="absolute right-2 z-10 p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 transition-colors -translate-y-1/2 top-1/2 disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={currentIndex >= vehicles.length - vehiclesPerPage}
             aria-label="Next Vehicles"
           >
-            <ChevronRight className="w-6 h-6 text-gray-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-lg" />
+            <ChevronRight className="w-5 h-5 text-gray-700 dark:text-white" />
           </button>
         )}
       </div>
 
-      {/* Premium Black Glass Page Indicators */}
+      {/* Page Indicators */}
       {vehicles.length > vehiclesPerPage && (
-        <div className="flex justify-center items-center gap-3 pt-4">
+        <div className="flex justify-center items-center gap-2 pt-3">
           {Array.from({ length: vehicles.length - vehiclesPerPage + 1 }, (_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={cn(
-                "transition-all duration-300 rounded-full border backdrop-blur-sm",
+                "transition-colors rounded-full",
                 index === currentIndex 
-                  ? "bg-blue-500/70 dark:bg-blue-600/70 border-blue-400/50 w-8 h-3 shadow-lg shadow-blue-500/25" 
-                  : "bg-white/80 dark:bg-black/30 border-gray-200/50 dark:border-white/20 hover:bg-white/90 dark:hover:bg-black/50 hover:border-gray-300/50 dark:hover:border-white/30 w-3 h-3"
+                  ? "bg-blue-600 w-6 h-2" 
+                  : "bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 w-2 h-2"
               )}
-              aria-label={`Go to card ${index + 1}`}
+              aria-label={`Go to page ${index + 1}`}
             />
           ))}
         </div>
