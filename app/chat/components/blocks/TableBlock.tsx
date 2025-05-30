@@ -388,7 +388,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                 {hasVehicleData && vehicleImages.length > 0 && (
                   <div 
                     className="relative h-52 w-full overflow-hidden bg-gradient-to-br from-gray-900 to-black transition-opacity duration-300"
-                    ref={(el) => {
+                    ref={(el: HTMLDivElement | null): void => {
                       imageContainerRefs.current[rowIndex] = el;
                     }}
                   >
