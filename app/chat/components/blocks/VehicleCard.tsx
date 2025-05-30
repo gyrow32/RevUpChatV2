@@ -46,7 +46,7 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
   return (
     <div 
       className={cn(
-        "group relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-black/80 backdrop-blur-xl rounded-3xl border border-gray-300 dark:border-gray-800 hover:border-blue-400 dark:hover:border-blue-400 transition-all duration-500 w-[308px] min-h-[420px]",
+        "group relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-black/80 backdrop-blur-xl rounded-3xl border border-gray-300 dark:border-gray-800 hover:border-blue-400 dark:hover:border-blue-400 transition-all duration-500 w-[308px] min-h-[500px] max-h-[500px] flex flex-col",
         "shadow-lg shadow-gray-300/40 dark:shadow-2xl dark:shadow-black/70 hover:shadow-blue-200/60 dark:hover:shadow-black/80",
         "transform hover:-translate-y-2 hover:scale-[1.02]",
         "before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-100/10 before:via-transparent before:to-purple-100/5 before:pointer-events-none dark:before:from-white/5 dark:before:to-black/10",
@@ -115,7 +115,7 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
       </div>
       
       {/* Premium Content Section */}
-      <div className="p-3 space-y-3 flex flex-col justify-between">
+      <div className="p-3 space-y-2 flex flex-col flex-1 justify-between">
         {/* Title */}
         <div>
           <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight min-h-[2.5em]">
@@ -127,43 +127,45 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
         </div>
         
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-2 min-h-[70px]">
-          {vehicle.mileage ? (
-            <div className="bg-gradient-to-br from-purple-100/80 dark:from-purple-900/30 to-purple-50/80 dark:to-purple-900/10 backdrop-blur-md rounded-lg p-2 border border-purple-200/50 dark:border-purple-500/20">
-              <div className="flex items-center gap-1">
-                <Gauge className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                <span className="text-xs text-purple-700 dark:text-purple-300 font-medium">Mileage</span>
-              </div>
-              <div className="text-xs font-bold text-gray-900 dark:text-white">{formatMileage(vehicle.mileage)}</div>
-            </div>
-          ) : <div className="min-h-[48px]" />}
+        <div className="grid grid-cols-2 gap-2 min-h-[48px] mb-1">
           {vehicle.fuel ? (
-            <div className="bg-gradient-to-br from-green-100/80 dark:from-green-900/30 to-green-50/80 dark:to-green-900/10 backdrop-blur-md rounded-lg p-2 border border-green-200/50 dark:border-green-500/20">
-              <div className="flex items-center gap-1">
-                <Fuel className="w-3 h-3 text-green-600 dark:text-green-400" />
-                <span className="text-xs text-green-700 dark:text-green-300 font-medium">Fuel</span>
-              </div>
-              <div className="text-xs font-bold text-gray-900 dark:text-white">{vehicle.fuel}</div>
+            <div className="bg-gradient-to-br from-green-100/80 dark:from-green-900/30 to-green-50/80 dark:to-green-900/10 backdrop-blur-md rounded-lg p-2 border border-green-200/50 dark:border-green-500/20 flex items-center min-h-[48px]">
+              <Fuel className="w-3 h-3 text-green-600 dark:text-green-400 mr-1" />
+              <span className="text-xs text-green-700 dark:text-green-300 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Fuel</span>
+              <span className="ml-2 text-xs font-bold text-gray-900 dark:text-white whitespace-nowrap overflow-hidden text-ellipsis">{vehicle.fuel}</span>
             </div>
           ) : <div className="min-h-[48px]" />}
           {vehicle.drivetrain ? (
-            <div className="bg-gradient-to-br from-orange-100/80 dark:from-orange-900/30 to-orange-50/80 dark:to-orange-900/10 backdrop-blur-md rounded-lg p-2 border border-orange-200/50 dark:border-orange-500/20">
-              <div className="flex items-center gap-1">
-                <Settings className="w-3 h-3 text-orange-600 dark:text-orange-400" />
-                <span className="text-xs text-orange-700 dark:text-orange-300 font-medium">Drivetrain</span>
-              </div>
-              <div className="text-xs font-bold text-gray-900 dark:text-white">{vehicle.drivetrain}</div>
+            <div className="bg-gradient-to-br from-orange-100/80 dark:from-orange-900/30 to-orange-50/80 dark:to-orange-900/10 backdrop-blur-md rounded-lg p-2 border border-orange-200/50 dark:border-orange-500/20 flex items-center min-h-[48px]">
+              <Settings className="w-3 h-3 text-orange-600 dark:text-orange-400 mr-1" />
+              <span className="text-xs text-orange-700 dark:text-orange-300 font-medium whitespace-nowrap overflow-hidden text-ellipsis">Drivetrain</span>
+              <span className="ml-2 text-xs font-bold text-gray-900 dark:text-white whitespace-nowrap overflow-hidden text-ellipsis">{vehicle.drivetrain}</span>
             </div>
           ) : <div className="min-h-[48px]" />}
-          {vehicle.dealer ? (
-            <div className="bg-gradient-to-br from-red-100/80 dark:from-red-900/30 to-red-50/80 dark:to-red-900/10 backdrop-blur-md rounded-lg p-2 border border-red-200/50 dark:border-red-500/20">
-              <div className="flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-red-600 dark:text-red-400" />
-                <span className="text-xs text-red-700 dark:text-red-300 font-medium">Dealer</span>
-              </div>
-              <div className="text-xs font-bold text-gray-900 dark:text-white">{vehicle.dealer}</div>
-            </div>
-          ) : <div className="min-h-[48px]" />}
+        </div>
+        
+        {/* 2x2 Meta Grid */}
+        <div className="grid grid-cols-2 grid-rows-2 gap-2 mt-1 mb-2">
+          {/* Age */}
+          <div className="flex flex-col justify-center items-start bg-gradient-to-br from-gray-900/80 to-gray-800/60 rounded-xl p-3 border border-gray-700/40 h-20 w-full min-w-0 overflow-hidden">
+            <span className="text-xs text-gray-300 font-medium mb-1 whitespace-nowrap">Age</span>
+            <span className="text-lg font-bold text-white leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{vehicle.ageDays !== undefined ? `${vehicle.ageDays} days` : '--'}</span>
+          </div>
+          {/* LTV */}
+          <div className="flex flex-col justify-center items-start bg-gradient-to-br from-blue-900/80 to-blue-800/60 rounded-xl p-3 border border-blue-700/40 h-20 w-full min-w-0 overflow-hidden">
+            <span className="text-xs text-blue-200 font-medium mb-1 whitespace-nowrap">LTV</span>
+            <span className="text-lg font-bold text-white leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{vehicle.ltv !== undefined ? `${vehicle.ltv.toFixed(1)}%` : '--'}</span>
+          </div>
+          {/* Profit */}
+          <div className="flex flex-col justify-center items-start bg-gradient-to-br from-green-900/80 to-green-800/60 rounded-xl p-3 border border-green-700/40 h-20 w-full min-w-0 overflow-hidden">
+            <span className="text-xs text-green-200 font-medium mb-1 whitespace-nowrap">Profit</span>
+            <span className="text-lg font-bold text-white leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{vehicle.profit !== undefined ? `$${vehicle.profit.toLocaleString()}` : '--'}</span>
+          </div>
+          {/* Mileage */}
+          <div className="flex flex-col justify-center items-start bg-gradient-to-br from-purple-900/80 to-purple-800/60 rounded-xl p-3 border border-purple-700/40 h-20 w-full min-w-0 overflow-hidden">
+            <span className="text-xs text-purple-200 font-medium mb-1 whitespace-nowrap">Mileage</span>
+            <span className="text-lg font-bold text-white leading-tight whitespace-nowrap overflow-hidden text-ellipsis">{vehicle.mileage !== undefined ? formatMileage(vehicle.mileage) : '--'}</span>
+          </div>
         </div>
         
         {/* Action Button */}
