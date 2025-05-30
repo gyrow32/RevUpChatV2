@@ -25,50 +25,70 @@ export default function MessageList({
   const bottomRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   
+  // Check if user is near bottom before auto-scrolling
+  const isNearBottom = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return true;
+    
+    const threshold = 100; // pixels from bottom
+    return container.scrollHeight - container.scrollTop - container.clientHeight <= threshold;
+  };
+
   // Smart scroll to show beginning of new AI responses
   useEffect(() => {
     if (messages.length > 0) {
       setTimeout(() => {
         const container = messagesContainerRef.current;
         if (container) {
-          // For user messages, just scroll to show them
-          const lastMessage = messages[messages.length - 1];
-          if (lastMessage.role === 'user') {
-            // Scroll to bottom for user messages
-            container.scrollTop = container.scrollHeight;
-          } else {
-            // For AI responses, scroll to show the beginning of the response
-            // Find the position where the new AI message starts
-            const messageElements = container.children;
-            if (messageElements.length >= 2) {
-              // Get the second-to-last element (user message) 
-              const userMessage = messageElements[messageElements.length - 2] as HTMLElement;
-              // Scroll to just after the user message to show start of AI response
-              userMessage.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'end' 
-              });
-              // Small delay then scroll a bit more to show AI response start
-              setTimeout(() => {
-                window.scrollBy(0, 40);
-              }, 300);
+          // Only auto-scroll if user is already near bottom
+          if (shouldAutoScroll && isNearBottom()) {
+            const lastMessage = messages[messages.length - 1];
+            if (lastMessage.role === 'user') {
+              // Scroll to bottom for user messages
+              container.scrollTop = container.scrollHeight;
+            } else {
+              // For AI responses, scroll to show the beginning of the response
+              const messageElements = container.children;
+              if (messageElements.length >= 2) {
+                const userMessage = messageElements[messageElements.length - 2] as HTMLElement;
+                userMessage.scrollIntoView({ 
+                  behavior: 'smooth', 
+                  block: 'end' 
+                });
+                setTimeout(() => {
+                  window.scrollBy(0, 40);
+                }, 300);
+              }
             }
           }
         }
       }, 100);
     }
-  }, [messages]);
+  }, [messages, shouldAutoScroll]);
   
+  // Update shouldAutoScroll based on scroll position
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      setShouldAutoScroll(isNearBottom());
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Scroll to beginning of response when loading completes
   useEffect(() => {
-    if (!isLoading && messages.length > 0) {
+    if (!isLoading && messages.length > 0 && shouldAutoScroll) {
       setTimeout(() => {
         const container = messagesContainerRef.current;
         const lastMessage = messages[messages.length - 1];
         
         if (container && lastMessage.role === 'assistant') {
-          // When AI finishes responding, ensure we see the beginning
           const messageElements = container.children;
           if (messageElements.length >= 2) {
             const userMessage = messageElements[messageElements.length - 2] as HTMLElement;
@@ -83,7 +103,7 @@ export default function MessageList({
         }
       }, 200);
     }
-  }, [isLoading, messages]);
+  }, [isLoading, messages, shouldAutoScroll]);
 
   // Animation trigger for welcome screen
   useEffect(() => {
