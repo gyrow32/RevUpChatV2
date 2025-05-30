@@ -63,7 +63,7 @@ export default function MessageInput({
       "border-t border-gray-200/50 dark:border-white/10 bg-white/90 dark:bg-black/20 backdrop-blur-xl pb-safe-bottom shadow-md",
       className
     )}>
-      <div className="p-3 sm:p-4">
+      <div className="p-3 sm:p-4 pb-[40px] sm:pb-4"> {/* Added extra bottom padding for mobile */}
         <div className="flex gap-2 sm:gap-3 items-end">
           <div className="flex-1 relative">
             <textarea
