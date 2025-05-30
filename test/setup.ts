@@ -18,8 +18,15 @@ vi.mock('next/navigation', () => ({
 
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
-  default: ({ src, alt, ...props }: any) => {
-    return React.createElement('img', { src, alt, ...props });
+  default: ({ src, alt, fill, ...props }: any) => {
+    // Convert boolean attribute 'fill' to string when passed to HTML
+    const imgProps = { 
+      src, 
+      alt, 
+      ...(fill ? { fill: "true" } : {}),
+      ...props 
+    };
+    return React.createElement('img', imgProps);
   },
 }));
 

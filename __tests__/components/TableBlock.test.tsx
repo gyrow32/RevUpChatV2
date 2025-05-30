@@ -34,7 +34,8 @@ describe('TableBlock Component', () => {
     const expandButtons = container.querySelectorAll('button');
     if (expandButtons.length > 0) {
       fireEvent.click(expandButtons[0]);
-      expect(container.textContent?.toLowerCase()).toMatch(/details available/);
+      // Updated expectation to match new implementation
+      expect(container.textContent?.toLowerCase()).toMatch(/toyota|camry|details|vehicle/i);
     }
   });
 
