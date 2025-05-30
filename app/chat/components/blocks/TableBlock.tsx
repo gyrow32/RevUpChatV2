@@ -393,7 +393,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                     }}
                   >
                     {/* Loading Indicator */}
-                    {loadingImages[currentImage!] && (
+                    {currentImage && loadingImages[currentImage] && (
                       <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/50">
                         <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                       </div>
@@ -401,17 +401,17 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                   
                     {/* Current Image */}
                     <div className="relative w-full h-full">
-                      {!imageErrors[currentImage!] ? (
+                      {currentImage && !imageErrors[currentImage] ? (
                         <Image
-                          src={currentImage!}
+                          src={currentImage}
                           alt={`${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`}
                           fill
                           className={cn(
                             "object-cover object-center transition-all duration-700 transform hover:scale-105",
-                            loadingImages[currentImage!] ? "opacity-0" : "opacity-100"
+                            loadingImages[currentImage] ? "opacity-0" : "opacity-100"
                           )}
-                          onError={() => handleImageError(currentImage!)}
-                          onLoad={() => handleImageLoad(currentImage!)}
+                          onError={() => handleImageError(currentImage)}
+                          onLoad={() => handleImageLoad(currentImage)}
                           data-testid={`vehicle-${vehicleInfo.make?.toLowerCase() || ''}-${vehicleInfo.model?.toLowerCase() || ''}-image`}
                         />
                       ) : (
