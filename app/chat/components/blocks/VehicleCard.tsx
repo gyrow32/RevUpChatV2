@@ -97,7 +97,7 @@ export default function VehicleCard({ vehicle, className = '' }: VehicleCardProp
         
         {/* Premium Price Overlay */}
         {vehicle.price > 0 && (
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-gray-900/90 dark:from-black via-gray-900/70 dark:via-black/70 to-transparent p-3">
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-gray-900/90 dark:from-black via-gray-900/70 dark:via-black/70 to-transparent p-3 pr-6">
             <div className="flex items-end justify-between">
               <div>
                 <div className="text-gray-300 dark:text-white/70 text-xs font-medium">Price</div>
