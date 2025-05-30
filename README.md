@@ -37,21 +37,21 @@ AI-powered car shopping assistant chat interface.
 - 🔧 **Development Server**: Running on localhost:3000/3001
 - 📦 **Repository**: https://github.com/gyrow32/RevUPChat.git (main branch)
 
-## Getting Started
+## Documentation
+
+- [Setup Instructions](docs/SETUP.md)
+- [Project Structure](docs/PROJECT_STRUCTURE.md)
+- [Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
+
+## Quick Start
 
 ```bash
-# Install dependencies
 npm install
-
-# Set up environment variables
 cp .env.example .env.local
-# Edit .env.local with your actual API keys and configuration
-
-# Run development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the application.
+Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## Project Structure
 
