@@ -11,6 +11,11 @@ const nextConfig = {
         hostname: 'images.example.com',
       },
     ],
+    domains: [
+      'pictures.dealer.com',
+      'images.dealer.com',
+      // Add any other domains you need
+    ],
   },
 }
 
