@@ -122,11 +122,7 @@ export default function MessageInput({
                 : "bg-gray-200 border-gray-300 dark:bg-black/30 dark:border-white/20 text-gray-500 cursor-not-allowed"
             )}
           >
-            {isLoading ? (
-              <span className="animate-spin text-lg">⟳</span>
-            ) : (
-              <span className="text-lg">➤</span>
-            )}
+            <span className="text-lg">➤</span>
           </button>
         </div>
         
@@ -134,13 +130,6 @@ export default function MessageInput({
         <div className="mt-2 flex justify-between items-center text-xs text-gray-400">
           <span className="hidden sm:block">Press Enter to send, Shift+Enter for new line</span>
           <span className="block sm:hidden">Tap send or press Enter</span>
-          {isLoading && (
-            <span className="text-blue-400 flex items-center gap-1">
-              <span className="animate-spin">⟳</span>
-              <span className="hidden sm:inline">Sending message...</span>
-              <span className="sm:hidden">Sending...</span>
-            </span>
-          )}
         </div>
       </div>
     </div>

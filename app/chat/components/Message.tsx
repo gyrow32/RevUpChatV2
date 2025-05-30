@@ -169,13 +169,6 @@ export default function Message({
           {/* Status indicators */}
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-2">
-              {isSending && (
-                <div className="flex items-center gap-2 text-xs text-gray-300">
-                  <div className="animate-spin text-xs">⟳</div>
-                  <span>Sending...</span>
-                </div>
-              )}
-              
               {isError && (
                 <div className="flex items-center gap-2 text-red-300">
                   <span className="text-xs">⚠️</span>
