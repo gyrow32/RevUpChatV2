@@ -20,6 +20,7 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   const [loadingImages, setLoadingImages] = useState<Record<string, boolean>>({});
   const imageContainerRefs = useRef<{[key: number]: HTMLDivElement | null}>({});
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const handleImageError = (src: string) => {
     setImageErrors(prev => ({ ...prev, [src]: true }));
@@ -254,6 +255,26 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hoveredRow]);
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 1) {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchStartRef.current) return;
+    const dx = e.touches[0].clientX - touchStartRef.current.x;
+    const dy = e.touches[0].clientY - touchStartRef.current.y;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+      // Horizontal swipe: prevent vertical scroll
+      e.preventDefault();
+    }
+    // If mostly vertical, do NOT preventDefault (let chat scroll)
+  };
+
   if (!hasRows || !columns || columns.length === 0) {
     return (
       <div className={cn(
@@ -391,6 +412,8 @@ export default function TableBlock({ columns, rows, className = '' }: TableBlock
                     ref={(el: HTMLDivElement | null): void => {
                       imageContainerRefs.current[rowIndex] = el;
                     }}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
                   >
                     {/* Loading Indicator */}
                     {currentImage && loadingImages[currentImage] && (
