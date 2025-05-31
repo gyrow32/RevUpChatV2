@@ -8,6 +8,10 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'RevUpChat - AI Car Shopping Assistant',
   description: 'Your intelligent car shopping companion powered by AI',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
 };
 
 export const viewport = {
@@ -16,11 +20,6 @@ export const viewport = {
   maximumScale: 1,
   userScalable: false,
 };
-
-export const themeColor = [
-  { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-  { media: '(prefers-color-scheme: dark)', color: '#000000' },
-];
 
 export default function RootLayout({
   children,
