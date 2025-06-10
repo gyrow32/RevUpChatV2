@@ -1,9 +1,11 @@
 'use client';
 
+import React from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { useChat } from '@/app/lib/hooks/useChat';
 import Message from './Message';
 import ThinkingIndicator from './ThinkingIndicator';
-import type { Message as MessageType } from '../../../lib/types';
+import type { Message as MessageType } from '@/app/lib/types';
 import { cn } from '../../lib/utils';
 import Image from 'next/image';
 
