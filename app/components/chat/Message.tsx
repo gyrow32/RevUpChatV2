@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import TextBlock from './blocks/TextBlock';
 import VehicleBlock from './blocks/VehicleBlock';
 import TableBlock from './blocks/TableBlock';
@@ -28,7 +27,6 @@ export default function Message({
 }: MessageProps) {
   const isUser = message.role === 'user';
   const isError = message.status === 'error';
-  const isSending = message.status === 'sending';
   
   // Check if this message contains blocks that should span nearly full width
   const parsedBlocks = !isUser && message.content &&
@@ -49,10 +47,6 @@ export default function Message({
   const hasWideContent = hasVehicleGallery || hasTable;
   
   // Separate questions from other content blocks if present
-  const hasQuestions = !isUser && parsedBlocks?.some(
-    block => isBlock(block) && block.type === 'questions'
-  );
-  
   // Get all blocks that are not questions
   const nonQuestionBlocks = !isUser && parsedBlocks 
     ? parsedBlocks.filter(block => !isBlock(block) || block.type !== 'questions')
