@@ -50,6 +50,7 @@ export interface VehicleData {
   priceofit?: number;
   paymentment?: number;
   downpaymentment?: number;
+  [key: string]: string | number | string[] | undefined;
 }
 
 // Block type definitions (from tested responses)
