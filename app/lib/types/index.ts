@@ -41,8 +41,15 @@ export interface VehicleData {
   taxRate?: number;
   amountFinanced?: number;
   profit?: number;
+  newProfit?: number;
+  NewProfit?: number;
+  Profit?: number;
+  "New Profit"?: number;
   // Additional fields
   ageDays?: number;
+  priceofit?: number;
+  paymentment?: number;
+  downpaymentment?: number;
 }
 
 // Block type definitions (from tested responses)
@@ -98,4 +105,20 @@ export interface ChatState {
   sessionId: string;
   isLoading: boolean;
   error: string | null;
+}
+
+// Survey types
+export interface SurveyQuestion {
+  id: string;
+  text: string;
+  type: 'rating' | 'text' | 'choice';
+  options?: string[];
+  required?: boolean;
+}
+
+// API response types
+export interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  status: 'success' | 'error';
 }

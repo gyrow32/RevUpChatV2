@@ -2,9 +2,9 @@
 // Deployment trigger - fix applied for duplicate scrollToTop import
 
 import { useEffect } from 'react';
-import { ChatProvider } from '@/components/providers/ChatProvider';
-import ChatWindow from './components/ChatWindow';
-import { scrollToTop } from '@/lib/utils';
+import { ChatProvider } from '../components/providers/ChatProvider';
+import ChatWindow from '../components/chat/ChatWindow';
+import { scrollToTop } from '../lib/utils/scroll';
 
 export default function ChatPage() {
   // Ensure page starts at top on load (mobile fix)

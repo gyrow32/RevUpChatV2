@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import ThinkingIndicator from './ThinkingIndicator';
-import type { Message as MessageType } from '@/types';
-import { cn } from '@/lib/utils';
+import type { Message as MessageType } from '../../lib/types';
+import { cn } from '../../lib/utils';
 import Image from 'next/image';
+import VehicleCard from './VehicleCard';
 
 interface MessageListProps {
   messages: MessageType[];
@@ -165,18 +166,27 @@ export default function MessageList({
             </div>
 
             {/* Floating particles - Reduced on mobile */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              {[...Array(10)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-blue-400/40 dark:bg-white/20 rounded-full animate-float hidden sm:block"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 3}s`,
-                    animationDuration: `${3 + Math.random() * 4}s`
-                  }}
-                ></div>
-              ))}
+            <div className="absolute inset-0">
+              {[...Array(10)].map((_, i) => {
+                // Use deterministic values based on index
+                const left = 10 + (i * 8); // Evenly spaced from 10% to 90%
+                const top = 20 + (i * 6); // Evenly spaced from 20% to 80%
+                const delay = (i * 0.3); // Sequential delays
+                const duration = 5 + (i % 3); // Alternating durations between 5-7s
+                
+                return (
+                  <div
+                    key={i}
+                    className="absolute w-1 h-1 bg-blue-400/40 dark:bg-white/20 rounded-full animate-float hidden sm:block"
+                    style={{
+                      left: `${left}%`,
+                      top: `${top}%`,
+                      animationDelay: `${delay}s`,
+                      animationDuration: `${duration}s`
+                    }}
+                  ></div>
+                );
+              })}
             </div>
 
             {/* Main Content - Mobile Optimized */}
@@ -208,19 +218,27 @@ export default function MessageList({
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 via-transparent to-blue-900/30 dark:from-gray-900/30 dark:via-transparent dark:to-gray-900/30"></div>
                   
                   {/* Subtle animated particles for premium feel */}
-                  <div className="absolute inset-0 opacity-20">
-                    {[...Array(8)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="absolute w-1 h-1 bg-white/30 rounded-full animate-float"
-                        style={{
-                          left: `${20 + Math.random() * 60}%`,
-                          top: `${20 + Math.random() * 60}%`,
-                          animationDelay: `${Math.random() * 3}s`,
-                          animationDuration: `${4 + Math.random() * 4}s`
-                        }}
-                      ></div>
-                    ))}
+                  <div className="absolute inset-0">
+                    {[...Array(8)].map((_, i) => {
+                      // Use deterministic values based on index
+                      const left = 20 + (i * 7.5); // Evenly spaced from 20% to 80%
+                      const top = 20 + (i * 7.5); // Evenly spaced from 20% to 80%
+                      const delay = (i * 0.4); // Sequential delays
+                      const duration = 4 + (i % 4); // Alternating durations between 4-7s
+                      
+                      return (
+                        <div
+                          key={i}
+                          className="absolute w-1 h-1 bg-white/30 rounded-full animate-float"
+                          style={{
+                            left: `${left}%`,
+                            top: `${top}%`,
+                            animationDelay: `${delay}s`,
+                            animationDuration: `${duration}s`
+                          }}
+                        ></div>
+                      );
+                    })}
                   </div>
                   
                   {/* Content Overlay */}

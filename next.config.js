@@ -17,6 +17,13 @@ const nextConfig = {
       // Add any other domains you need
     ],
   },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': '.',
+    };
+    return config;
+  },
 }
 
 module.exports = nextConfig

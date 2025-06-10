@@ -1,6 +1,6 @@
-import type { ParsedResponse } from '@/types';
+import type { ParsedResponse } from '@/app/lib/types';
 import { parseWebhookResponse } from './parser';
-import { debugLog } from '@/lib/utils';
+import { debugLog } from '@/app/lib/utils/debug';
 
 export interface ChatRequest {
   message: string;
@@ -47,6 +47,9 @@ export class WebhookClient {
           error: data.error || `HTTP ${response.status}: ${response.statusText}`,
         };
       }
+      
+      // Log the entire response for debugging
+      debugLog('API RESPONSE RAW:', data);
       
       // Parse the webhook response
       const parsed = parseWebhookResponse(data);

@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
-import { useChat } from '@/hooks/useChat';
-import { cn, scrollToTop } from '@/lib/utils';
-import { useTheme } from '@/app/components/providers/ThemeProvider';
+import { useChat } from '../../lib/hooks/useChat';
+import { cn } from '../../lib/utils';
+import { scrollToTop } from '../../lib/utils/scroll';
+import { useTheme } from '../providers/ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
 
 interface ChatWindowProps {

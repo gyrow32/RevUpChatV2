@@ -1,9 +1,9 @@
 'use client';
 
 import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
-import type { Message, ChatState } from '@/types';
-import { generateSessionId, getStoredSessionId, storeSessionId } from '@/lib/utils/session';
-import { debugLog } from '@/lib/utils/debug';
+import type { Message, ChatState } from '@/app/lib/types';
+import { generateSessionId, getStoredSessionId, storeSessionId } from '@/app/lib/utils/session';
+import { debugLog } from '@/app/lib/utils/debug';
 
 
 type ChatAction =
@@ -78,7 +78,7 @@ interface ChatProviderProps {
 export function ChatProvider({ children }: ChatProviderProps) {
   const [state, dispatch] = useReducer(chatReducer, initialState);
   
-  // Load saved session and messages on mount
+  // Load saved session and messages on mount (once only)
   useEffect(() => {
     const savedSessionId = getStoredSessionId();
     if (savedSessionId) {
@@ -105,7 +105,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
       // Save new session ID
       storeSessionId(state.sessionId);
     }
-  }, [state.sessionId]);
+  }, []); // Empty dependency array - run only once on mount
   
   // Save messages when they change (debounced)
   useEffect(() => {

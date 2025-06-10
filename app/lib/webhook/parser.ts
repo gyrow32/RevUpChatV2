@@ -226,104 +226,76 @@ interface RawVehicleData {
   newProfit?: string | number; // Add newProfit variant
   NewProfit?: string | number; // Add capitalized newProfit variant
   "New Profit"?: string | number; // Add space-separated variant
+  priceofit?: string | number; // Add priceofit field
   [key: string]: any; // Allow any other properties to support dynamic field names
 }
 
 // Normalize vehicle data from different formats
-function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
-  // Log the incoming vehicle object to debug profit field
-  debugLog('Raw vehicle data:', {
-    id: vehicle.id,
-    make: vehicle.make,
-    model: vehicle.model,
+export function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
+  console.log('Raw vehicle data:', vehicle);
+  console.log('All keys:', Object.keys(vehicle));
+  console.log('Profit-related fields:', {
+    "New Profit": vehicle["New Profit"],
     profit: vehicle.profit,
     Profit: vehicle.Profit,
     newProfit: vehicle.newProfit,
     NewProfit: vehicle.NewProfit,
-    "New Profit": vehicle["New Profit"],
-    // Log all keys to find the profit property if it exists with a different name
-    keys: Object.keys(vehicle),
-    // Log all values for keys containing "profit"
-    profitValues: Object.entries(vehicle)
-      .filter(([key]) => key.toLowerCase().includes('profit'))
-      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+    priceofit: vehicle.priceofit
   });
   
-  // Check for all profit field variants and handle any case variants
-  let profitValue;
+  // Extract profit value from various possible fields, prioritizing priceofit since that's what we're getting
+  let profitValue = vehicle.priceofit ?? 
+                   vehicle["New Profit"] ?? 
+                   vehicle.profit ?? 
+                   vehicle.Profit ?? 
+                   vehicle.newProfit ?? 
+                   vehicle.NewProfit;
   
-  // Look for standard variants first
-  if (vehicle.profit !== undefined) {
-    profitValue = vehicle.profit;
-    debugLog('Found profit in standard field:', profitValue);
-  }
-  else if (vehicle.Profit !== undefined) {
-    profitValue = vehicle.Profit;
-    debugLog('Found profit in capitalized field:', profitValue);
-  }
-  else if (vehicle.newProfit !== undefined) {
-    profitValue = vehicle.newProfit;
-    debugLog('Found profit in newProfit field:', profitValue);
-  }
-  else if (vehicle.NewProfit !== undefined) {
-    profitValue = vehicle.NewProfit;
-    debugLog('Found profit in NewProfit field:', profitValue);
-  }
-  else if (vehicle["New Profit"] !== undefined) {
-    profitValue = vehicle["New Profit"];
-    debugLog('Found profit in "New Profit" field:', profitValue);
+  console.log('Profit value before normalization:', profitValue);
+  console.log('Profit value type:', typeof profitValue);
+  
+  // Normalize profit value if it's a string
+  if (typeof profitValue === 'string') {
+    profitValue = parseFloat(profitValue.replace(/[^0-9.-]+/g, ''));
   }
   
-  // If we still don't have a profit value, search all keys for any containing "profit" (case insensitive)
-  if (profitValue === undefined) {
-    for (const key of Object.keys(vehicle)) {
-      if (key.toLowerCase().includes('profit')) {
-        profitValue = vehicle[key];
-        debugLog(`Found profit in field: ${key} with value: ${profitValue}`);
-        break;
-      }
-    }
+  console.log('Profit value after normalization:', profitValue);
+  console.log('Final profit value type:', typeof profitValue);
+  
+  // Normalize price if it's a string
+  let price = vehicle.price;
+  if (typeof price === 'string') {
+    price = parseFloat(price.replace(/[^0-9.-]+/g, ''));
   }
   
-  const normalizedVehicle = {
-    id: vehicle.id || vehicle.vin || `vehicle-${Date.now()}`,
-    year: parseInt(String(vehicle.year)) || 0,
+  // Normalize payment if it's a string
+  let payment = vehicle.payment ?? vehicle.paymentment ?? vehicle["New PMT"];
+  if (typeof payment === 'string') {
+    payment = parseFloat(payment.replace(/[^0-9.-]+/g, ''));
+  }
+  
+  // Normalize down payment if it's a string
+  let downPayment = vehicle.downPayment ?? vehicle.downpaymentment ?? vehicle["Down Payment"];
+  if (typeof downPayment === 'string') {
+    downPayment = parseFloat(downPayment.replace(/[^0-9.-]+/g, ''));
+  }
+  
+  return {
+    id: vehicle.id?.toString() || vehicle.vIN || '',
+    stock: vehicle.stock || vehicle["stock #"] || '',
+    year: parseInt(vehicle.year?.toString() || '0'),
     make: vehicle.make || '',
     model: vehicle.model || '',
-    trim: vehicle.trim || undefined,
-    price: parseFloat(String(vehicle.price).replace(/[$,]/g, '')) || 0,
-    image: vehicle.image || vehicle['Image URLs']?.[0] || undefined,
-    stock: vehicle.stock?.replace(/^stock\s*#?\s*/i, '').trim() || undefined,
-    vin: vehicle.vin || undefined,
-    dealer: vehicle.dealer || undefined,
-    mileage: vehicle.mileage ? parseFloat(String(vehicle.mileage).replace(/[,]/g, '')) : 
-             vehicle.odometer ? parseFloat(String(vehicle.odometer).replace(/[,]/g, '')) : undefined,
-    odometer: vehicle.odometer ? String(vehicle.odometer) : undefined,
-    bodyStyle: vehicle.bodyStyle || undefined,
-    fuel: vehicle.fuel || vehicle.fuelType || undefined,
-    drivetrain: vehicle.drivetrain || undefined,
-    unitCost: vehicle.unitCost ? String(vehicle.unitCost) : undefined,
-    jdPowerClean: vehicle.jdPowerClean ? String(vehicle.jdPowerClean) : undefined,
-    "Image URLs": vehicle["Image URLs"] || undefined,
-    "Vehicle Link": vehicle["Vehicle Link"] || vehicle.vdp || undefined,
-    // Financial data
-    payment: vehicle.payment ? parseFloat(String(vehicle.payment).replace(/[$,]/g, '')) : undefined,
-    downPayment: vehicle.downPayment ? parseFloat(String(vehicle.downPayment).replace(/[$,]/g, '')) : undefined,
-    loanTermMonths: vehicle.loanTermMonths ? parseInt(String(vehicle.loanTermMonths)) : undefined,
-    ltv: vehicle.ltv ? parseFloat(String(vehicle.ltv)) : undefined,
-    interestRate: vehicle.interestRate ? parseFloat(String(vehicle.interestRate)) : undefined,
-    taxRate: vehicle.taxRate ? parseFloat(String(vehicle.taxRate)) : undefined,
-    profit: profitValue ? parseFloat(String(profitValue).replace(/[$,]/g, '')) : undefined,
-    ageDays: vehicle.ageDays ? parseInt(String(vehicle.ageDays)) : undefined,
+    trim: vehicle.trim || vehicle.series || '',
+    price: price || 0,
+    payment: payment || 0,
+    downPayment: downPayment || 0,
+    profit: profitValue,
+    ltv: parseFloat(vehicle.ltv?.toString() || vehicle.LTV?.toString() || '0'),
+    mileage: parseInt(vehicle.mileage?.toString() || vehicle.odometer?.toString() || '0'),
+    ageDays: parseInt(vehicle.ageDays?.toString() || vehicle.age?.toString() || '0'),
+    image: vehicle.image || vehicle.imageUrls?.split(',')[0] || '',
+    "Image URLs": vehicle["Image URLs"] || vehicle.imageUrls?.split(',') || [],
+    "Vehicle Link": vehicle["Vehicle Link"] || vehicle.websiteVDPURL || '',
   };
-  
-  // Log the normalized vehicle to verify profit is being properly processed
-  debugLog('Normalized vehicle data:', {
-    profit: normalizedVehicle.profit,
-    year: normalizedVehicle.year,
-    make: normalizedVehicle.make,
-    model: normalizedVehicle.model
-  });
-  
-  return normalizedVehicle;
 }
