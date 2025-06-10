@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import ThinkingIndicator from './ThinkingIndicator';
-import type { Message as MessageType } from '../../lib/types';
+import type { Message as MessageType } from '../../../lib/types';
 import { cn } from '../../lib/utils';
 import Image from 'next/image';
 

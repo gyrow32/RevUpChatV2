@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import TextBlock from './blocks/TextBlock';
 import VehicleBlock from './blocks/VehicleBlock';
 import TableBlock from './blocks/TableBlock';
@@ -56,6 +57,8 @@ export default function Message({
   const questionBlocks = !isUser && parsedBlocks
     ? parsedBlocks.filter(block => isBlock(block) && block.type === 'questions')
     : undefined;
+  
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   
   const renderContent = () => {
     if (isUser) {
