@@ -11,7 +11,8 @@ import Image from 'next/image';
 
 interface MessageListProps {
   messages: MessageType[];
-  isLoading?: boolean;
+  isLoading: boolean;
+  error: string | null;
   onRetry?: (messageId: string) => void;
   onQuestionClick?: (question: string) => void;
   className?: string;
@@ -20,12 +21,14 @@ interface MessageListProps {
 export default function MessageList({ 
   messages, 
   isLoading,
+  error,
   onRetry,
   onQuestionClick,
   className = '' 
 }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Scroll to bottom when messages change or loading state changes
   useEffect(() => {
