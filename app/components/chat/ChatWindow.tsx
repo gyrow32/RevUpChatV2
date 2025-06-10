@@ -206,7 +206,6 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
       <MessageList
         messages={messages}
         isLoading={isLoading}
-        error={error}
         onRetry={retryMessage}
         onQuestionClick={handleQuestionClick}
         className="flex-1"
