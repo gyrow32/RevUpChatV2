@@ -47,7 +47,7 @@ import type { Message } from '@/app/lib/types';
 
 
 
-import { debugLog } from '@/app/lib/utils';
+import { debugLog } from '@/app/lib/utils/debug';
 
 
 
