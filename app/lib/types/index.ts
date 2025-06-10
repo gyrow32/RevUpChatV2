@@ -30,7 +30,7 @@ export interface VehicleData {
   drivetrain?: string;
   unitCost?: string;
   jdPowerClean?: string;
-  "Image URLs"?: string[];
+  // 'Image URLs'?: string[]; // Not included due to index signature constraints
   "Vehicle Link"?: string;
   // Financial fields
   payment?: number;
@@ -50,7 +50,7 @@ export interface VehicleData {
   priceofit?: number;
   paymentment?: number;
   downpaymentment?: number;
-  [key: string]: string | number | string[] | undefined;
+  [key: string]: string | number | undefined;
 }
 
 // Block type definitions (from tested responses)
