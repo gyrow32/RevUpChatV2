@@ -222,7 +222,7 @@ export async function POST(request: Request) {
 
 
 
-        debugLog(`Webhook error: ${response.status} ${response.statusText}`);
+        debugLog(`Webhook error: ${response.status} - ${response.statusText}`);
 
 
 
