@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useChat } from '@/app/lib/hooks/useChat';
 import Message from './Message';
 import ThinkingIndicator from './ThinkingIndicator';
 import type { Message as MessageType } from '@/app/lib/types';
@@ -12,7 +11,6 @@ import Image from 'next/image';
 interface MessageListProps {
   messages: MessageType[];
   isLoading: boolean;
-  error: string | null;
   onRetry?: (messageId: string) => void;
   onQuestionClick?: (question: string) => void;
   className?: string;
@@ -21,14 +19,12 @@ interface MessageListProps {
 export default function MessageList({ 
   messages, 
   isLoading,
-  error,
   onRetry,
   onQuestionClick,
   className = '' 
 }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
-  const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Scroll to bottom when messages change or loading state changes
   useEffect(() => {
