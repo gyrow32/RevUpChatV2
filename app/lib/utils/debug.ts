@@ -1,5 +1,5 @@
-export function debugLog(...args: unknown[]): void {
+export function debugLog(message: string, ...args: unknown[]): void {
   if (process.env.NODE_ENV === 'development') {
-    console.log(...args);
+    console.log(message, ...args);
   }
 }
