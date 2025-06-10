@@ -17,7 +17,8 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
   console.log('Profit value in VehicleCard:', vehicle.profit);
   console.log('Profit value type:', typeof vehicle.profit);
 
-  const primaryImage = vehicle.image || vehicle["Image URLs"]?.[0];
+  const imageUrls = vehicle["Image URLs"];
+  const primaryImage = vehicle.image || (Array.isArray(imageUrls) ? imageUrls[0] : undefined);
   const hasImage = primaryImage && primaryImage.trim() !== '';
   
   const handleViewDetails = () => {
