@@ -12,7 +12,7 @@ export interface WebhookResponse {
 }
 
 // Vehicle data structure (from HTML prototype testing)
-export interface VehicleData {
+export interface VehicleDataBase {
   id: string;
   year: number;
   make: string;
@@ -30,7 +30,7 @@ export interface VehicleData {
   drivetrain?: string;
   unitCost?: string;
   jdPowerClean?: string;
-  // 'Image URLs'?: string[]; // Not included due to index signature constraints
+  "Image URLs"?: string[];
   "Vehicle Link"?: string;
   // Financial fields
   payment?: number;
@@ -50,7 +50,46 @@ export interface VehicleData {
   priceofit?: number;
   paymentment?: number;
   downpaymentment?: number;
-  [key: string]: string | number | undefined;
+}
+
+export interface VehicleData {
+  id: string;
+  year: number;
+  make: string;
+  model: string;
+  trim?: string;
+  price: number;
+  image?: string;
+  stock?: string;
+  vin?: string;
+  dealer?: string;
+  mileage?: number;
+  odometer?: string;
+  bodyStyle?: string;
+  fuel?: string;
+  drivetrain?: string;
+  unitCost?: string;
+  jdPowerClean?: string;
+  "Image URLs"?: string[];
+  "Vehicle Link"?: string;
+  // Financial fields
+  payment?: number;
+  downPayment?: number;
+  loanTermMonths?: number;
+  ltv?: number;
+  interestRate?: number;
+  taxRate?: number;
+  amountFinanced?: number;
+  profit?: number;
+  newProfit?: number;
+  NewProfit?: number;
+  Profit?: number;
+  "New Profit"?: number;
+  // Additional fields
+  ageDays?: number;
+  priceofit?: number;
+  paymentment?: number;
+  downpaymentment?: number;
 }
 
 // Block type definitions (from tested responses)

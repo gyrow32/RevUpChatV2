@@ -454,8 +454,6 @@ interface RawVehicleData {
 
   "New Profit"?: string | number; // Add space-separated variant
 
-  [key: string]: string | number | undefined; // Allow other properties with proper typing
-
 }
 
 
@@ -558,7 +556,7 @@ function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
 
       if (key.toLowerCase().includes('profit')) {
 
-        profitValue = vehicle[key];
+        profitValue = (vehicle as any)[key];
 
         debugLog(`Found profit in field: ${key} with value: ${profitValue}`);
 

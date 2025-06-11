@@ -456,7 +456,17 @@ interface RawVehicleData {
 
   priceofit?: string | number; // Add priceofit field
 
-  [key: string]: string | number | undefined; // Allow other properties with proper typing
+  // Additional dynamic fields that may come from webhooks
+  paymentment?: string | number;
+  downpaymentment?: string | number;
+  "New PMT"?: string | number;
+  "Down Payment"?: string | number;
+  "stock #"?: string | number;
+  series?: string;
+  LTV?: string | number;
+  age?: string | number;
+  websiteVDPURL?: string;
+  imageUrls?: string;
 
 }
 
@@ -520,6 +530,16 @@ export function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
 
   
 
+  // Ensure profit is always a number (or 0 if missing/invalid)
+
+  if (typeof profitValue !== 'number' || isNaN(profitValue)) {
+
+    profitValue = 0;
+
+  }
+
+  
+
   console.log('Profit value after normalization:', profitValue);
 
   console.log('Final profit value type:', typeof profitValue);
@@ -562,40 +582,30 @@ export function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
 
   
 
+  // Safely parse imageUrls
+  let imageUrls: string[] = [];
+  if (typeof vehicle.imageUrls === 'string') {
+    imageUrls = vehicle.imageUrls.split(',').map(url => url.trim()).filter(Boolean);
+  } else if (Array.isArray(vehicle["Image URLs"])) {
+    imageUrls = vehicle["Image URLs"];
+  }
+
   return {
-
-    id: vehicle.id?.toString() || vehicle.vIN || '',
-
-    stock: vehicle.stock || vehicle["stock #"] || '',
-
+    id: vehicle.id?.toString() || vehicle.vin?.toString() || '',
+    stock: vehicle.stock?.toString() || vehicle["stock #"]?.toString() || '',
     year: parseInt(vehicle.year?.toString() || '0'),
-
-    make: vehicle.make || '',
-
-    model: vehicle.model || '',
-
-    trim: vehicle.trim || vehicle.series || '',
-
+    make: vehicle.make?.toString() || '',
+    model: vehicle.model?.toString() || '',
+    trim: vehicle.trim?.toString() || vehicle.series?.toString() || '',
     price: price || 0,
-
     payment: payment || 0,
-
     downPayment: downPayment || 0,
-
     profit: profitValue,
-
     ltv: parseFloat(vehicle.ltv?.toString() || vehicle.LTV?.toString() || '0'),
-
     mileage: parseInt(vehicle.mileage?.toString() || vehicle.odometer?.toString() || '0'),
-
     ageDays: parseInt(vehicle.ageDays?.toString() || vehicle.age?.toString() || '0'),
-
-    image: vehicle.image || vehicle.imageUrls?.split(',')[0] || '',
-
-    "Image URLs": vehicle["Image URLs"] || vehicle.imageUrls?.split(',') || [],
-
-    "Vehicle Link": vehicle["Vehicle Link"] || vehicle.websiteVDPURL || '',
-
+    image: vehicle.image?.toString() || imageUrls[0] || '',
+    "Image URLs": imageUrls,
+    "Vehicle Link": vehicle["Vehicle Link"]?.toString() || vehicle.websiteVDPURL?.toString() || '',
   };
-
 }

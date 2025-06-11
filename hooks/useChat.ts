@@ -1,10 +1,10 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useChatContext } from '@/components/providers/ChatProvider';
+import { useChatContext } from '@/app/components/providers/ChatProvider';
 import { webhookClient } from '@/lib/webhook/client';
 import { generateSessionId, storeSessionId } from '@/lib/utils/session';
-import type { Message } from '@/types';
+import type { Message } from '@/app/lib/types';
 import { debugLog } from '@/lib/utils';
 
 export function useChat() {
@@ -91,7 +91,7 @@ export function useChat() {
           }
         });
         
-        debugLog('Webhook error:', errorMessage, { isTimeout, isRetryable });
+        debugLog('Webhook error:', { errorMessage, isTimeout, isRetryable });
       }
       
     } catch (error) {
