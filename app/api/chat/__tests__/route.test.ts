@@ -2,12 +2,10 @@ import { NextRequest } from 'next/server';
 import { POST } from '../route';
 
 // Mock the webhook parser
+const mockParseWebhookResponse = jest.fn();
 jest.mock('@/lib/webhook/parser', () => ({
-  parseWebhookResponse: jest.fn()
+  parseWebhookResponse: mockParseWebhookResponse
 }));
-
-// Mock the parseWebhookResponse function
-const mockParseWebhookResponse = require('@/lib/webhook/parser').parseWebhookResponse;
 
 describe('/api/chat', () => {
   beforeEach(() => {
