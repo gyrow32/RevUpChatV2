@@ -82,6 +82,124 @@ describe('Webhook Client and Parser', () => {
       expect(result.blocks[0].type).toBe('text');
       expect(result.blocks[1].type).toBe('gallery');
     });
+
+    it('should parse text response correctly', () => {
+      const mockResponse = {
+        output: '```json\n{"type": "text", "message": "Hello world"}\n```'
+      };
+
+      const result = parseWebhookResponse(mockResponse);
+
+      expect(result).toEqual({
+        blocks: [
+          {
+            type: 'text',
+            content: 'Hello world'
+          }
+        ]
+      });
+    });
+
+    it('should handle invalid JSON gracefully', () => {
+      const mockResponse = {
+        output: '```json\ninvalid json\n```'
+      };
+
+      const result = parseWebhookResponse(mockResponse);
+
+      expect(result).toEqual({
+        blocks: [
+          {
+            type: 'text',
+            content: 'I apologize, but I encountered an error processing your request. Please try again.'
+          }
+        ]
+      });
+    });
+
+      it('should handle missing output field', () => {
+    const mockResponse = {} as { output: string };
+
+    const result = parseWebhookResponse(mockResponse);
+
+      expect(result).toEqual({
+        blocks: [
+          {
+            type: 'text',
+            content: 'I apologize, but I encountered an error processing your request. Please try again.'
+          }
+        ]
+      });
+    });
+
+    it('should handle non-JSON response', () => {
+      const mockResponse = {
+        output: 'Plain text response'
+      };
+
+      const result = parseWebhookResponse(mockResponse);
+
+      expect(result).toEqual({
+        blocks: [
+          {
+            type: 'text',
+            content: 'Plain text response'
+          }
+        ]
+      });
+    });
+
+    it('should handle gallery type response', () => {
+      const mockResponse = {
+        output: '```json\n{"type": "gallery", "vehicles": [{"id": "1", "make": "Toyota"}]}\n```'
+      };
+
+      const result = parseWebhookResponse(mockResponse);
+
+      expect(result).toEqual({
+        blocks: [
+          {
+            type: 'gallery',
+            vehicles: [{"id": "1", "make": "Toyota"}]
+          }
+        ]
+      });
+    });
+
+    it('should handle table type response', () => {
+      const mockResponse = {
+        output: '```json\n{"type": "table", "columns": ["Make", "Model"], "rows": [["Toyota", "Camry"]]}\n```'
+      };
+
+      const result = parseWebhookResponse(mockResponse);
+
+      expect(result).toEqual({
+        blocks: [
+          {
+            type: 'table',
+            columns: ["Make", "Model"],
+            rows: [["Toyota", "Camry"]]
+          }
+        ]
+      });
+    });
+
+    it('should handle questions type response', () => {
+      const mockResponse = {
+        output: '```json\n{"type": "questions", "questions": ["What is your budget?", "What type of vehicle?"]}\n```'
+      };
+
+      const result = parseWebhookResponse(mockResponse);
+
+      expect(result).toEqual({
+        blocks: [
+          {
+            type: 'questions',
+            content: ["What is your budget?", "What type of vehicle?"]
+          }
+        ]
+      });
+    });
   });
 
   describe('WebhookClient', () => {

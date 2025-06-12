@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { VehicleData } from '@/app/lib/types';
 import { Car } from 'lucide-react';
 
@@ -25,10 +26,12 @@ export default function VehicleCard({ vehicle, onClick, className = '' }: Vehicl
       data-testid="vehicle-card"
     >
       {vehicle.image ? (
-        <img 
+        <Image 
           src={vehicle.image} 
           alt={`${vehicle.make} ${vehicle.model}`} 
           className="vehicle-image"
+          width={300}
+          height={200}
         />
       ) : (
         <div className="vehicle-image-placeholder flex items-center justify-center h-32 w-full bg-gray-100">

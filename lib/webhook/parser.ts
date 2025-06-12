@@ -556,7 +556,7 @@ function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
 
       if (key.toLowerCase().includes('profit')) {
 
-        profitValue = (vehicle as any)[key];
+        profitValue = (vehicle as Record<string, unknown>)[key];
 
         debugLog(`Found profit in field: ${key} with value: ${profitValue}`);
 
