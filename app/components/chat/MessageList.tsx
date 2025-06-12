@@ -24,14 +24,7 @@ export default function MessageList({
 }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hasScrolled, setHasScrolled] = useState(false);
-
-  // Scroll to bottom when messages change or loading state changes
-  useEffect(() => {
-    if (messagesEndRef.current && (!hasScrolled || messages.length <= 2)) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, isLoading, hasScrolled]);
+  const [isUserNearBottom, setIsUserNearBottom] = useState(true);
 
   // Listen for user scroll on the chat container
   useEffect(() => {
@@ -40,13 +33,22 @@ export default function MessageList({
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
-      const isNearBottom = scrollHeight - scrollTop - clientHeight < 200;
-      setHasScrolled(!isNearBottom);
+      const nearBottom = scrollHeight - scrollTop - clientHeight < 200;
+      setIsUserNearBottom(nearBottom);
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
+    // Set initial state
+    handleScroll();
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Scroll to bottom ONLY if user is near the bottom
+  useEffect(() => {
+    if (messagesEndRef.current && isUserNearBottom) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading, isUserNearBottom]);
 
   return (
     <div
