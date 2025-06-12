@@ -210,10 +210,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
     }
 
-  // Empty dependency array - run only once on mount
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+  }, [dispatch, state.sessionId]);
 
   
 

@@ -160,7 +160,7 @@ export default function ThinkingIndicator({ className = '' }: ThinkingIndicatorP
 
   return (
     <div className={cn("flex justify-start mb-6 px-4 md:px-0", className)}>
-      <div className="w-full bg-black/60 dark:bg-black/60 backdrop-blur-sm border border-white/10 dark:border-white/10 rounded-2xl rounded-bl-md shadow-lg">
+      <div className="max-w-xl w-full bg-black/60 dark:bg-black/60 backdrop-blur-sm border border-white/10 dark:border-white/10 rounded-2xl rounded-bl-md shadow-lg">
         <div className="p-5">
           <div className="flex items-center gap-3">
             {/* Animated thinking dots */}

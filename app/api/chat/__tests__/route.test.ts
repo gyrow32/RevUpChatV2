@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
+import { Message } from '@/app/lib/types';
 
 // Mock the webhook parser
 const mockParseWebhookResponse = jest.fn();
@@ -8,8 +9,26 @@ jest.mock('@/lib/webhook/parser', () => ({
 }));
 
 describe('/api/chat', () => {
+  let mockRequest: NextRequest;
+  let mockJson: jest.Mock;
+  let mockHeaders: jest.Mock;
+  let mockResponse: { json: jest.Mock; headers: jest.Mock };
+
   beforeEach(() => {
     jest.clearAllMocks();
+    mockJson = jest.fn();
+    mockHeaders = jest.fn();
+    mockResponse = {
+      json: mockJson,
+      headers: mockHeaders
+    };
+    mockRequest = new NextRequest('http://localhost:3000/api/chat', {
+      method: 'POST',
+      body: JSON.stringify({
+        messages: [],
+        sessionId: 'test-session'
+      })
+    });
   });
 
   it('should handle POST request with valid message', async () => {
@@ -157,5 +176,20 @@ describe('/api/chat', () => {
 
     expect(response.status).toBe(200);
     expect(data).toHaveProperty('content');
+  });
+
+  it('should handle errors gracefully', async () => {
+    const errorMessage = 'Test error';
+    const mockError = new Error(errorMessage);
+    
+    // Mock the chat function to throw an error
+    jest.spyOn(global, 'fetch').mockRejectedValueOnce(mockError);
+
+    await POST(mockRequest);
+
+    expect(mockJson).toHaveBeenCalledWith({
+      error: 'Failed to process chat request',
+      details: errorMessage
+    });
   });
 }); 

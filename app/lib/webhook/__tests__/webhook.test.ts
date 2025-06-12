@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { WebhookClient } from '../client';
 import { parseWebhookResponse } from '../parser';
-import { GalleryBlock, TableBlock, TextBlock } from '@/app/lib/types';
+import { GalleryBlock, TableBlock, TextBlock } from '../../../lib/types';
+import { WebhookRequest, WebhookResponse } from '../../../lib/types';
 
 describe('Webhook Client and Parser', () => {
   let client: WebhookClient;
@@ -199,6 +200,49 @@ describe('Webhook Client and Parser', () => {
           }
         ]
       });
+    });
+
+    it('should parse a valid webhook response', () => {
+      const response: WebhookResponse = {
+        output: JSON.stringify({
+          blocks: [
+            {
+              type: 'text',
+              content: 'Test message'
+            } as TextBlock
+          ]
+        })
+      };
+
+      const result = parseWebhookResponse(response);
+      expect(result).toBeDefined();
+      expect(result.blocks).toHaveLength(1);
+      expect(result.blocks[0].type).toBe('text');
+      expect((result.blocks[0] as TextBlock).content).toBe('Test message');
+    });
+
+    it('should handle invalid JSON in output', () => {
+      const response: WebhookResponse = {
+        output: 'invalid json'
+      };
+
+      const result = parseWebhookResponse(response);
+      expect(result).toBeDefined();
+      expect(result.blocks).toHaveLength(1);
+      expect(result.blocks[0].type).toBe('text');
+      expect((result.blocks[0] as TextBlock).content).toBe('invalid json');
+    });
+
+    it('should handle missing blocks in parsed JSON', () => {
+      const response: WebhookResponse = {
+        output: JSON.stringify({})
+      };
+
+      const result = parseWebhookResponse(response);
+      expect(result).toBeDefined();
+      expect(result.blocks).toHaveLength(1);
+      expect(result.blocks[0].type).toBe('text');
+      expect((result.blocks[0] as TextBlock).content).toBe('{}');
     });
   });
 
