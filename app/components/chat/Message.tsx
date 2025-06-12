@@ -264,7 +264,7 @@ export default function Message({
             "shadow-lg rounded-2xl backdrop-blur-sm",
             isUser
               ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-br-md border border-blue-400/30"
-              : "bg-white dark:bg-black/30 border border-gray-200 dark:border-white/10 rounded-bl-md text-gray-800 dark:text-white",
+              : "bg-white/95 dark:bg-slate-900/95 border border-gray-200/80 dark:border-slate-700/50 rounded-bl-md text-gray-800 dark:text-white backdrop-blur-sm",
             isError && "border-red-400/50 bg-red-500/20"
           )}
         >
@@ -346,7 +346,7 @@ export default function Message({
 
           "shadow-lg rounded-2xl backdrop-blur-sm",
 
-          "bg-white dark:bg-black/30 border border-gray-200 dark:border-white/10 rounded-bl-md text-gray-800 dark:text-white",
+          "bg-white/95 dark:bg-slate-900/95 border border-gray-200/80 dark:border-slate-700/50 rounded-bl-md text-gray-800 dark:text-white backdrop-blur-sm",
 
           isError && "border-red-400/50 bg-red-500/20"
 

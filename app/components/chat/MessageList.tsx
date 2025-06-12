@@ -53,7 +53,7 @@ export default function MessageList({
   return (
     <div
       ref={containerRef}
-      className={cn("flex flex-col space-y-4 pt-8 px-4 md:px-0 overflow-y-auto", className)}
+      className={cn("flex flex-col space-y-4 pt-8 px-6 md:px-8 overflow-y-auto", className)}
       style={{ maxHeight: '100vh' }} // Adjust as needed for your layout
     >
       {messages.length === 0 ? (

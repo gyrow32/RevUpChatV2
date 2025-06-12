@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import MessageList from '@/app/chat/components/MessageList';
-import type { Message } from '@/types';
+import type { Message } from '@/app/lib/types';
 
 describe('MessageList Component', () => {
   const mockMessages: Message[] = [
@@ -27,10 +27,13 @@ describe('MessageList Component', () => {
 
   const mockOnRetry = vi.fn();
   const mockOnQuestionClick = vi.fn();
+  const scrollIntoViewMock = vi.fn();
 
   beforeEach(() => {
     mockOnRetry.mockClear();
     mockOnQuestionClick.mockClear();
+    scrollIntoViewMock.mockClear();
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
   });
 
   it('renders list of messages', () => {
@@ -55,8 +58,9 @@ describe('MessageList Component', () => {
       />
     );
     
-    // The empty state shows a welcome message with a car image
-    expect(screen.getByAltText('Sleek Sports Car')).toBeInTheDocument();
+    // The empty state shows a welcome message
+    expect(screen.getByText('Welcome to RevUpChat')).toBeInTheDocument();
+    expect(screen.getByText(/Ask me anything about vehicles/)).toBeInTheDocument();
   });
 
   it('shows thinking indicator when loading', () => {
@@ -156,10 +160,6 @@ describe('MessageList Component', () => {
       status: 'sent'
     };
     
-    // Mock scrollIntoView
-    const scrollIntoViewMock = vi.fn();
-    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
-    
     // Force a re-render with new message
     rerender(
       <MessageList 
@@ -171,7 +171,7 @@ describe('MessageList Component', () => {
     
     // Wait for the effect to run
     await waitFor(() => {
-      expect(scrollIntoViewMock).toHaveBeenCalled();
+      expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: 'smooth' });
     });
   });
 }); 

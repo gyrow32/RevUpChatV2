@@ -60,14 +60,14 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
   
   return (
     <div className={cn(
-      "flex flex-col h-full bg-white dark:bg-gray-800",
+      "flex flex-col h-full bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-gray-900 dark:to-slate-800",
       className
     )}>
       {/* Header - Clean and Simple */}
-      <div className="border-b bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm px-3 sm:px-6 relative overflow-hidden">
+      <div className="border-b bg-white dark:bg-slate-900/80 dark:backdrop-blur-xl border-gray-200 dark:border-slate-700/50 shadow-sm dark:shadow-xl px-3 sm:px-6 relative overflow-hidden">
         {/* Glass/highlight overlays */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="hidden dark:block absolute inset-0 opacity-30" />
+          <div className="hidden dark:block absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-blue-500/5 opacity-30" />
           <div className="block dark:hidden absolute inset-0 opacity-30" />
         </div>
         <div className="pt-safe-top pt-6 sm:pt-4 py-3 sm:py-4">
@@ -206,7 +206,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
       </div>
       
       {/* Input container */}
-      <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+      <div className="border-t border-gray-200 dark:border-slate-700/50 bg-white dark:bg-slate-900/90 dark:backdrop-blur-md p-4">
         <MessageInput
           onSendMessage={sendMessage}
           disabled={isLoading}

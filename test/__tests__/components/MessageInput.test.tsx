@@ -1,19 +1,20 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import MessageInput from '@/app/chat/components/MessageInput';
+import { parseWebhookResponse } from '@/app/lib/webhook/parser';
 
 describe('MessageInput Component', () => {
-  const mockOnSendMessage = vi.fn();
+  const mockOnSend = vi.fn();
 
   beforeEach(() => {
-    mockOnSendMessage.mockClear();
+    mockOnSend.mockClear();
   });
 
   it('renders input field with placeholder', () => {
     const placeholder = 'Type your message...';
     render(
       <MessageInput 
-        onSendMessage={mockOnSendMessage} 
+        onSend={mockOnSend} 
         placeholder={placeholder}
       />
     );
@@ -22,27 +23,27 @@ describe('MessageInput Component', () => {
   });
 
   it('sends message when Enter is pressed', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} />);
+    render(<MessageInput onSend={mockOnSend} />);
     
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Test message' } });
     fireEvent.keyDown(input, { key: 'Enter' });
     
-    expect(mockOnSendMessage).toHaveBeenCalledWith('Test message');
+    expect(mockOnSend).toHaveBeenCalledWith('Test message');
   });
 
   it('does not send message when Shift+Enter is pressed', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} />);
+    render(<MessageInput onSend={mockOnSend} />);
     
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Test message' } });
     fireEvent.keyDown(input, { key: 'Enter', shiftKey: true });
     
-    expect(mockOnSendMessage).not.toHaveBeenCalled();
+    expect(mockOnSend).not.toHaveBeenCalled();
   });
 
   it('sends message when send button is clicked', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} />);
+    render(<MessageInput onSend={mockOnSend} />);
     
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Test message' } });
@@ -50,11 +51,11 @@ describe('MessageInput Component', () => {
     const sendButton = screen.getByRole('button');
     fireEvent.click(sendButton);
     
-    expect(mockOnSendMessage).toHaveBeenCalledWith('Test message');
+    expect(mockOnSend).toHaveBeenCalledWith('Test message');
   });
 
   it('clears input after sending message', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} />);
+    render(<MessageInput onSend={mockOnSend} />);
     
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Test message' } });
@@ -64,17 +65,17 @@ describe('MessageInput Component', () => {
   });
 
   it('does not send empty messages', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} />);
+    render(<MessageInput onSend={mockOnSend} />);
     
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: '   ' } });
     fireEvent.keyDown(input, { key: 'Enter' });
     
-    expect(mockOnSendMessage).not.toHaveBeenCalled();
+    expect(mockOnSend).not.toHaveBeenCalled();
   });
 
   it('shows character count when near limit', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} />);
+    render(<MessageInput onSend={mockOnSend} />);
     
     const input = screen.getByRole('textbox');
     const longMessage = 'a'.repeat(801); // 80% of 1000 character limit
@@ -84,7 +85,7 @@ describe('MessageInput Component', () => {
   });
 
   it('disables input when loading', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} isLoading={true} />);
+    render(<MessageInput onSend={mockOnSend} isLoading={true} />);
     
     const input = screen.getByRole('textbox');
     expect(input).toBeDisabled();
@@ -94,7 +95,7 @@ describe('MessageInput Component', () => {
   });
 
   it('disables input when disabled prop is true', () => {
-    render(<MessageInput onSendMessage={mockOnSendMessage} disabled={true} />);
+    render(<MessageInput onSend={mockOnSend} disabled={true} />);
     
     const input = screen.getByRole('textbox');
     expect(input).toBeDisabled();
@@ -107,11 +108,27 @@ describe('MessageInput Component', () => {
     const customClass = 'custom-test-class';
     const { container } = render(
       <MessageInput 
-        onSendMessage={mockOnSendMessage} 
+        onSend={mockOnSend} 
         className={customClass}
       />
     );
     
     expect(container.firstChild).toHaveClass(customClass);
+  });
+
+  it('should handle questions type response', () => {
+    const mockResponse = {
+      output: '```json\n{"type": "questions", "questions": ["What is your budget?", "What type of vehicle?"]}\n```'
+    };
+
+    const result = parseWebhookResponse(mockResponse);
+    expect(result).toEqual({
+      blocks: [
+        {
+          type: 'text',
+          content: '```json\n{"type": "questions", "questions": ["What is your budget?", "What type of vehicle?"]}\n```'
+        }
+      ]
+    });
   });
 }); 

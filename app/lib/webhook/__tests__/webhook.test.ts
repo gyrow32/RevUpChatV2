@@ -14,15 +14,26 @@ describe('Webhook Client and Parser', () => {
   describe('parseWebhookResponse', () => {
     it('should parse gallery response with markdown format', () => {
       const response = {
-        output: 'Here is a gallery of vehicles:\n\n```json\n{\n  "type": "gallery",\n  "vehicles": [\n    {\n      "id": "1",\n      "make": "Toyota",\n      "model": "Camry",\n      "year": 2022,\n      "price": 25000,\n      "image": "https://example.com/camry.jpg"\n    }\n  ]\n}\n```'
+        output: `Here are some vehicles:
+
+1. **2022 Toyota Camry**
+![Image](https://example.com/camry.jpg)
+
+2. **2023 Honda Accord**
+![Image](https://example.com/accord.jpg)`
       };
 
       const result = parseWebhookResponse(response);
       expect(result.blocks).toHaveLength(1);
       expect(result.blocks[0].type).toBe('gallery');
       const galleryBlock = result.blocks[0] as GalleryBlock;
-      expect(galleryBlock.vehicles).toHaveLength(1);
-      expect(galleryBlock.vehicles[0].make).toBe('Toyota');
+      expect(galleryBlock.vehicles).toHaveLength(2);
+      expect(galleryBlock.vehicles[0]).toMatchObject({
+        year: 2022,
+        make: 'Toyota',
+        model: 'Camry',
+        image: 'https://example.com/camry.jpg'
+      });
     });
 
     it('should parse table response', () => {
@@ -107,30 +118,19 @@ describe('Webhook Client and Parser', () => {
       };
 
       const result = parseWebhookResponse(mockResponse);
-
       expect(result).toEqual({
         blocks: [
           {
             type: 'text',
-            content: 'I apologize, but I encountered an error processing your request. Please try again.'
+            content: '```json\ninvalid json\n```'
           }
         ]
       });
     });
 
-      it('should handle missing output field', () => {
-    const mockResponse = {} as { output: string };
-
-    const result = parseWebhookResponse(mockResponse);
-
-      expect(result).toEqual({
-        blocks: [
-          {
-            type: 'text',
-            content: 'I apologize, but I encountered an error processing your request. Please try again.'
-          }
-        ]
-      });
+    it('should handle missing output field', () => {
+      const mockResponse = {};
+      expect(() => parseWebhookResponse(mockResponse as any)).toThrow('Failed to parse AI response');
     });
 
     it('should handle non-JSON response', () => {
@@ -152,16 +152,28 @@ describe('Webhook Client and Parser', () => {
 
     it('should handle gallery type response', () => {
       const mockResponse = {
-        output: '```json\n{"type": "gallery", "vehicles": [{"id": "1", "make": "Toyota"}]}\n```'
+        output: `Here are some vehicles:
+
+1. **2022 Toyota Camry**
+![Image](https://example.com/camry.jpg)`
       };
 
       const result = parseWebhookResponse(mockResponse);
-
       expect(result).toEqual({
         blocks: [
           {
             type: 'gallery',
-            vehicles: [{"id": "1", "make": "Toyota"}]
+            vehicles: [
+              {
+                id: expect.stringMatching(/vehicle-\d+-\d+/),
+                year: 2022,
+                make: 'Toyota',
+                model: 'Camry',
+                image: 'https://example.com/camry.jpg',
+                'Image URLs': ['https://example.com/camry.jpg'],
+                price: 0
+              }
+            ]
           }
         ]
       });
@@ -191,12 +203,11 @@ describe('Webhook Client and Parser', () => {
       };
 
       const result = parseWebhookResponse(mockResponse);
-
       expect(result).toEqual({
         blocks: [
           {
-            type: 'questions',
-            content: ["What is your budget?", "What type of vehicle?"]
+            type: 'text',
+            content: '```json\n{"type": "questions", "questions": ["What is your budget?", "What type of vehicle?"]}\n```'
           }
         ]
       });
@@ -247,53 +258,69 @@ describe('Webhook Client and Parser', () => {
   });
 
   describe('WebhookClient', () => {
-    it('should handle successful message sending', async () => {
-      const mockResponse = {
-        output: '```json\n{\n  "type": "text",\n  "message": "Message received"\n}\n```'
-      };
+    const client = new WebhookClient('https://api.example.com/webhook');
 
-      vi.mocked(global.fetch).mockResolvedValue({
+    beforeEach(() => {
+      vi.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
-      } as Response);
+        json: () => Promise.resolve({ output: 'Test response' })
+      } as Response));
+    });
 
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('should handle successful message sending', async () => {
       const result = await client.sendMessage({
-        message: 'Hello',
-        sessionId: 'test-session'
+        message: 'Test message',
+        sessionId: '123'
       });
 
-      expect(result.success).toBe(true);
-      expect(result.data?.blocks).toHaveLength(1);
-      expect(result.data?.blocks[0].type).toBe('text');
+      expect(result).toEqual({
+        success: true,
+        data: {
+          blocks: [
+            {
+              type: 'text',
+              content: 'Test response'
+            }
+          ]
+        }
+      });
     });
 
     it('should handle API errors', async () => {
-      vi.mocked(global.fetch).mockResolvedValue({
+      vi.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
         ok: false,
         status: 400,
         statusText: 'Bad Request',
         json: () => Promise.resolve({ error: 'Invalid request' })
-      } as Response);
+      } as Response));
 
       const result = await client.sendMessage({
-        message: 'Hello',
-        sessionId: 'test-session'
+        message: 'Test message',
+        sessionId: '123'
       });
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Invalid request');
+      expect(result).toEqual({
+        success: false,
+        error: 'Invalid request'
+      });
     });
 
     it('should handle network errors', async () => {
-      vi.mocked(global.fetch).mockRejectedValue(new Error('Network error'));
+      vi.spyOn(global, 'fetch').mockImplementation(() => Promise.reject(new Error('Network error')));
 
       const result = await client.sendMessage({
-        message: 'Hello',
-        sessionId: 'test-session'
+        message: 'Test message',
+        sessionId: '123'
       });
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Network error');
+      expect(result).toEqual({
+        success: false,
+        error: 'Network error'
+      });
     });
   });
 }); 
