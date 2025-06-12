@@ -23,6 +23,7 @@ export default function MessageList({
   className = '' 
 }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
 
   // Scroll to bottom when messages change or loading state changes
@@ -32,20 +33,27 @@ export default function MessageList({
     }
   }, [messages, isLoading, hasScrolled]);
 
-  // Listen for user scroll to stop auto-scrolling if they've scrolled up
+  // Listen for user scroll on the chat container
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const handleScroll = () => {
-      // If they've scrolled up more than 200px from the bottom, stop auto-scrolling
-      const isNearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 200;
       setHasScrolled(!isNearBottom);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className={cn("flex flex-col space-y-4 pt-8 px-4 md:px-0", className)}>
+    <div
+      ref={containerRef}
+      className={cn("flex flex-col space-y-4 pt-8 px-4 md:px-0 overflow-y-auto", className)}
+      style={{ maxHeight: '100vh' }} // Adjust as needed for your layout
+    >
       {messages.length === 0 ? (
         // Welcome screen when no messages
         <div className="flex flex-col items-center justify-center py-16 text-center">
