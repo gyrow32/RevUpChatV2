@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { WebhookClient } from '../client';
 import { parseWebhookResponse } from '../parser';
-import { ParsedResponse, GalleryBlock, TableBlock, TextBlock } from '@/app/lib/types';
+import { GalleryBlock, TableBlock, TextBlock } from '@/app/lib/types';
 
 describe('Webhook Client and Parser', () => {
   let client: WebhookClient;
@@ -211,7 +211,7 @@ describe('Webhook Client and Parser', () => {
       vi.mocked(global.fetch).mockResolvedValue({
         ok: true,
         json: () => Promise.resolve(mockResponse)
-      } as any);
+      } as Response);
 
       const result = await client.sendMessage({
         message: 'Hello',
@@ -229,7 +229,7 @@ describe('Webhook Client and Parser', () => {
         status: 400,
         statusText: 'Bad Request',
         json: () => Promise.resolve({ error: 'Invalid request' })
-      } as any);
+      } as Response);
 
       const result = await client.sendMessage({
         message: 'Hello',
