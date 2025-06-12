@@ -50,16 +50,7 @@ export default function MessageList({
       {messages.length === 0 ? (
         // Welcome screen when no messages
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="w-full max-w-xs mx-auto mb-8">
-            <Image
-              src="/images/welcome-car.png"
-              alt="Welcome to RevUp Chat"
-              width={400}
-              height={225}
-              className="rounded-lg shadow-xl w-full h-auto"
-              priority
-            />
-          </div>
+          {/* Car image removed */}
           
           <h1 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
             Welcome to RevUp Chat
