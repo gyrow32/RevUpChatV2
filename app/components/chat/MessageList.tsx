@@ -67,33 +67,46 @@ export default function MessageList({
             Your AI-powered assistant for finding the perfect vehicle. Ask anything about cars in our inventory!
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-md">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full max-w-lg">
+            {/* Each card has consistent dimensions with height: 80px, fixed margins and width */}
             <button 
-              className="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-              onClick={() => onQuestionClick?.("What are the newest cars in inventory?")}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-semibold h-[80px] flex items-center justify-center"
+              onClick={() => onQuestionClick?.("Show me SUVs under $30,000")}
             >
-              Newest arrivals
+              <div className="flex items-center">
+                <span className="text-xl mr-3">🚙</span>
+                <span>SUVs Under $30,000</span>
+              </div>
             </button>
             
             <button 
-              className="bg-gradient-to-r from-purple-600 to-purple-500 text-white py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-              onClick={() => onQuestionClick?.("What&apos;s the best deal right now?")}
+              className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-semibold h-[80px] flex items-center justify-center"
+              onClick={() => onQuestionClick?.("Vehicles with payments under $450 per month")}
             >
-              Best deals
+              <div className="flex items-center">
+                <span className="text-xl mr-3">💰</span>
+                <span>Payments Under $450/mo</span>
+              </div>
             </button>
             
             <button 
-              className="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-              onClick={() => onQuestionClick?.("Show me SUVs under $35,000")}
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-semibold h-[80px] flex items-center justify-center"
+              onClick={() => onQuestionClick?.("Show me pickup trucks in inventory")}
             >
-              SUVs under $35k
+              <div className="flex items-center">
+                <span className="text-xl mr-3">🛻</span>
+                <span>Pickup Trucks Available</span>
+              </div>
             </button>
             
             <button 
-              className="bg-gradient-to-r from-teal-600 to-teal-500 text-white py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-              onClick={() => onQuestionClick?.("I need a truck with good towing capacity")}
+              className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-semibold h-[80px] flex items-center justify-center"
+              onClick={() => onQuestionClick?.("Show me best value SUVs with lowest age and mileage")}
             >
-              Trucks
+              <div className="flex items-center">
+                <span className="text-xl mr-3">✨</span>
+                <span>Best Value SUVs</span>
+              </div>
             </button>
           </div>
         </div>

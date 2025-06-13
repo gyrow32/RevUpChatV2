@@ -160,27 +160,27 @@ export default function ThinkingIndicator({ className = '' }: ThinkingIndicatorP
 
   return (
     <div className={cn("flex justify-start mb-6 px-4 md:px-0", className)}>
-      <div className="max-w-xl w-full bg-black/60 dark:bg-black/60 backdrop-blur-sm border border-white/10 dark:border-white/10 rounded-2xl rounded-bl-md shadow-lg">
+      <div className="max-w-xl w-full bg-white/95 dark:bg-black/60 backdrop-blur-sm border border-gray-300 dark:border-white/10 rounded-2xl rounded-bl-md shadow-lg dark:shadow-lg">
         <div className="p-5">
           <div className="flex items-center gap-3">
             {/* Animated thinking dots */}
             <div className="flex gap-1">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
             
             {/* Current step with icon */}
-            <div className="flex items-center gap-2 text-sm text-white">
+            <div className="flex items-center gap-2 text-sm text-gray-800 dark:text-white">
               <span className="text-base animate-pulse">{currentStepData?.icon}</span>
               <span className="animate-pulse font-medium">{currentStepData?.text}</span>
             </div>
           </div>
           
           {/* Progress bar */}
-          <div className="mt-3 w-full bg-white/20 rounded-full h-1.5">
+          <div className="mt-3 w-full bg-gray-200 dark:bg-white/20 rounded-full h-1.5">
             <div 
-              className="bg-blue-400 h-1.5 rounded-full transition-all duration-500 ease-out"
+              className="bg-blue-600 dark:bg-blue-400 h-1.5 rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${((currentStep + 1) / activeSteps.length) * 100}%`
               }}

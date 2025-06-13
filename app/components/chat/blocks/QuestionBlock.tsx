@@ -54,13 +54,17 @@ export default function QuestionBlock({
               key={index}
               className={cn(
                 "group inline-flex items-center px-4 py-2.5 rounded-full text-sm font-medium",
-                "bg-gradient-to-r from-black/50 to-black/40 backdrop-blur-sm",
-                "border border-white/15 text-white",
-                "hover:from-black/70 hover:to-black/60 hover:border-white/25",
-                "hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/10",
+                // Light mode - vibrant with good contrast
+                "bg-white border-2 border-gray-300 text-gray-800 shadow-md",
+                "hover:bg-blue-50 hover:border-blue-400 hover:text-blue-800",
+                // Dark mode - keep the existing dark styling
+                "dark:bg-gradient-to-r dark:from-black/50 dark:to-black/40 dark:backdrop-blur-sm",
+                "dark:border-white/15 dark:text-white",
+                "dark:hover:from-black/70 dark:hover:to-black/60 dark:hover:border-white/25",
+                "hover:scale-[1.02] hover:shadow-lg",
                 "active:scale-[0.98] transition-all duration-200",
-                "focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:ring-offset-2 focus:ring-offset-black",
-                selectedQuestion === question && "from-blue-600/80 to-blue-500/70 border-blue-400/30"
+                "focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:ring-offset-2",
+                selectedQuestion === question && "bg-blue-600 border-blue-600 text-white hover:bg-blue-700 dark:from-blue-600/80 dark:to-blue-500/70 dark:border-blue-400/30"
               )}
               onClick={() => handleQuestionClick(question)}
               disabled={selectedQuestion !== null && selectedQuestion !== question}
