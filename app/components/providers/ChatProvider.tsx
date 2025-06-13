@@ -210,7 +210,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
     }
 
-  }, [dispatch, state.sessionId]);
+  }, []); // Empty dependency array - only run once on mount
 
   
 

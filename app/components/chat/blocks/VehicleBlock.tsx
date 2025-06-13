@@ -21,6 +21,7 @@ interface VehicleBlockProps {
 
 const DESKTOP_CARD_WIDTH = 308;
 const CARD_GAP = 16;
+const MOBILE_CARD_GAP = 8;
 const SWIPE_MIN_DISTANCE = 50;
 
 // ============================================================================
@@ -70,9 +71,10 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   // Layout calculations
   const vehiclesPerPage = isMobile ? 1 : 3;
   const totalPages = Math.ceil(vehicles.length / vehiclesPerPage);
-  const mobileCardWidth = isMobile && containerWidth ? containerWidth - 32 : DESKTOP_CARD_WIDTH;
+  const mobileCardWidth = isMobile && containerWidth ? containerWidth - 8 : DESKTOP_CARD_WIDTH; // Even more minimal margin
   const adjustedCardWidth = isMobile ? mobileCardWidth : DESKTOP_CARD_WIDTH;
-  const slideWidth = adjustedCardWidth + CARD_GAP;
+  const currentGap = isMobile ? 0 : CARD_GAP; // No gap on mobile
+  const slideWidth = isMobile ? mobileCardWidth : adjustedCardWidth + CARD_GAP; // Use actual card width for mobile slides
   const carouselWidth = isMobile ? '100%' : slideWidth * 3;
 
   // ============================================================================
@@ -163,8 +165,8 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
     <section
       ref={containerRef}
       className={cn(
-        "w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 py-6 sm:py-8",
-        "rounded-2xl border shadow-lg",
+        "w-full max-w-7xl mx-auto px-1 sm:px-8 md:px-12 py-1 sm:py-8",
+        "rounded-lg sm:rounded-2xl border shadow-lg",
         // Light mode
         "bg-white/95 backdrop-blur-sm border-gray-200/80",
         // Dark mode
@@ -173,19 +175,19 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
       )}
     >
       {/* ============================================================================ */}
-      {/* HEADER SECTION */}
+      {/* HEADER SECTION - Ultra compact on mobile */}
       {/* ============================================================================ */}
       
-      <div className="flex items-center justify-between px-4 py-3 mb-4 border-b border-gray-200/50 dark:border-slate-700/30">
+      <div className="flex items-center justify-between px-1 sm:px-4 py-1 sm:py-3 mb-1 sm:mb-4 border-b border-gray-200/50 dark:border-slate-700/30">
         <div>
-          <h4 className="font-bold text-xl text-gray-900 dark:text-slate-100">
+          <h4 className="font-bold text-sm sm:text-xl text-gray-900 dark:text-slate-100">
             {vehicles.length} Vehicle{vehicles.length !== 1 ? 's' : ''} Found
           </h4>
         </div>
         
         {/* Page indicator */}
         {totalPages > 1 && (
-          <div className="px-4 py-2 bg-gray-100/80 dark:bg-slate-800/60 rounded-lg text-sm font-semibold text-gray-700 dark:text-slate-300 border border-gray-200/50 dark:border-slate-700/30 backdrop-blur-sm">
+          <div className="px-1.5 sm:px-4 py-0.5 sm:py-2 bg-gray-100/80 dark:bg-slate-800/60 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold text-gray-700 dark:text-slate-300 border border-gray-200/50 dark:border-slate-700/30 backdrop-blur-sm">
             {currentIndex + 1} of {totalPages}
           </div>
         )}
@@ -196,11 +198,11 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
       {/* ============================================================================ */}
       
       <div className="relative">
-        {/* Left Navigation Arrow */}
+        {/* Left Navigation Arrow - Hidden on mobile as requested */}
         {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToPrevious}
-            className="absolute left-0 z-10 p-3 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-lg hover:shadow-xl hover:bg-gray-50 dark:hover:bg-slate-700/90 border border-gray-200/50 dark:border-slate-600/50 transition-all duration-200 -translate-y-1/2 top-1/2 disabled:opacity-40 disabled:cursor-not-allowed backdrop-blur-md"
+            className="hidden md:block absolute left-0 z-10 p-3 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-lg hover:shadow-xl hover:bg-gray-50 dark:hover:bg-slate-700/90 border border-gray-200/50 dark:border-slate-600/50 transition-all duration-200 -translate-y-1/2 top-1/2 disabled:opacity-40 disabled:cursor-not-allowed backdrop-blur-md"
             disabled={currentIndex === 0}
             aria-label="Previous Vehicles"
           >
@@ -219,7 +221,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
         >
           {/* Vehicle Cards */}
           <div 
-            className="flex transition-transform duration-500 ease-out gap-4 items-stretch min-h-[420px] sm:min-h-[450px]"
+            className="flex transition-transform duration-500 ease-out gap-0 sm:gap-4 items-stretch min-h-[460px] sm:min-h-[450px]"
             style={{ 
               transform: `translateX(-${currentIndex * slideWidth}px)`
             }}
@@ -234,7 +236,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
                 >
                   <VehicleCard 
                     vehicle={vehicle} 
-                    className="h-full max-h-[450px] mx-auto" 
+                    className="h-full max-h-[460px] sm:max-h-[450px] mx-auto" 
                     width={adjustedCardWidth} 
                   />
                 </div>
@@ -243,11 +245,11 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
           </div>
         </div>
 
-        {/* Right Navigation Arrow */}
+        {/* Right Navigation Arrow - Hidden on mobile as requested */}
         {vehicles.length > vehiclesPerPage && (
           <button
             onClick={goToNext}
-            className="absolute right-0 z-10 p-3 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-lg hover:shadow-xl hover:bg-gray-50 dark:hover:bg-slate-700/90 border border-gray-200/50 dark:border-slate-600/50 transition-all duration-200 -translate-y-1/2 top-1/2 disabled:opacity-40 disabled:cursor-not-allowed backdrop-blur-md"
+            className="hidden md:block absolute right-0 z-10 p-3 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-lg hover:shadow-xl hover:bg-gray-50 dark:hover:bg-slate-700/90 border border-gray-200/50 dark:border-slate-600/50 transition-all duration-200 -translate-y-1/2 top-1/2 disabled:opacity-40 disabled:cursor-not-allowed backdrop-blur-md"
             disabled={currentIndex >= vehicles.length - vehiclesPerPage}
             aria-label="Next Vehicles"
           >
@@ -257,11 +259,11 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
       </div>
 
       {/* ============================================================================ */}
-      {/* PAGE INDICATORS */}
+      {/* PAGE INDICATORS - Minimal */}
       {/* ============================================================================ */}
       
       {vehicles.length > vehiclesPerPage && (
-        <div className="flex justify-center items-center gap-2 pt-4 pb-2">
+        <div className="flex justify-center items-center gap-1 sm:gap-2 pt-1 sm:pt-4 pb-0.5 sm:pb-2">
           {Array.from({ length: vehicles.length - vehiclesPerPage + 1 }, (_, index) => (
             <button
               key={index}
@@ -269,8 +271,8 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
               className={cn(
                 "transition-all duration-200 rounded-full",
                 index === currentIndex 
-                  ? "bg-blue-600 dark:bg-blue-500 w-8 h-3 shadow-md" 
-                  : "bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500 w-3 h-3"
+                  ? "bg-blue-600 dark:bg-blue-500 w-4 sm:w-8 h-1 sm:h-3 shadow-md" 
+                  : "bg-gray-300 dark:bg-slate-600 hover:bg-gray-400 dark:hover:bg-slate-500 w-1 sm:w-3 h-1 sm:h-3"
               )}
               aria-label={`Go to page ${index + 1}`}
             />
