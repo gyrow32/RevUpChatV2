@@ -118,11 +118,11 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
             </div>
           </div>
           
-          {/* Profit */}
+          {/* Price - Changed from Profit */}
           <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md sm:rounded-xl p-2 sm:p-3 border border-emerald-200/50 dark:border-emerald-800/30">
-            <div className="text-xs sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5 sm:mb-1">Profit</div>
+            <div className="text-xs sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5 sm:mb-1">Price</div>
             <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
-              {vehicle.profit !== undefined ? formatPrice(vehicle.profit) : '--'}
+              {vehicle.price !== undefined ? formatPrice(vehicle.price) : '--'}
             </div>
           </div>
           

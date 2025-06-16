@@ -31,7 +31,7 @@ const SWIPE_MIN_DISTANCE = 50;
 export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockProps) {
   // Debug logging
   console.log('VehicleBlock received vehicles:', vehicles);
-  console.log('First vehicle profit:', vehicles[0]?.profit);
+  console.log('First vehicle price:', vehicles[0]?.price);
 
   // ============================================================================
   // STATE MANAGEMENT
@@ -81,7 +81,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
   // DATA PROCESSING
   // ============================================================================
 
-  // Normalize vehicle data
+  // Normalize vehicle data - keep profit mapping for backend use but we now display price
   const normalizedVehicles = vehicles.map(vehicle => ({
     ...vehicle,
     profit: vehicle.profit ?? vehicle.priceofit ?? 0,
@@ -227,7 +227,7 @@ export default function VehicleBlock({ vehicles, className = '' }: VehicleBlockP
             }}
           >
             {normalizedVehicles.map((vehicle, vehicleIndex) => {
-              console.log(`Rendering vehicle ${vehicleIndex} with profit:`, vehicle.profit);
+              console.log(`Rendering vehicle ${vehicleIndex} with price:`, vehicle.price);
               return (
                 <div 
                   key={`${vehicle.id || vehicle.stock || vehicleIndex}`}
