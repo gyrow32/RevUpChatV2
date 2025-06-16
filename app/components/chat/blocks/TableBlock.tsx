@@ -50,8 +50,8 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
     if (rows.length === 0) return -1;
 
     // Find column indices for different criteria
-    const profitIndex = columns.findIndex(col => 
-      col.toLowerCase().includes('profit')
+    const priceIndex = columns.findIndex(col => 
+      col.toLowerCase().includes('price')
     );
     const paymentIndex = columns.findIndex(col => 
       col.toLowerCase().includes('payment') && 
@@ -64,18 +64,18 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
     let bestIndex = -1;
     let bestValue = null;
 
-    // Priority 1: Highest profit (if available)
-    if (profitIndex !== -1) {
+    // Priority 1: Lowest price (if available)
+    if (priceIndex !== -1) {
       rows.forEach((row, index) => {
-        const profit = typeof row[profitIndex] === 'number' ? row[profitIndex] : 
-                      typeof row[profitIndex] === 'string' ? parseFloat(row[profitIndex].toString().replace(/[$,]/g, '')) : 0;
-        if (bestValue === null || profit > bestValue) {
-          bestValue = profit;
+        const price = typeof row[priceIndex] === 'number' ? row[priceIndex] : 
+                      typeof row[priceIndex] === 'string' ? parseFloat(row[priceIndex].toString().replace(/[$,]/g, '')) : 0;
+        if (bestValue === null || price < bestValue) {
+          bestValue = price;
           bestIndex = index;
         }
       });
     }
-    // Priority 2: Lowest monthly payment (if no profit column)
+    // Priority 2: Lowest monthly payment (if no price column)
     else if (paymentIndex !== -1) {
       rows.forEach((row, index) => {
         const payment = typeof row[paymentIndex] === 'number' ? row[paymentIndex] : 
@@ -105,13 +105,13 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
 
   // Get the criteria used for "best deal"
   const getBestDealCriteria = () => {
-    const profitIndex = columns.findIndex(col => col.toLowerCase().includes('profit'));
+    const priceIndex = columns.findIndex(col => col.toLowerCase().includes('price'));
     const paymentIndex = columns.findIndex(col => 
       col.toLowerCase().includes('payment') && col.toLowerCase().includes('monthly')
     );
     const residualIndex = columns.findIndex(col => col.toLowerCase().includes('residual'));
 
-    if (profitIndex !== -1) return 'Highest Profit';
+    if (priceIndex !== -1) return 'Lowest Price';
     if (paymentIndex !== -1) return 'Lowest Payment';
     if (residualIndex !== -1) return 'Best Residual';
     return 'Best Deal';
