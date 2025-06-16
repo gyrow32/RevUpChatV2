@@ -81,11 +81,11 @@ export default function MessageList({
             
             <button 
               className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-semibold h-[80px] flex items-center justify-center"
-              onClick={() => onQuestionClick?.("Vehicles with payments under $450 per month")}
+              onClick={() => onQuestionClick?.("Leases under $500 per month")}
             >
               <div className="flex items-center">
-                <span className="text-xl mr-3">💰</span>
-                <span>Payments Under $450/mo</span>
+                <span className="text-xl mr-3">📋</span>
+                <span>Leases Under $500/mo</span>
               </div>
             </button>
             

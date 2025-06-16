@@ -32,6 +32,7 @@ export interface VehicleDataBase {
   jdPowerClean?: string;
   "Image URLs"?: string[];
   "Vehicle Link"?: string;
+  vdp?: string; // Vehicle Detail Page URL
   // Financial fields
   payment?: number;
   downPayment?: number;
@@ -72,6 +73,7 @@ export interface VehicleData {
   jdPowerClean?: string;
   "Image URLs"?: string[];
   "Vehicle Link"?: string;
+  vdp?: string; // Vehicle Detail Page URL
   // Financial fields
   payment?: number;
   downPayment?: number;

@@ -13,16 +13,15 @@ interface VehicleCardProps {
 }
 
 export default function VehicleCard({ vehicle, className = '', width }: VehicleCardProps) {
-  console.log('VehicleCard received vehicle:', vehicle);
-  console.log('Profit value in VehicleCard:', vehicle.profit);
-  console.log('Profit value type:', typeof vehicle.profit);
-
+  // Remove debug console logs
+  
   const imageUrls = vehicle["Image URLs"];
   const primaryImage = vehicle.image || (Array.isArray(imageUrls) ? imageUrls[0] : undefined);
   const hasImage = primaryImage && primaryImage.trim() !== '';
   
   const handleViewDetails = () => {
-    const link = vehicle["Vehicle Link"];
+    // Prioritize vdp URL if available, fallback to Vehicle Link
+    const link = vehicle.vdp || vehicle["Vehicle Link"];
     if (link) {
       window.open(link, '_blank', 'noopener,noreferrer');
     }
@@ -35,7 +34,7 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
     <div 
       className={cn(
         // Professional design with proper light/dark mode support
-        "group relative overflow-hidden rounded-2xl transition-all duration-300 h-[460px] sm:h-[450px] flex flex-col mx-auto",
+        "group relative overflow-hidden rounded-2xl transition-all duration-300 h-[480px] sm:h-[470px] flex flex-col mx-auto",
         // Light mode: crisp white with subtle shadow
         "bg-white/95 backdrop-blur-sm border border-gray-200/80 shadow-lg hover:shadow-xl",
         // Dark mode: elegant dark glass with refined border
@@ -46,8 +45,8 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
       )}
       style={{ width: `${cardWidth}px` }}
     >
-      {/* Hero Image Section - MAXIMIZED for mobile */}
-      <div className="relative h-[320px] sm:h-56 w-full overflow-hidden rounded-t-2xl bg-gray-100 dark:bg-gray-800">
+      {/* Hero Image Section - REDUCED height for better balance */}
+      <div className="relative h-[240px] sm:h-44 w-full overflow-hidden rounded-t-2xl bg-gray-100 dark:bg-gray-800">
         {hasImage ? (
           <>
             <Image
@@ -61,8 +60,8 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
                 target.className = target.className.replace('object-cover', 'object-contain opacity-60');
               }}
             />
-            {/* Subtle overlay for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            {/* Enhanced gradient overlay for smoother transition to info section */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -87,66 +86,66 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
         )}
       </div>
       
-      {/* Content Section - MINIMIZED padding for mobile */}
-      <div className="flex flex-col flex-1 p-1.5 sm:p-6">
-        {/* Vehicle Title - More compact on mobile */}
-        <div className="mb-1 sm:mb-5">
-          <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-lg leading-tight">
+      {/* Content Section - EXPANDED padding and height for better readability */}
+      <div className="flex flex-col flex-1 p-3 sm:p-6">
+        {/* Vehicle Title - More prominent on mobile */}
+        <div className="mb-2 sm:mb-5">
+          <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg leading-tight">
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h3>
           {vehicle.trim && (
-            <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium mt-0.5">
+            <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-sm font-medium mt-0.5">
               {vehicle.trim}
             </p>
           )}
         </div>
         
-        {/* Stats Grid - COMPACT for mobile */}
-        <div className="grid grid-cols-2 gap-1 sm:gap-4 mb-1.5 sm:mb-6">
+        {/* Stats Grid - EXPANDED for mobile with better spacing */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-6">
           {/* Age */}
-          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-md sm:rounded-xl p-1 sm:p-3 border border-gray-200/50 dark:border-gray-700/30">
-            <div className="text-[9px] sm:text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5 sm:mb-1">Age</div>
-            <div className="text-xs sm:text-base font-bold text-gray-900 dark:text-white">
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-md sm:rounded-xl p-2 sm:p-3 border border-gray-200/50 dark:border-gray-700/30">
+            <div className="text-xs sm:text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5 sm:mb-1">Age</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
               {vehicle.ageDays !== undefined ? `${vehicle.ageDays} days` : '--'}
             </div>
           </div>
           
           {/* LTV */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-md sm:rounded-xl p-1 sm:p-3 border border-blue-200/50 dark:border-blue-800/30">
-            <div className="text-[9px] sm:text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-0.5 sm:mb-1">LTV</div>
-            <div className="text-xs sm:text-base font-bold text-gray-900 dark:text-white">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-md sm:rounded-xl p-2 sm:p-3 border border-blue-200/50 dark:border-blue-800/30">
+            <div className="text-xs sm:text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-0.5 sm:mb-1">LTV</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
               {vehicle.ltv !== undefined ? `${Math.round(vehicle.ltv * 10) / 10}%` : '--'}
             </div>
           </div>
           
           {/* Profit */}
-          <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md sm:rounded-xl p-1 sm:p-3 border border-emerald-200/50 dark:border-emerald-800/30">
-            <div className="text-[9px] sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5 sm:mb-1">Profit</div>
-            <div className="text-xs sm:text-base font-bold text-gray-900 dark:text-white">
-              {vehicle.profit !== undefined ? `$${vehicle.profit.toLocaleString()}` : '--'}
+          <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md sm:rounded-xl p-2 sm:p-3 border border-emerald-200/50 dark:border-emerald-800/30">
+            <div className="text-xs sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5 sm:mb-1">Profit</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
+              {vehicle.profit !== undefined ? formatPrice(vehicle.profit) : '--'}
             </div>
           </div>
           
           {/* Mileage */}
-          <div className="bg-purple-50 dark:bg-purple-900/20 rounded-md sm:rounded-xl p-1 sm:p-3 border border-purple-200/50 dark:border-purple-800/30">
-            <div className="text-[9px] sm:text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-0.5 sm:mb-1">Miles</div>
-            <div className="text-xs sm:text-base font-bold text-gray-900 dark:text-white">
-              {vehicle.mileage !== undefined ? `${vehicle.mileage.toLocaleString()}` : '--'}
+          <div className="bg-purple-50 dark:bg-purple-900/20 rounded-md sm:rounded-xl p-2 sm:p-3 border border-purple-200/50 dark:border-purple-800/30">
+            <div className="text-xs sm:text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-0.5 sm:mb-1">Miles</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
+              {vehicle.mileage !== undefined ? formatMileage(vehicle.mileage) : '--'}
             </div>
           </div>
         </div>
         
-        {/* Action Button - Compact for mobile */}
+        {/* Action Button - Improved for mobile */}
         <div className="mt-auto">
           <button 
             className={cn(
-              "w-full py-1.5 sm:py-3 px-4 rounded-md sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2",
+              "w-full py-2 sm:py-3 px-4 rounded-md sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2",
               "bg-blue-600 hover:bg-blue-700 text-white shadow-md sm:shadow-lg hover:shadow-xl text-sm sm:text-base",
               "dark:bg-blue-600 dark:hover:bg-blue-500",
               "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
             )}
             onClick={handleViewDetails}
-            disabled={!vehicle["Vehicle Link"]}
+            disabled={!vehicle.vdp && !vehicle["Vehicle Link"]}
           >
             View Details
           </button>
