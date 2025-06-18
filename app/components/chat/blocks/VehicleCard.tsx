@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Car } from 'lucide-react';
+import { Car, ExternalLink } from 'lucide-react';
 import { formatPrice, formatMileage, formatPayment } from '@/app/lib/utils/formatters';
 import type { VehicleData } from '@/app/lib/types';
 import { cn } from '@/app/lib/utils';
@@ -13,11 +13,31 @@ interface VehicleCardProps {
 }
 
 export default function VehicleCard({ vehicle, className = '', width }: VehicleCardProps) {
-  // Remove debug console logs
+  // Debug logging for image data
+  console.log('DEBUG - VehicleCard received vehicle:', {
+    id: vehicle.id,
+    make: vehicle.make,
+    model: vehicle.model,
+    image: vehicle.image,
+    imageUrls: vehicle["Image URLs"]
+  });
   
+  // FIXED: More robust image URL handling
   const imageUrls = vehicle["Image URLs"];
-  const primaryImage = vehicle.image || (Array.isArray(imageUrls) ? imageUrls[0] : undefined);
-  const hasImage = primaryImage && primaryImage.trim() !== '';
+  
+  // More robust primary image selection with multiple fallbacks
+  const primaryImage = 
+    // First try the main image field if it exists and is not empty
+    (vehicle.image && typeof vehicle.image === 'string' && vehicle.image.trim() !== '') ? vehicle.image : 
+    // Then try the first image from Image URLs array if it exists
+    (Array.isArray(imageUrls) && imageUrls.length > 0 && typeof imageUrls[0] === 'string' && imageUrls[0].trim() !== '') ? imageUrls[0] : 
+    // Fallback to undefined (will show placeholder)
+    undefined;
+    
+  // Check if we have a valid image URL
+  const hasImage = Boolean(primaryImage && typeof primaryImage === 'string' && primaryImage.trim() !== '');
+  
+  console.log('DEBUG - Image processing results:', { primaryImage, hasImage });
   
   const handleViewDetails = () => {
     // Prioritize vdp URL if available, fallback to Vehicle Link
@@ -30,30 +50,31 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
   // Default card width is 308px, but allow responsive resizing
   const cardWidth = width || 308;
   
+  // BEAST MODE: Increased height for more dramatic card proportions
   return (
     <div 
       className={cn(
         // Professional design with proper light/dark mode support
-        "group relative overflow-hidden rounded-2xl transition-all duration-300 h-[480px] sm:h-[470px] flex flex-col mx-auto",
+        "group relative overflow-hidden rounded-2xl transition-all duration-300 h-[560px] sm:h-[580px] md:h-[600px] flex flex-col mx-auto",
         // Light mode: crisp white with subtle shadow
         "bg-white/95 backdrop-blur-sm border border-gray-200/80 shadow-lg hover:shadow-xl",
         // Dark mode: elegant dark glass with refined border
         "dark:bg-gray-900/95 dark:backdrop-blur-md dark:border-gray-700/50 dark:shadow-2xl dark:hover:shadow-blue-900/20",
-        // Hover effects
-        "hover:border-blue-300 dark:hover:border-blue-600/60 hover:-translate-y-1",
+        // BEAST MODE: Enhanced hover effects
+        "hover:border-blue-400 dark:hover:border-blue-500/80 hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-blue-900/30",
         className
       )}
       style={{ width: `${cardWidth}px` }}
     >
-      {/* Hero Image Section - REDUCED height for better balance */}
-      <div className="relative h-[240px] sm:h-44 w-full overflow-hidden rounded-t-2xl bg-gray-100 dark:bg-gray-800">
+      {/* Hero Image Section - BEAST MODE: Expanded for dramatic impact */}
+      <div className="relative h-[320px] sm:h-[260px] md:h-[280px] w-full overflow-hidden rounded-t-2xl bg-gray-100 dark:bg-gray-800">
         {hasImage ? (
           <>
             <Image
-              src={primaryImage}
+              src={primaryImage!}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
               fill
-              className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+              className="object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.src = '/placeholder-car.jpg';
@@ -61,7 +82,7 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
               }}
             />
             {/* Enhanced gradient overlay for smoother transition to info section */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-80 group-hover:opacity-70 transition-opacity duration-500" />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -87,7 +108,7 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
       </div>
       
       {/* Content Section - EXPANDED padding and height for better readability */}
-      <div className="flex flex-col flex-1 p-3 sm:p-6">
+      <div className="flex flex-col flex-1 p-3 sm:p-5 md:p-6">
         {/* Vehicle Title - More prominent on mobile */}
         <div className="mb-2 sm:mb-5">
           <h3 className="font-bold text-gray-900 dark:text-white text-base sm:text-lg leading-tight">
@@ -100,10 +121,45 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
           )}
         </div>
         
-        {/* Stats Grid - EXPANDED for mobile with better spacing */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-6">
+        {/* Stats Grid - EXPANDED to 2x2x2 for mobile with better spacing */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-5 md:mb-6">
+          {/* Row 1: Financial Info */}
+          {/* Price */}
+          <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 border border-emerald-200/50 dark:border-emerald-800/30">
+            <div className="text-xs sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5 sm:mb-1">Price</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
+              {vehicle.price !== undefined ? formatPrice(vehicle.price) : '--'}
+            </div>
+          </div>
+          
+          {/* Payment */}
+          <div className="bg-green-50 dark:bg-green-900/20 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 border border-green-200/50 dark:border-green-800/30">
+            <div className="text-xs sm:text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider mb-0.5 sm:mb-1">Payment</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
+              {vehicle.payment ? formatPayment(vehicle.payment) : 'Call'}
+            </div>
+          </div>
+          
+          {/* Row 2: Vehicle Metrics */}
+          {/* Mileage */}
+          <div className="bg-purple-50 dark:bg-purple-900/20 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 border border-purple-200/50 dark:border-purple-800/30">
+            <div className="text-xs sm:text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-0.5 sm:mb-1">Miles</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
+              {vehicle.mileage !== undefined ? formatMileage(vehicle.mileage) : '--'}
+            </div>
+          </div>
+          
+          {/* Match Score */}
+          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 border border-amber-200/50 dark:border-amber-800/30">
+            <div className="text-xs sm:text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-0.5 sm:mb-1">Match</div>
+            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
+              {vehicle.score !== undefined ? `${Math.round(vehicle.score)}%` : 'N/A'}
+            </div>
+          </div>
+          
+          {/* Row 3: Dealer Metrics */}
           {/* Age */}
-          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-md sm:rounded-xl p-2 sm:p-3 border border-gray-200/50 dark:border-gray-700/30">
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 border border-gray-200/50 dark:border-gray-700/30">
             <div className="text-xs sm:text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-0.5 sm:mb-1">Age</div>
             <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
               {vehicle.ageDays !== undefined ? `${vehicle.ageDays} days` : '--'}
@@ -111,43 +167,28 @@ export default function VehicleCard({ vehicle, className = '', width }: VehicleC
           </div>
           
           {/* LTV */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-md sm:rounded-xl p-2 sm:p-3 border border-blue-200/50 dark:border-blue-800/30">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-md sm:rounded-lg md:rounded-xl p-2 sm:p-2.5 md:p-3 border border-blue-200/50 dark:border-blue-800/30">
             <div className="text-xs sm:text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-0.5 sm:mb-1">LTV</div>
             <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
               {vehicle.ltv !== undefined ? `${Math.round(vehicle.ltv * 10) / 10}%` : '--'}
             </div>
           </div>
-          
-          {/* Price - Changed from Profit */}
-          <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-md sm:rounded-xl p-2 sm:p-3 border border-emerald-200/50 dark:border-emerald-800/30">
-            <div className="text-xs sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5 sm:mb-1">Price</div>
-            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
-              {vehicle.price !== undefined ? formatPrice(vehicle.price) : '--'}
-            </div>
-          </div>
-          
-          {/* Mileage */}
-          <div className="bg-purple-50 dark:bg-purple-900/20 rounded-md sm:rounded-xl p-2 sm:p-3 border border-purple-200/50 dark:border-purple-800/30">
-            <div className="text-xs sm:text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-0.5 sm:mb-1">Miles</div>
-            <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
-              {vehicle.mileage !== undefined ? formatMileage(vehicle.mileage) : '--'}
-            </div>
-          </div>
         </div>
         
-        {/* Action Button - Improved for mobile */}
+        {/* Action Button - BEAST MODE: Premium gradient button */}
         <div className="mt-auto">
           <button 
             className={cn(
-              "w-full py-2 sm:py-3 px-4 rounded-md sm:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2",
-              "bg-blue-600 hover:bg-blue-700 text-white shadow-md sm:shadow-lg hover:shadow-xl text-sm sm:text-base",
-              "dark:bg-blue-600 dark:hover:bg-blue-500",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+              "w-full py-2.5 sm:py-3.5 px-4 rounded-md sm:rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2",
+              "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-md sm:shadow-lg hover:shadow-xl text-sm sm:text-base",
+              "dark:from-blue-600 dark:to-indigo-700 dark:hover:from-blue-500 dark:hover:to-indigo-600",
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-blue-600 disabled:hover:to-blue-500"
             )}
             onClick={handleViewDetails}
             disabled={!vehicle.vdp && !vehicle["Vehicle Link"]}
           >
-            View Details
+            <span>View Details</span>
+            <ExternalLink className="w-4 h-4" />
           </button>
         </div>
       </div>

@@ -92,6 +92,7 @@ export interface VehicleData {
   priceofit?: number;
   paymentment?: number;
   downpaymentment?: number;
+  score?: number; // Match score from CarAPI
 }
 
 // Block type definitions (from tested responses)

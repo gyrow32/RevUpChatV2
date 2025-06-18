@@ -467,6 +467,8 @@
     age?: string | number;
     websiteVDPURL?: string;
     imageUrls?: string;
+    score?: string | number;
+    Score?: string | number;
 
   }
 
@@ -476,7 +478,12 @@
 
   export function normalizeVehicleData(vehicle: RawVehicleData): VehicleData {
 
-    console.log('Raw vehicle data:', vehicle);
+    // Debug image-related fields
+    console.log('DEBUG - Vehicle image fields:', {
+      image: vehicle.image,
+      imageUrls: vehicle.imageUrls,
+      imageURLs: vehicle["Image URLs"]
+    });
 
     console.log('All keys:', Object.keys(vehicle));
 
@@ -582,15 +589,34 @@
 
     
 
-    // Safely parse imageUrls
+    // FIXED: Enhanced imageUrls parsing with more robust handling
     let imageUrls: string[] = [];
-    if (typeof vehicle.imageUrls === 'string') {
+    
+    // Use Image URLs array if available
+    if (Array.isArray(vehicle["Image URLs"]) && vehicle["Image URLs"].length > 0) {
+      imageUrls = vehicle["Image URLs"].filter(url => url && typeof url === 'string' && url.trim() !== '');
+      console.log('DEBUG - Using Image URLs array:', imageUrls);
+    } 
+    // Or parse from imageUrls string if available
+    else if (typeof vehicle.imageUrls === 'string' && vehicle.imageUrls.trim() !== '') {
       imageUrls = vehicle.imageUrls.split(',').map(url => url.trim()).filter(Boolean);
-    } else if (Array.isArray(vehicle["Image URLs"])) {
-      imageUrls = vehicle["Image URLs"];
+      console.log('DEBUG - Parsed imageUrls from string:', imageUrls);
     }
 
-    return {
+    // FIXED: Enhanced image field handling with prioritization
+    const primaryImage = vehicle.image || (imageUrls.length > 0 ? imageUrls[0] : undefined);
+    console.log('DEBUG - Selected primary image:', primaryImage);
+
+    // Extract score value (check both case variants)
+    let score;
+    if (vehicle.score !== undefined) {
+      score = parseFloat(vehicle.score.toString());
+    } else if (vehicle.Score !== undefined) {
+      score = parseFloat(vehicle.Score.toString());
+    }
+
+    // FIXED: Create normalized vehicle with robust image handling
+    const normalizedVehicle = {
       id: vehicle.id?.toString() || vehicle.vin?.toString() || '',
       stock: vehicle.stock?.toString() || vehicle["stock #"]?.toString() || '',
       year: parseInt(vehicle.year?.toString() || '0'),
@@ -604,8 +630,16 @@
       ltv: parseFloat(vehicle.ltv?.toString() || vehicle.LTV?.toString() || '0'),
       mileage: parseInt(vehicle.mileage?.toString() || vehicle.odometer?.toString() || '0'),
       ageDays: parseInt(vehicle.ageDays?.toString() || vehicle.age?.toString() || '0'),
-      image: vehicle.image?.toString() || imageUrls[0] || '',
+      image: primaryImage || '', // Use the calculated primary image
       "Image URLs": imageUrls,
       "Vehicle Link": vehicle["Vehicle Link"]?.toString() || vehicle.websiteVDPURL?.toString() || '',
+      score: score,
     };
+    
+    console.log('DEBUG - Final normalized image data:', {
+      image: normalizedVehicle.image,
+      imageUrls: normalizedVehicle["Image URLs"]
+    });
+    
+    return normalizedVehicle;
   }
