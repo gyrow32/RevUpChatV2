@@ -23,7 +23,7 @@ export default function ChatPage() {
         {/* Mobile-first chat container with safe areas */}
         <div className="w-full h-screen h-[100dvh] relative z-10 pb-safe-bottom">
           <div className="bg-white/95 dark:bg-slate-900/95 dark:backdrop-blur-md border border-gray-200/80 dark:border-slate-700/50 h-full flex flex-col shadow-lg dark:shadow-2xl overflow-hidden">
-            <ChatWindow className="h-full flex-1 pb-[40px] sm:pb-0" />
+            <ChatWindow className="h-full flex-1" />
           </div>
         </div>
       </div>

@@ -29,7 +29,7 @@ body {
 }
 
 .pb-safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
 }
 
 .pl-safe-left {
@@ -38,6 +38,15 @@ body {
 
 .pr-safe-right {
   padding-right: env(safe-area-inset-right);
+}
+
+/* Additional mobile safe area utilities */
+.mb-safe-bottom {
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
+.h-screen-safe {
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 }
 
 /* Mobile-first touch targets */
