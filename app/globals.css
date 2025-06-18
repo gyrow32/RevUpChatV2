@@ -316,3 +316,20 @@ body {
 .duration-7000 {
   animation-duration: 7000ms;
 }
+
+/* Header height variables */
+:root {
+  --header-height-mobile: 70px; 
+  --header-height-desktop: 90px;
+}
+
+/* Header padding utility classes */
+.pt-header {
+  padding-top: var(--header-height-mobile);
+}
+
+@media (min-width: 640px) {
+  .pt-header {
+    padding-top: var(--header-height-desktop);
+  }
+}
