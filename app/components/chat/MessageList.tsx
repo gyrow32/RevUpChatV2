@@ -54,7 +54,6 @@ export default function MessageList({
     <div
       ref={containerRef}
       className={cn("flex flex-col space-y-4 pt-8 px-6 md:px-8 overflow-y-auto", className)}
-      style={{ maxHeight: '100vh' }} // Adjust as needed for your layout
     >
       {messages.length === 0 ? (
         // Welcome screen when no messages
