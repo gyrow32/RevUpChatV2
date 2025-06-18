@@ -1825,7 +1825,7 @@ export default function ChatWindow({ className = '' }: ChatWindowProps) {
 
 
 
-          className="h-full overflow-y-auto"
+          className="overflow-y-auto"
 
 
 
