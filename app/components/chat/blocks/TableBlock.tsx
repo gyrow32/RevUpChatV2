@@ -20,6 +20,22 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
       </div>
     );
   }
+  
+  // Validate that all rows are arrays
+  const invalidRows = rows.filter((row, index) => !Array.isArray(row));
+  if (invalidRows.length > 0) {
+    console.error('TableBlock - Invalid rows found:', invalidRows);
+    return (
+      <div className="w-full p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
+        <p className="text-red-700 dark:text-red-300 text-sm">
+          Error: Invalid row data. Some rows are not arrays.
+        </p>
+        <p className="text-red-600 dark:text-red-400 text-xs mt-1">
+          Invalid rows: {invalidRows.length} out of {rows.length}
+        </p>
+      </div>
+    );
+  }
 
   const tableRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
@@ -78,6 +94,7 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
     // Priority 1: Lowest price (if available)
     if (priceIndex !== -1) {
       rows.forEach((row, index) => {
+        if (!Array.isArray(row)) return; // Skip invalid rows
         const price = typeof row[priceIndex] === 'number' ? row[priceIndex] : 
                       typeof row[priceIndex] === 'string' ? parseFloat(row[priceIndex].toString().replace(/[$,]/g, '')) : 0;
         if (bestValue === null || price < bestValue) {
@@ -89,6 +106,7 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
     // Priority 2: Lowest monthly payment (if no price column)
     else if (paymentIndex !== -1) {
       rows.forEach((row, index) => {
+        if (!Array.isArray(row)) return; // Skip invalid rows
         const payment = typeof row[paymentIndex] === 'number' ? row[paymentIndex] : 
                        typeof row[paymentIndex] === 'string' ? parseFloat(row[paymentIndex].toString().replace(/[$,]/g, '')) : Infinity;
         if (bestValue === null || payment < bestValue) {
@@ -100,6 +118,7 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
     // Priority 3: Highest residual value (for leases)
     else if (residualIndex !== -1) {
       rows.forEach((row, index) => {
+        if (!Array.isArray(row)) return; // Skip invalid rows
         const residual = typeof row[residualIndex] === 'number' ? row[residualIndex] : 
                         typeof row[residualIndex] === 'string' ? parseFloat(row[residualIndex].toString().replace(/[%$,]/g, '')) : 0;
         if (bestValue === null || residual > bestValue) {
@@ -159,6 +178,12 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
           <tbody>
             {rows.map((row, rowIndex) => {
               const isBestDeal = rowIndex === bestDealIndex;
+              
+              // Additional safety check for each row
+              if (!Array.isArray(row)) {
+                console.error(`TableBlock - Row ${rowIndex} is not an array:`, row);
+                return null; // Skip this row
+              }
               
               return (
                 <tr 

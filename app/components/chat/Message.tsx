@@ -5,7 +5,7 @@ import VehicleBlock from './blocks/VehicleBlock';
 import TableBlock from './blocks/TableBlock';
 import SurveyBlock from './blocks/SurveyBlock';
 import QuestionBlock from './blocks/QuestionBlock';
-import type { Message as MessageType, ParsedResponse, Block } from '@/app/lib/types';
+import type { Message as MessageType, ParsedResponse, Block, TableBlock as TableBlockType } from '@/app/lib/types';
 import { cn, debugLog } from '@/app/lib/utils';
 
 interface MessageProps {
@@ -107,12 +107,23 @@ export default function Message({
               );
               
             case 'table':
+              // Handle nested content structure with proper typing
+              const tableBlock = block as TableBlockType;
+              let tableColumns = tableBlock.columns;
+              let tableRows = tableBlock.rows;
+              
+              if (!tableColumns && !tableRows && tableBlock.content) {
+                tableColumns = tableBlock.content.columns;
+                tableRows = tableBlock.content.rows;
+              }
+              
+              // Ensure we have valid data before rendering
+              if (!tableColumns || !tableRows) {
+                return null;
+              }
+              
               return (
-                <TableBlock 
-                  key={index} 
-                  columns={block.columns}
-                  rows={block.rows}
-                />
+                <TableBlock key={index} columns={tableColumns} rows={tableRows} />
               );
               
             case 'survey':
@@ -188,8 +199,23 @@ export default function Message({
               );
               
             case 'table':
+              // Handle nested content structure with proper typing
+              const tableBlock = block as TableBlockType;
+              let tableColumns = tableBlock.columns;
+              let tableRows = tableBlock.rows;
+              
+              if (!tableColumns && !tableRows && tableBlock.content) {
+                tableColumns = tableBlock.content.columns;
+                tableRows = tableBlock.content.rows;
+              }
+              
+              // Ensure we have valid data before rendering
+              if (!tableColumns || !tableRows) {
+                return null;
+              }
+              
               return (
-                <TableBlock key={index} columns={block.columns} rows={block.rows} />
+                <TableBlock key={index} columns={tableColumns} rows={tableRows} />
               );
               
             case 'survey':

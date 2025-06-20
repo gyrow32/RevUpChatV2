@@ -108,8 +108,12 @@ export interface GalleryBlock {
 
 export interface TableBlock {
   type: 'table';
-  columns: string[];
-  rows: (string | number)[][];
+  columns?: string[];
+  rows?: (string | number)[][];
+  content?: {
+    columns: string[];
+    rows: (string | number)[][];
+  };
 }
 
 export interface HybridBlock {

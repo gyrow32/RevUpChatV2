@@ -17,7 +17,8 @@ export class WebhookClient {
   private baseUrl: string;
   
   constructor(baseUrl: string = '') {
-    this.baseUrl = baseUrl;
+    // If no baseUrl is provided, use the current origin (includes correct port)
+    this.baseUrl = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
   }
   
   async sendMessage(request: ChatRequest): Promise<ChatResponse> {
@@ -75,5 +76,10 @@ export class WebhookClient {
   }
 }
 
-// Default client instance
+// Function to get a client instance with correct URL
+export function getWebhookClient(): WebhookClient {
+  return new WebhookClient();
+}
+
+// Default client instance - will use current origin when created
 export const webhookClient = new WebhookClient();

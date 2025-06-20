@@ -26,7 +26,7 @@ import { useChatContext } from '@/app/components/providers/ChatProvider';
 
 
 
-import { webhookClient } from '@/app/lib/webhook/client';
+import { getWebhookClient } from '@/app/lib/webhook/client';
 
 
 
@@ -271,7 +271,8 @@ export function useChat() {
 
 
 
-      const response = await webhookClient.sendMessage({
+      const client = getWebhookClient();
+      const response = await client.sendMessage({
 
 
 
@@ -460,7 +461,7 @@ export function useChat() {
 
 
 
-          types: response.data.blocks.map(b => b.type)
+          types: response.data.blocks.map((b: any) => b.type)
 
 
 

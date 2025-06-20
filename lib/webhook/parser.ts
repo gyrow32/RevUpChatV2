@@ -38,42 +38,6 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
   try {
     debugLog('Raw webhook response:', response.output);
     
-    // DEBUG: Try to parse and log the entire response object
-    try {
-      let jsonOutput = response.output;
-      // Strip ```json fences if present
-      const jsonMatch = jsonOutput.match(/```json\s*([\s\S]*?)```/);
-      if (jsonMatch && jsonMatch[1]) {
-        jsonOutput = jsonMatch[1].trim();
-      }
-      
-      const parsedJson = JSON.parse(jsonOutput);
-      debugLog('PARSED JSON STRUCTURE:', parsedJson);
-      
-      // If it has vehicles, log the first vehicle to see all fields
-      if (parsedJson.vehicles && Array.isArray(parsedJson.vehicles) && parsedJson.vehicles.length > 0) {
-        const vehicle = parsedJson.vehicles[0];
-        debugLog('FIRST VEHICLE FULL DATA:', vehicle);
-        
-        // Log all property names in the vehicle object
-        debugLog('ALL VEHICLE KEYS:', Object.keys(vehicle));
-        
-        // Find any keys containing "profit" (case insensitive)
-        const profitKeys = Object.keys(vehicle).filter(key => 
-          key.toLowerCase().includes('profit')
-        );
-        if (profitKeys.length > 0) {
-          debugLog('FOUND PROFIT KEYS:', profitKeys);
-          profitKeys.forEach(key => {
-            debugLog(`${key} value:`, vehicle[key]);
-          });
-        }
-      }
-    } catch (e) {
-      // If parsing fails, it's not valid JSON or has other format
-      debugLog('Failed to parse raw response as JSON for debugging', e);
-    }
-    
     // Check for markdown gallery format first
     if (response.output.includes('Here is a gallery') || response.output.includes('Here are')) {
       const vehicles = parseMarkdownGallery(response.output);
@@ -134,6 +98,30 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
       
       const parsed = JSON.parse(body);
       
+      // PRIORITY: Handle blocks format first (this is our main format)
+      if (parsed.blocks && Array.isArray(parsed.blocks)) {
+        // Process blocks to handle nested table content structure
+        const processedBlocks = parsed.blocks.map((block: any) => {
+          // Handle nested content structure (content.columns/content.rows)
+          if (block.type === 'table' && block.content && block.content.columns && block.content.rows) {
+            return {
+              type: 'table',
+              columns: block.content.columns,
+              rows: block.content.rows
+            };
+          }
+          
+          // Handle direct structure (columns/rows directly on block)
+          if (block.type === 'table' && block.columns && block.rows) {
+            return block;
+          }
+          
+          return block;
+        });
+        
+        return { blocks: processedBlocks };
+      }
+      
       // Handle different response formats
       if (parsed.type === 'gallery' && Array.isArray(parsed.vehicles)) {
         return {
@@ -161,11 +149,6 @@ export function parseWebhookResponse(response: { output: string }): ParsedRespon
             content: parsed.message
           }]
         };
-      }
-      
-      // Legacy blocks format
-      if (parsed.blocks && Array.isArray(parsed.blocks)) {
-        return { blocks: parsed.blocks };
       }
       
     } catch (jsonError) {
