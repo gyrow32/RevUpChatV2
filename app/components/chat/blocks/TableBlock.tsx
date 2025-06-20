@@ -10,6 +10,17 @@ interface TableBlockProps {
 }
 
 export default function TableBlock({ columns, rows }: TableBlockProps) {
+  // Safety check for invalid props
+  if (!columns || !Array.isArray(columns) || !rows || !Array.isArray(rows)) {
+    return (
+      <div className="w-full p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
+        <p className="text-red-700 dark:text-red-300 text-sm">
+          Error: Invalid table data. Please check the data format.
+        </p>
+      </div>
+    );
+  }
+
   const tableRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
   
@@ -47,7 +58,7 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
 
   // Determine the best deal based on available criteria
   const getBestDealIndex = () => {
-    if (rows.length === 0) return -1;
+    if (!columns || !Array.isArray(columns) || rows.length === 0) return -1;
 
     // Find column indices for different criteria
     const priceIndex = columns.findIndex(col => 
@@ -62,7 +73,7 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
     );
 
     let bestIndex = -1;
-    let bestValue = null;
+    let bestValue: number | null = null;
 
     // Priority 1: Lowest price (if available)
     if (priceIndex !== -1) {
@@ -105,6 +116,8 @@ export default function TableBlock({ columns, rows }: TableBlockProps) {
 
   // Get the criteria used for "best deal"
   const getBestDealCriteria = () => {
+    if (!columns || !Array.isArray(columns)) return 'Best Deal';
+    
     const priceIndex = columns.findIndex(col => col.toLowerCase().includes('price'));
     const paymentIndex = columns.findIndex(col => 
       col.toLowerCase().includes('payment') && col.toLowerCase().includes('monthly')
